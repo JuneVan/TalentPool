@@ -1,0 +1,84 @@
+﻿@model Van.TalentPool.Web.Models.UserViewModels.CreateOrEditUserViewModel
+@{
+    ViewData["PageHeader"] = "用户管理";
+    ViewData["Title"] = "创建一条新的用户记录";
+}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">@ViewData["Title"]</h5>
+    </div>
+    <form role="form" asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <img class="img-fluid  border profile-user-img" src="/img/default-avator.jpeg" width="128" />
+                    <div class="custom-file mt-2">
+                        <input type="file" class="custom-file-input" id="avatarFile" asp-for="Photo">
+                        <label class="custom-file-label">请选择你上传的图像文件</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label>用户名</label>
+                    <input type="text" asp-for="UserName" class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-12">
+                    <label>邮箱地址</label>
+                    <input type="text" asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>姓</label>
+                    <input type="text" asp-for="Surname" class="form-control" />
+                    <span asp-validation-for="Surname" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>名</label>
+                    <input type="text" asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-12">
+                    <label>密码</label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-12">
+                    <label>手机号</label>
+                    <input type="text" asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="Confirmed">
+                        <label class="form-check-label" asp-for="Confirmed">激活</label>
+                    </div>
+                </div> 
+            </div> 
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">提交</button>
+            <a asp-action="List" class="btn btn-default">返回列表</a>
+        </div>
+    </form>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+
+            $("#avatarFile").change(function () {
+                var url = null;
+                if (window.createObjectURL != undefined) {
+                    url = window.createObjectURL(this.files[0]);
+                } else if (window.URL != undefined) {
+                    url = window.URL.createObjectURL(this.files[0]);
+                } else if (window.webkitURL != undefined) {
+                    url = window.webkitURL.createObjectURL(this.files[0]);
+                }
+                console.log(this.files[0]);
+                $(".profile-user-img").attr("src", url);
+            })
+        })
+    </script>
+}

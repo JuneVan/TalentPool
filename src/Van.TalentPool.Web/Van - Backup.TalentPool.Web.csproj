@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Van.TalentPool.Application\Van.TalentPool.Application.csproj" />
+    <ProjectReference Include="..\Van.TalentPool.TalentPool.Application\Van.TalentPool.TalentPool.Application.csproj" />
+    <ProjectReference Include="..\Van.TalentPool.Core\Van.TalentPool.Core.csproj" />
+    <ProjectReference Include="..\Van.TalentPool.EntityFrameworkCore\Van.TalentPool.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\Van.TalentPool.Infrastructure\Van.TalentPool.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\" />
+  </ItemGroup>
+
+</Project>
