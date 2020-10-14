@@ -52,8 +52,8 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                 query = query.Where(w => w.CreatorUserId == input.CreatorUserId.Value);
             if (input.OwnerUserId.HasValue)
                 query = query.Where(w => w.OwnerUserId == input.OwnerUserId.Value);
-            if (input.StartedTime.HasValue && input.EndedTime.HasValue)
-                query = query.Where(w => w.CreationTime >= input.StartedTime.Value && w.CreationTime <= input.EndedTime.Value);
+            if (input.StartTime.HasValue && input.EndTime.HasValue)
+                query = query.Where(w => w.CreationTime >= input.StartTime.Value && w.CreationTime <= input.EndTime.Value);
             if (input.AuditStatus.HasValue)
                 query = query.Where(w => w.AuditStatus == (AuditStatus)input.AuditStatus.Value);
 
