@@ -1,0 +1,65 @@
+﻿@model Van.TalentPool.Web.Models.DictionaryViewModels.CreateOrEditDictionaryModel
+@{
+    ViewData["Header"] = "数据字典管理";
+    ViewData["Title"] = "创建一条新的数据字典记录";
+}
+
+
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"]</h3>
+    </div>
+    <form role="form" method="post" asp-action="Create">
+        <div class="card-body">
+            <div class="form-group">
+                <label>名称</label>
+                <select class="form-control" name="Name" asp-items="Model.InjectDictionaries">
+                    <option value="">==请选择字典==</option>
+                </select>
+                <input type="hidden" asp-for="DisplayName" />
+            </div> 
+            <div class="form-group value-list">
+                <label>字典值</label>
+                <a class="btn btn-default" id="btn-create-value"><i class="fas fa-plus"></i>增加一项</a>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">提交</button>
+            <a asp-action="List" class="btn btn-default">返回列表</a>
+        </div>
+    </form>
+</div>
+@section scripts {
+    <script>
+        $(function () {
+            var $btnCreate = $("#btn-create-value");
+            create($btnCreate);
+            $btnCreate.click(function () {
+                create($btnCreate);
+            })
+
+            $("select[name='Name']").change(function () {
+                if ($(this).val() != '')
+                    $("input[name='DisplayName']").val($(this).find("option:selected").text());
+            })
+        })
+
+        function create(beforeObject) {
+            var index = $(".value-list .child").length;
+            var htmlTemplate = [];
+            htmlTemplate.push('<div class="input-group child mb-md-1">');
+            htmlTemplate.push('<input type="text" class="form-control" placeholder="请输入字典的名称" name="DictionaryItems[' + index + '].Name"/>');
+            htmlTemplate.push('<input type="number" class="form-control" placeholder="请输入字典的值" name="DictionaryItems[' + index + '].Value"/>');
+            htmlTemplate.push('<div class="input-group-prepend">');
+            htmlTemplate.push('<button type="button" class="btn btn-danger" onclick="remove(this)" title="移除"><i class="fas fa-trash-alt"></i></button>');
+            htmlTemplate.push('</div>');
+            htmlTemplate.push('</div>');
+            $(beforeObject).before(htmlTemplate.join(''));
+        }
+        function remove(btnObject) {
+            if (!confirm("你确定要移除该项吗？"))
+                return;
+            var $element = $(btnObject).parents(".child");
+            $element.remove();
+        }</script>
+}

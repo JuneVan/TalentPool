@@ -1,0 +1,9 @@
+﻿.vague-background {
+    /*background: url(https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture);*/
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -99;
+}

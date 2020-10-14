@@ -1,0 +1,80 @@
+﻿.note-editor {
+    font-size: 10px;
+}
+
+.validation-summary-errors { 
+    color:#f00;
+}
+
+    .validation-summary-errors li {
+        list-style: none;
+    }
+
+.nav-treeview {
+    margin-left: 0.5rem;
+}
+
+.table-responsive {
+    min-height: 300px;
+}
+
+dt {
+    margin-bottom: .5rem;
+}
+
+.custom-control {
+    float: left;
+    margin-right: 0.5rem;
+}
+
+.card {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+}
+
+.card-footer {
+    background-color: transparent;
+    border-top: 1px solid rgba(0,0,0,.125);
+}
+
+.info-box {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+}
+
+.content-wrapper {
+    background: #f9fbfd;
+    margin-bottom: 1rem;
+}
+
+
+.main-header {
+    border-bottom: none;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #fff;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.brand-link, .main-header {
+    height: 62px;
+}
+
+.avatar-lg {
+    width: 3.75rem;
+    height: 3.75rem;
+}
+
+.avatar-sm {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+}

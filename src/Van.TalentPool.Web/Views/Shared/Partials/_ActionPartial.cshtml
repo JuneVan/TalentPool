@@ -1,0 +1,16 @@
+﻿@model ActionViewModel
+@{
+    var path = Context.Request.Path;
+    var user = User;
+}
+@if (string.IsNullOrEmpty(Model.PermissionName) || (!string.IsNullOrEmpty(Model.PermissionName) && user.HasClaim(AppConstansts.ClaimTypes.Permission, Model.PermissionName)))
+{
+    <a href="@Model.LinkUrl" class="@Model.CssClassName @(!Model.Enable?"disabled":"")">
+        @if (!string.IsNullOrEmpty(Model.IconClassName))
+        {
+            <i class="@Model.IconClassName"></i>
+        }
+        @Model.Text
+    </a>
+}
+

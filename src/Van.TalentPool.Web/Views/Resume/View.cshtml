@@ -1,0 +1,110 @@
+﻿@model Van.TalentPool.Application.Resumes.ResumeDetailDto
+
+@{
+    ViewData["Header"] = "简历库管理";
+    ViewData["Title"] = $"查看简历 - {Model.JobName} - { Model.Name}";
+}
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"]</h3>
+    </div>
+    <form role="form">
+        <div class="card-body">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>姓名</label>
+                    <input type="text" class="form-control" asp-for="Name" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>手机号</label>
+                    <input type="text" class="form-control" asp-for="PhoneNumber" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>邮箱地址</label>
+                    <input type="text" class="form-control" asp-for="Email" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>职位</label>
+                    <input type="text" class="form-control" asp-for="JobName" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>求职意向城市</label>
+                    <input type="text" class="form-control" placeholder="请输入求职意向城市" asp-for="City">
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-12">
+                    <label>相似度结果</label>
+                    <br />
+
+                </div>
+                <div class="form-group col-md-12">
+                    <label>简历内容</label>
+                    <textarea name="Description">@Model.Description</textarea>
+                </div>
+                <div class="form-group col-md-12">
+                    <label>简历匹配关键词<small>（该项用于检测简历职位符合程度）</small></label>
+                    <div id="keywords"></div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>所属招聘平台</label>
+                    <input type="text" class="form-control" asp-for="PlatformName" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>所属招聘平台ID</label>
+                    <input type="text" class="form-control" asp-for="PlatformId" placeholder="请输入ID">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>创建时间</label>
+                    <input type="text" class="form-control" asp-for="CreationTime" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>创建人</label>
+                    <input type="text" class="form-control" asp-for="CreatorUserName" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>最后更新时间</label>
+                    <input type="text" class="form-control" asp-for="LastModificationTime" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>最后更新人</label>
+                    <input type="text" class="form-control" asp-for="LastModifierUserName" readonly>
+                </div>
+                <div class="form-group col-md-12">
+                    <label>有效性</label>
+                    @if (Model.Enable)
+                    {
+                        <input type="text" class="form-control text-success" value="有效" readonly>
+                    }
+                    else
+                    {<input type="text" class="form-control text-danger" value="无效，@Model.EnableReason" readonly>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">编辑</a>
+            <a asp-action="Audit" asp-route-id="@Model.Id" class="btn btn-info">审批</a>
+            <a asp-action="List" class="btn btn-default">返回列表</a>
+        </div>
+    </form>
+</div>
+
+
+
+
+@section styles {
+    <link href="~/lib/summernote/summernote-bs4.min.css" rel="stylesheet" />
+}
+@section scripts {
+    <script src="~/lib/linq/linq.min.js"></script>
+    <script src="~/lib/summernote/summernote-bs4.min.js"></script>
+    <script src="~/js/resume.js" asp-append-version="true"></script>
+    <script>
+        $(function () {
+            // 检测技术点
+
+        })
+        $("textarea[name='Description']").summernote({ toolbar: [] });
+    </script>
+}

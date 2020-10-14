@@ -1,0 +1,70 @@
+﻿@model Van.TalentPool.Web.Models.UserViewModels.UserViewModel
+@{
+    ViewData["PageHeader"] = "用户管理";
+    ViewData["Title"] = "查看一条用户记录 - " + Model.UserName;
+}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">@ViewData["Title"]</h5>
+    </div>
+    <div class="card-body">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label>用户名</label>
+                <input type="text" asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label>邮箱地址</label>
+                <input type="text" asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                @if (string.IsNullOrEmpty(Model.Photo))
+                {
+                    <img class="img-fluid border profile-user-img" src="/img/default-avator.jpeg" width="128" />
+                }
+                else
+                {
+                    <img class="img-fluid border profile-user-img" src="@Model.Photo" width="128" />
+                }
+                <div class="custom-file mt-2">
+                    <input type="file" class="custom-file-input" id="avatarFile" asp-for="Photo">
+                    <label class="custom-file-label">请选择你上传的图像文件</label>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label>姓</label>
+                <input type="text" asp-for="Surname" class="form-control" />
+                <span asp-validation-for="Surname" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label>名</label>
+                <input type="text" asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label>手机号码</label>
+                <input type="text" asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label>手机号码</label>
+                <input type="text" asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="form-check">
+                    <input class="form-check-input" asp-for="Active">
+                    <label class="form-check-label" asp-for="Active">激活</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-footer">
+        <a asp-action="List" class="btn btn-default">返回列表</a>
+    </div>
+</div>

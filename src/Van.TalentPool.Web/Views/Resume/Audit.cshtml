@@ -1,0 +1,138 @@
+﻿@inject IUserIdentifier UserIdentifier
+
+@model Van.TalentPool.Web.Models.ResumeViewModels.CreateAuditViewModel
+@{
+    ViewData["Header"] = "审批简历";
+    ViewData["Title"] = "开始审批";
+}
+
+@if (Model.AuditRecords != null && Model.AuditRecords.Count > 0)
+{
+
+    <div class="timeline">
+        @foreach (var record in Model.AuditRecords)
+        {
+            if (record.Passed.HasValue)
+            {
+                <div class="time-label">
+                    <span class="bg-gray-light">@record.CreatedTime.Value.ToString("yyyy-MM-dd HH:mm:ss")</span>
+                </div>
+                <div>
+                    @if (record.Passed.Value)
+                    {
+                        <i class="fa fa-check bg-success"></i>
+                    }
+                    else
+                    {
+                        <i class="fas fa-window-close bg-danger"></i>
+                    }
+                    <div class="timeline-item">
+                        <h3 class="timeline-header">@record.CreatedName</h3>
+                        <div class="timeline-body">
+
+                            @if (record.Passed.Value)
+                            {
+                                <span class="text-success">审核通过</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger">审核不通过</span>
+                            }
+                            <p>@record.Remark</p>
+                            <p>
+                                @if (UserIdentifier.UserId == record.CreatedBy)
+                                {
+                                    <a href="/Resume/CancelAudit?auditRecordId=@record.Id" class="btn btn-danger">撤销记录</a>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div>
+                    <i class="far fa-dot-circle bg-gray"></i>
+                    <div class="timeline-item">
+                        <h3 class="timeline-header">@record.CreatedName</h3>
+                        <div class="timeline-body">
+                            @if (!string.IsNullOrEmpty(record.Remark))
+                            {
+                                <p>@record.Remark</p>
+                            }
+                            else
+                            {
+                                <p>等待该管理员的审核</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+    @if (Model.IsEnabled)
+    {
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"]</h3>
+            </div> <form role="form" method="post" asp-controller="Resume" asp-action="Audit">
+                <div class="card-body">
+
+                    <input type="hidden" asp-for="ResumeId"  />
+                    <div class="row"> 
+                        <div class="form-group col-md-12">
+                            <label>审批状态</label>
+                            <div class="form-group">
+                                <div class="custom-control custom-radio">
+                                    <input class="custom-control-input" type="radio" id="IsPassedRadio1" name="Passed" value="false" checked>
+                                    <label for="IsPassedRadio1" class="custom-control-label">不通过</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input class="custom-control-input" type="radio" id="IsPassedRadio2" name="Passed" value="true">
+                                    <label for="IsPassedRadio2" class="custom-control-label">通过</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label>不通过原因</label>
+                            <div class="btn-group btn-group-sm" id="btn-remarks">
+                                <button type="button" class="btn btn-default" data-remark="工作经验不足">工作经验不足</button>
+                                <button type="button" class="btn btn-primary" data-remark="技术能力一般">技术能力一般</button>
+                                <button type="button" class="btn btn-success" data-remark="简历不符合职位要求">简历不符合职位要求</button>
+                                <button type="button" class="btn btn-info" data-remark="薪资要求过高">薪资要求过高</button>
+                                <button type="button" class="btn btn-danger" data-remark="重复简历">重复简历</button>
+                                <button type="button" class="btn btn-warning" data-remark="其他原因">其他原因</button>
+                            </div>
+                            <textarea class="form-control" name="Remark"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">提交</button>
+                    <a href="/Resume/List" class="btn btn-default">返回简历列表</a>
+                </div>
+            </form>
+        </div>
+    }
+
+}
+else
+{
+    <div class="_alarm _alarm-warning _alarm-dismissible">
+        <h5><i class="icon fas fa-exclamation-triangle"></i> 提醒</h5>
+        管理员还未设置审核配置!
+    </div>
+}
+
+
+@section scripts{
+    <script>
+
+        $(function () {
+            $("#btn-remarks button").click(function () {
+                $("textarea[name='Remark']").val($(this).data("remark"));
+            })
+        });
+    </script>
+}

@@ -1,0 +1,60 @@
+﻿@model Van.TalentPool.Web.Models.SettingViewModels.UserSettingViewModel
+@{
+    ViewData["PageHeader"] = "配置管理";
+    ViewData["Title"] = "账户配置";
+}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">@ViewData["Title"]</h5>
+    </div>
+    <form role="form" asp-action="UserSetting" method="post">
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="AllowedForNewUsers">
+                        <label class="form-check-label" asp-for="AllowedForNewUsers">允许注册新用户</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="RequireConfirmedEmail">
+                        <label class="form-check-label" asp-for="RequireConfirmedEmail">必须已验证邮箱</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="RequireConfirmedPhoneNumber">
+                        <label class="form-check-label" asp-for="RequireConfirmedPhoneNumber">必须已验证手机号</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="RequireConfirmedAccount">
+                        <label class="form-check-label" asp-for="RequireConfirmedAccount">必须已确认账户</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="LockoutOnFailure">
+                        <label class="form-check-label" asp-for="LockoutOnFailure">允许登录失败锁定</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label>最大失败登录次数</label>
+                    <input asp-for="MaxFailedAccessAttempts" class="form-control" />
+                    <span asp-validation-for="MaxFailedAccessAttempts" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-12">
+                    <label>默认登录失败后锁定账户时间</label>
+                    <input asp-for="DefaultLockoutTimeSpan" class="form-control" />
+                    <span asp-validation-for="DefaultLockoutTimeSpan" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">保存</button>
+        </div>
+    </form>
+</div>
