@@ -6,8 +6,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Van.TalentPool.Configurations;
+using Van.TalentPool.Dictionaries;
 using Van.TalentPool.Entities;
 using Van.TalentPool.EntityFrameworkCore.EntityTypeConfigurations;
+using Van.TalentPool.Evaluations;
+using Van.TalentPool.Interviews;
+using Van.TalentPool.Investigations;
+using Van.TalentPool.Jobs;
+using Van.TalentPool.Resumes;
 using Van.TalentPool.Roles;
 using Van.TalentPool.Users;
 
@@ -26,6 +32,26 @@ namespace Van.TalentPool.EntityFrameworkCore
         }
 
         public DbSet<SettingValue> SettingValues { get; set; }
+        public DbSet<Dictionary> Dictionaries { get; set; }
+        public DbSet<DictionaryItem> DictionaryItems { get; set; }
+
+        public DbSet<Resume> Resumes { get; set; }
+        public DbSet<ResumeAuditRecord> ResumeAuditRecords { get; set; }
+        public DbSet<ResumeAuditSetting> ResumeAuditSettings { get; set; }
+        public DbSet<ResumeKeyMap> ResumeKeyMaps { get; set; }
+        public DbSet<ResumeCompare> ResumeCompares { get; set; }
+
+        public DbSet<Investigation> Investigations { get; set; }
+
+        public DbSet<Interview> Interviews { get; set; }
+
+        public DbSet<Evaluation> Evaluations { get; set; }
+        public DbSet<EvaluationSubject> EvaluationSubjects { get; set; }
+        public DbSet<EvaluationQuestion> EvaluationQuestions { get; set; }
+
+        public DbSet<Job> Jobs { get; set; }
+         
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -36,6 +62,18 @@ namespace Van.TalentPool.EntityFrameworkCore
             builder.ApplyConfiguration(new UserLoginEntityTypeConfiguration());
             builder.ApplyConfiguration(new UserTokenEntityTypeConfiguration());
             builder.ApplyConfiguration(new UserClaimEntityTypeConfiguration());
+            builder.ApplyConfiguration(new DictionaryEntityTypeConfiguration());
+            builder.ApplyConfiguration(new DictionaryItemEntityTypeConfiguration());
+            builder.ApplyConfiguration(new ResumeEntityTypeConfiguration());
+            builder.ApplyConfiguration(new ResumeKeyMapEntityTypeConfiguration());
+            builder.ApplyConfiguration(new ResumeCompareEntityTypeConfiguration());
+            builder.ApplyConfiguration(new ResumeAuditSettingEntityTypeConfiguration());
+            builder.ApplyConfiguration(new ResumeAuditRecordEntityTypeConfiguration());
+            builder.ApplyConfiguration(new InvestigationEntityTypeConfiguration());
+            builder.ApplyConfiguration(new InterviewEntityTypeConfiguration());
+            builder.ApplyConfiguration(new EvaluationEntityTypeConfiguration());
+            builder.ApplyConfiguration(new EvaluationSubjectEntityTypeConfiguration());
+            builder.ApplyConfiguration(new EvaluationQuestionEntityTypeConfiguration());
         }
 
         protected IUserIdentifier UserIdentifier { get; }

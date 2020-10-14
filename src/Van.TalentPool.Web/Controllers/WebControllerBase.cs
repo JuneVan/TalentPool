@@ -14,9 +14,11 @@ namespace Van.TalentPool.Web.Controllers
         {
             Notifier = serviceProvider.GetRequiredService<INotifier>();
             Mapper = serviceProvider.GetRequiredService<IMapper>();
+            UserIdentifier = serviceProvider.GetRequiredService<IUserIdentifier>();
         }
 
         public INotifier Notifier { get; }
         public IMapper Mapper { get; }
+        public IUserIdentifier UserIdentifier { get; set; }
     }
 }

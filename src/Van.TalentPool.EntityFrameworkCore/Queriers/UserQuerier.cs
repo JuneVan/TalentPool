@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Van.TalentPool.Application;
@@ -42,6 +43,13 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                  .ToListAsync();
 
             return new PaginationOutput<UserDto>(totalSize, users);
+        }
+
+        public async Task<List<UserSelectItemDto>> GetUsersAsync()
+        {
+            return await _context.Users
+                .Select(s => new UserSelectItemDto() { Id = s.Id, FullName = s.FullName })
+                .ToListAsync();
         }
     }
 }

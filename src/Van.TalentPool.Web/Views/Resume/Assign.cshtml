@@ -1,0 +1,35 @@
+﻿@model Van.TalentPool.Web.Models.ResumeViewModels.AssignUserViewModel
+@{
+    ViewData["Header"] = "简历库管理";
+    ViewData["Title"] = "分配处理人 - " + Model.Name;
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"]</h3>
+            </div>
+            <form role="form" method="post" asp-controller="Resume" asp-action="Assign">
+                <div class="card-body"> 
+                    <input type="hidden" asp-for="Id">
+                    <div class="form-group">
+                        <label>简历姓名</label>
+                        <input type="text" class="form-control" placeholder="请输入姓名，例如：张三" value="@Model.Name" name="Name" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>处理人</label>  
+                        <select class="form-control" asp-for="OwnerUserId" asp-items="Model.Users">
+                            <option value="">=请选择用户=</option> 
+                        </select>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">提交</button>
+                    <a asp-action="List" class="btn btn-default">返回简历列表</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

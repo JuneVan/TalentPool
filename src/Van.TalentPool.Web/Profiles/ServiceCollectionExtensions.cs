@@ -10,7 +10,10 @@ namespace Van.TalentPool.Web.Profiles
             services.AddAutoMapper(typeof(AccountMappingProfile));
             services.AddAutoMapper(typeof(RoleMappingProfile));
             services.AddAutoMapper(typeof(UserMappingProfile));
+            services.AddAutoMapper(typeof(DictionaryMappingProfile));
             services.AddAutoMapper(typeof(SettingMappingProfile));
+            services.AddAutoMapper(typeof(JobMappingProfile));
+            services.AddAutoMapper(typeof(ResumeMappingProfile));
             return services;
         }
     }
