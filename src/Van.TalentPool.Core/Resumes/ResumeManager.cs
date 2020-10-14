@@ -1,5 +1,4 @@
-﻿using MediatR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -9,19 +8,16 @@ namespace Van.TalentPool.Resumes
 {
     public class ResumeManager : IDisposable
     {
-        private bool _disposed;
-        private readonly IMediator _mediator;
+        private bool _disposed; 
         public ResumeManager(IResumeStore resumeStore,
             IResumeAuditSettingStore resumeAuditSettingStore,
             IEnumerable<IResumeValidator> resumeValidators,
-            IResumeComparer resumeComparer,
-            IMediator mediator)
+            IResumeComparer resumeComparer )
         {
             ResumeStore = resumeStore;
             ResumeValidators = resumeValidators;
             ResumeComparer = resumeComparer;
-            ResumeAuditSettingStore = resumeAuditSettingStore;
-            _mediator = mediator;
+            ResumeAuditSettingStore = resumeAuditSettingStore; 
         }
         protected IResumeStore ResumeStore { get; }
         protected IResumeAuditSettingStore ResumeAuditSettingStore { get; }
@@ -165,12 +161,7 @@ namespace Van.TalentPool.Resumes
             resume.OwnerUserId = ownerUserId;
 
             await ResumeStore.UpdateAsync(resume, CancellationToken);
-            // 发布更换负责人事件
-            await _mediator.Publish(new ResumeAssignUserEvent()
-            {
-                ResumeId = resume.Id
-            }, CancellationToken);
-
+            
         }
 
         public void Dispose()

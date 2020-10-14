@@ -165,8 +165,8 @@
                                                 }
                                                 else
                                                 {@await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("分配负责人", "/Resume/Assign/" + item.Id, Pages.Resume_AssignUser, "dropdown-item"))
-                                                }
                                             }
+                                        }
                                             @if (item.InvestigationId.HasValue)
                                             {
                                                 <a href="/Investigation/View/@item.InvestigationId" class="dropdown-item">查看调查</a>
@@ -175,8 +175,8 @@
                                             @if (item.AuditStatus == AuditStatus.Complete && !string.IsNullOrEmpty(item.Name))//合适状态可以进行的操作
                                             {
                                                 if (item.OwnerUserId == UserIdentifier.UserId && !item.InvestigationId.HasValue)
-                                                {
-                                                    <a href="/Investigation/Create/@item.Id" class="dropdown-item">添加调查</a>
+                                                { 
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("添加调查", "/Investigation/Create/" + item.Id, Pages.Investigation_Create, "dropdown-item"))
                                                 }
                                                 if (item.OwnerUserId == UserIdentifier.UserId)
                                                 {
@@ -271,8 +271,8 @@
                 startDate: startDate,
                 endDate: endDate
             }, function (start, end, label) {
-                    $("input[name='StartTime']").val(start.format('YYYY/MM/DD HH:mm'));
-                    $("input[name='EndTime']").val(end.format('YYYY/MM/DD HH:mm'));
+                $("input[name='StartTime']").val(start.format('YYYY/MM/DD HH:mm'));
+                $("input[name='EndTime']").val(end.format('YYYY/MM/DD HH:mm'));
 
             });
             // 导出excel

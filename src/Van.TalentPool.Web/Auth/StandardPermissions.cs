@@ -24,7 +24,7 @@ namespace Van.TalentPool.Web.Auth
         public const string Configuration = "Pages.Configuration";
         public const string Configuration_SiteSetting = "Pages.Configuration.SiteSetting";
         public const string Configuration_UserSetting = "Pages.Configuration.UserSetting";
-        public const string Configuration_EmailSetting = "Pages.Configuration.EmailSetting"; 
+        public const string Configuration_EmailSetting = "Pages.Configuration.EmailSetting";
         public const string Configuration_Dictionary = "Pages.Configuration.Dictionary";
 
 
@@ -36,6 +36,13 @@ namespace Van.TalentPool.Web.Auth
         public const string Resume_Audit = "Pages.Resume.AssignUser";
         public const string Resume_SendEmail = "Pages.Resume.SendEmail";
         public const string Resume_AuditSetting = "Pages.Resume.AuditSetting";
+
+        public const string Investigation = "Pages.Investigation";
+        public const string Investigation_Create = "Pages.Investigation.Create";
+        public const string Investigation_Edit = "Pages.Investigation.Edit";
+        public const string Investigation_Delete = "Pages.Investigation.Delete";
+        public const string Investigation_FinshOrRestore = "Pages.Investigation.FinshOrRestore";
+        public const string Investigation_Audit = "Pages.Investigation.Audit";
 
 
     }
@@ -63,18 +70,26 @@ namespace Van.TalentPool.Web.Auth
             configuration.AddChild(Pages.Configuration_EmailSetting, "邮件配置");
             configuration.AddChild(Pages.Configuration_Dictionary, "数据字典");
 
-            var resume= new PermissionDefinition(Pages.Resume, "简历管理", "拥有简历库的管理权限。");
+            var resume = new PermissionDefinition(Pages.Resume, "简历管理", "拥有简历库的管理权限。");
             resume.AddChild(Pages.Resume_Create, "创建简历");
-            resume.AddChild(Pages.Resume_Edit,"编辑简历"); 
-            resume.AddChild(Pages.Resume_Delete, "删除简历"); 
-            resume.AddChild(Pages.Resume_AssignUser ,"分配负责人"); 
-            resume.AddChild(Pages.Resume_SendEmail ,"发送邮件");
-            resume.AddChild(Pages.Resume_AuditSetting ,"审核配置");
+            resume.AddChild(Pages.Resume_Edit, "编辑简历");
+            resume.AddChild(Pages.Resume_Delete, "删除简历");
+            resume.AddChild(Pages.Resume_AssignUser, "分配负责人");
+            resume.AddChild(Pages.Resume_SendEmail, "发送邮件");
+            resume.AddChild(Pages.Resume_AuditSetting, "审核配置");
+
+            var investigation = new PermissionDefinition(Pages.Investigation, "意向调查", "拥有意向调查的管理权限。");
+            investigation.AddChild(Pages.Investigation_Create, "创建意向调查");
+            investigation.AddChild(Pages.Investigation_Edit, "编辑意向调查");
+            investigation.AddChild(Pages.Investigation_Delete, "删除意向调查");
+            investigation.AddChild(Pages.Investigation_FinshOrRestore, "结束调查/恢复调查");
+            investigation.AddChild(Pages.Investigation_Audit, "审核调查");
 
             return new[] {
             authorization,
             configuration,
-            resume
+            resume,
+            investigation
             };
         }
     }

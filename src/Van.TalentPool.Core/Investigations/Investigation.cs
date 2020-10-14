@@ -17,10 +17,7 @@ namespace Van.TalentPool.Investigations
         /// 调查日期（默认为创建时间，但当电话未接通或者考虑情况下，可以通过更新该字段，来更新到当日的调查记录列表）
         /// </summary>
         public DateTime InvestigateDate { get; set; }
-        /// <summary>
-        /// 处理人
-        /// </summary>
-        public virtual Guid OwnerUserId { get; set; }
+      
         /// <summary>
         /// 调查状态
         /// </summary>

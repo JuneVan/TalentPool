@@ -1,4 +1,3 @@
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -100,7 +99,7 @@ namespace Van.TalentPool.Web
             services.AddTransient<ResumeManager>();
             services.AddTransient<IResumeAuditSettingStore, ResumeAuditSettingStore>();
             services.AddTransient<ResumeAuditSettingManager>();
-            services.AddMediatR(typeof(ResumeAssignUserEvent).Assembly);
+            
             // infrastructure
             services.AddScoped<INotifier, Notifier>();
             services.AddTransient<IEmailSender, EmailSender>();
