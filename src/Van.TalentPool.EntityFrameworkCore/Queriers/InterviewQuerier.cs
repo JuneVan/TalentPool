@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Van.TalentPool.Application;
@@ -50,6 +51,40 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                 .Take(input.PageSize)
                  .ToListAsync();
             return new PaginationOutput<InterviewDto>(totalSize, interviews);
+        }
+
+        public async Task<List<InterviewMonthyDto>> GetMonthyInterviewsAsync(DateTime startTime, DateTime endTime)
+        {
+            var query = from a in _context.Interviews
+                        where a.CreationTime >= startTime && a.CreationTime <= endTime
+                        select new InterviewMonthyDto()
+                        {
+                            CreatorUserId = a.CreatorUserId
+                        };
+            return await query.ToListAsync();
+        }
+
+        public async Task<List<UnfinshInterviewDto>> GetUnfinshInterviewsAsync(Guid? creatorUserId)
+        {
+            var query = from a in _context.Interviews
+                        join b in _context.Resumes on a.ResumeId equals b.Id
+                        join d in _context.Jobs on b.JobId equals d.Id
+                        join e in _context.Users on a.CreatorUserId equals e.Id
+                        orderby a.AppointmentTime
+                        where a.Status == InterviewStatus.None
+                        select new UnfinshInterviewDto()
+                        {
+                            Id = a.Id,
+                            Name = a.Name,
+                            AppointmentTime = a.AppointmentTime,
+                            JobName = d.Title,
+                            PhoneNumber = b.PhoneNumber,
+                            CreatorUserId = a.CreatorUserId,
+                            CreatorUserName = e.FullName,
+                            Status = a.Status
+                        };
+
+            return await query.ToListAsync();
         }
     }
 }

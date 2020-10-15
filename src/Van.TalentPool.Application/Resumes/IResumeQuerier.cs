@@ -9,5 +9,8 @@ namespace Van.TalentPool.Application.Resumes
         Task<PaginationOutput<ResumeDto>> GetListAsync(QueryResumeInput input);
         Task<ResumeDetailDto> GetResumeAsync(Guid id);
         Task<List<ResumeAuditRecordDto>> GetResumeAuditRecordsAsync(Guid resumeId);
+
+        Task<List<MonthlyResumeDto>> GetMonthlyResumesAsync(DateTime startTime, DateTime endTime);
+        Task<List<UncompleteResumeDto>> GetUncompleteResumesAsync(Guid? ownerUserId);
     }
 }

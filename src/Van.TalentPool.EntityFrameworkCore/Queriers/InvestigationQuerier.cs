@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Van.TalentPool.Application;
@@ -103,6 +104,23 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                             LastModifierUserName = fff != null ? fff.FullName : string.Empty
                         };
             return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<List<InvestigationMonthyDto>> GetMonthyInvestigationsAsync(DateTime startTime, DateTime endTime)
+        {
+            var query = from a in _context.Investigations
+                        join b in _context.Resumes on a.ResumeId equals b.Id
+                        join c in _context.Users on b.OwnerUserId equals c.Id
+                        where a.CreationTime >= startTime && a.CreationTime <= endTime
+                        select new InvestigationMonthyDto()
+                        {
+                            OwnerUserId = b.OwnerUserId,
+                            OwnerUserName = c.FullName,
+                            CreationTime = a.CreationTime,
+                            AcceptTravelStatus = a.AcceptTravelStatus,
+                            IsConnected = a.IsConnected
+                        };
+            return await query.ToListAsync();
         }
     }
 }

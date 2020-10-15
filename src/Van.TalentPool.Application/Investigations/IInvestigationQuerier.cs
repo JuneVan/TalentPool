@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Van.TalentPool.Application.Investigations
@@ -9,5 +10,7 @@ namespace Van.TalentPool.Application.Investigations
         Task<PaginationOutput<InvestigationDto>> GetListAsync(QueryInvestigaionInput input);
         //详情
         Task<InvestigationDetailDto> GetInvestigationAsync(Guid id);
+
+        Task<List<InvestigationMonthyDto>> GetMonthyInvestigationsAsync(DateTime startTime, DateTime endTime);
     }
 }
