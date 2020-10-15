@@ -3,7 +3,7 @@ using Van.TalentPool.Resumes;
 
 namespace Van.TalentPool.Application.Resumes
 {
-    public class MonthlyResumeDto
+    public class StatisticResumeDto
     {
         public Guid CreatorUserId { get; set; }
         public string CreatorUserName { get; set; }

@@ -3,7 +3,7 @@ using Van.TalentPool.Investigations;
 
 namespace Van.TalentPool.Application.Investigations
 {
-    public  class InvestigationMonthyDto
+    public  class StatisticInvestigationDto
     { 
         public DateTime CreationTime { get; set; }
         public Guid OwnerUserId { get; set; } 

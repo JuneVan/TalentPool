@@ -2,7 +2,7 @@
 
 namespace Van.TalentPool.Application.Interviews
 {
-    public class InterviewMonthyDto
+    public class StatisticInterviewDto
     {
         public Guid CreatorUserId { get; set; }
     }

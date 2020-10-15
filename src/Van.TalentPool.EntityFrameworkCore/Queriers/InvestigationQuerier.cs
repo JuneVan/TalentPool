@@ -106,13 +106,13 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<List<InvestigationMonthyDto>> GetMonthyInvestigationsAsync(DateTime startTime, DateTime endTime)
+        public async Task<List<StatisticInvestigationDto>> GetStatisticInvestigationsAsync(DateTime startTime, DateTime endTime)
         {
             var query = from a in _context.Investigations
                         join b in _context.Resumes on a.ResumeId equals b.Id
                         join c in _context.Users on b.OwnerUserId equals c.Id
                         where a.CreationTime >= startTime && a.CreationTime <= endTime
-                        select new InvestigationMonthyDto()
+                        select new StatisticInvestigationDto()
                         {
                             OwnerUserId = b.OwnerUserId,
                             OwnerUserName = c.FullName,
@@ -120,6 +120,39 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                             AcceptTravelStatus = a.AcceptTravelStatus,
                             IsConnected = a.IsConnected
                         };
+            return await query.ToListAsync();
+        }
+
+        public async Task<List<ReportInvestigationDto>> GetReportInvestigationsAsync(DateTime date)
+        {
+            var query = from a in _context.Investigations
+                        join b in _context.Resumes on a.ResumeId equals b.Id
+                        join c in _context.Jobs on b.JobId equals c.Id
+                        join d in _context.Users on b.OwnerUserId equals d.Id
+                        where a.Status != InvestigationStatus.NoStart && a.InvestigateDate == date
+                        orderby a.CreationTime, a.InvestigateDate
+                        select new ReportInvestigationDto()
+                        {
+
+                            Id = a.Id,
+                            ResumeId = a.ResumeId,
+                            Name = a.Name,
+                            PhoneNumber = b.PhoneNumber,
+                            JobName = c.Title,
+                            PlatformName = b.PlatformName,
+                            InvestigateDate = a.InvestigateDate,
+                            CreationTime = a.CreationTime,
+                            AcceptTravelStatus = a.AcceptTravelStatus,
+                            CityOfResidence = a.CityOfResidence,
+                            CityOfDomicile = a.CityOfDomicile,
+                            ExpectedInterviewDate = a.ExpectedInterviewDate,
+                            ExpectedPhoneInterviewDate = a.ExpectedPhoneInterviewDate,
+                            IsConnected = a.IsConnected,
+                            IsQualified = a.IsQualified,
+                            OwnerUserName = d.FullName,
+                            Status = a.Status
+                        };
+
             return await query.ToListAsync();
         }
     }

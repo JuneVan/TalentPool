@@ -8,7 +8,7 @@ namespace Van.TalentPool.Application.Interviews
     {
         Task<PaginationOutput<InterviewDto>> GetListAsync(QueryInterviewInput input);
 
-        Task<List<InterviewMonthyDto>> GetMonthyInterviewsAsync(DateTime startTime, DateTime endTime);
+        Task<List<StatisticInterviewDto>> GetStatisticInterviewsAsync(DateTime startTime, DateTime endTime);
 
         Task<List<UnfinshInterviewDto>> GetUnfinshInterviewsAsync(Guid?creatorUserId);
     }

@@ -10,7 +10,9 @@ namespace Van.TalentPool.Application.Investigations
         Task<PaginationOutput<InvestigationDto>> GetListAsync(QueryInvestigaionInput input);
         //详情
         Task<InvestigationDetailDto> GetInvestigationAsync(Guid id);
-
-        Task<List<InvestigationMonthyDto>> GetMonthyInvestigationsAsync(DateTime startTime, DateTime endTime);
+        // 统计数据
+        Task<List<StatisticInvestigationDto>> GetStatisticInvestigationsAsync(DateTime startTime, DateTime endTime);
+        //每日报告
+        Task<List<ReportInvestigationDto>> GetReportInvestigationsAsync(DateTime date);
     }
 }

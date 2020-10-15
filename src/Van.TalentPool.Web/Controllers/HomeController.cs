@@ -61,7 +61,7 @@ namespace Van.TalentPool.Web.Controllers
             var todayInvestigationData = new TodayInvestigationData();
 
             // 简历
-            var mothlyResumes = await _resumeQuerier.GetMonthlyResumesAsync(thisMonthStartTime, thisMonthEndTime);
+            var mothlyResumes = await _resumeQuerier.GetStatisticResumesAsync(thisMonthStartTime, thisMonthEndTime, null);
             // 
             monthlyIncreaseData.NewResumeCount = mothlyResumes.Count(w => w.CreatorUserId == userId);
             monthlyIncreaseData.NewResumeTotalCount = mothlyResumes.Count;
@@ -75,7 +75,7 @@ namespace Van.TalentPool.Web.Controllers
 
 
             // 调查
-            var monthlyInvestigations = await _investigationQuerier.GetMonthyInvestigationsAsync(thisMonthStartTime, thisMonthEndTime);
+            var monthlyInvestigations = await _investigationQuerier.GetStatisticInvestigationsAsync(thisMonthStartTime, thisMonthEndTime);
 
             monthlyIncreaseData.NewInvestigationCount = monthlyInvestigations.Count(w => w.OwnerUserId == userId);
             monthlyIncreaseData.NewInvestigationTotalCount = monthlyInvestigations.Count;
@@ -92,7 +92,7 @@ namespace Van.TalentPool.Web.Controllers
             model.TodayInvestigationData = todayInvestigationData;
 
             // 预约
-            var monthlyInterviews = await _interviewQuerier.GetMonthyInterviewsAsync(startTime, endTime);
+            var monthlyInterviews = await _interviewQuerier.GetStatisticInterviewsAsync(startTime, endTime);
 
             monthlyIncreaseData.NewInterviewCount = monthlyInterviews.Count(w => w.CreatorUserId == userId);
             monthlyIncreaseData.NewInterviewTotalCount = monthlyInterviews.Count;
@@ -282,7 +282,7 @@ namespace Van.TalentPool.Web.Controllers
                 var todoTasks = await _interviewQuerier.GetUnfinshInterviewsAsync(null);
                 model.InterviewTasks = todoTasks;
             }
-            
+
             #endregion
 
             return View(model);

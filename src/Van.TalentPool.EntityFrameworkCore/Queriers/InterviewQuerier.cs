@@ -53,11 +53,11 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
             return new PaginationOutput<InterviewDto>(totalSize, interviews);
         }
 
-        public async Task<List<InterviewMonthyDto>> GetMonthyInterviewsAsync(DateTime startTime, DateTime endTime)
+        public async Task<List<StatisticInterviewDto>> GetStatisticInterviewsAsync(DateTime startTime, DateTime endTime)
         {
             var query = from a in _context.Interviews
                         where a.CreationTime >= startTime && a.CreationTime <= endTime
-                        select new InterviewMonthyDto()
+                        select new StatisticInterviewDto()
                         {
                             CreatorUserId = a.CreatorUserId
                         };
@@ -83,7 +83,8 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                             CreatorUserName = e.FullName,
                             Status = a.Status
                         };
-
+            if (creatorUserId.HasValue)
+                query = query.Where(w => w.CreatorUserId == creatorUserId);
             return await query.ToListAsync();
         }
     }

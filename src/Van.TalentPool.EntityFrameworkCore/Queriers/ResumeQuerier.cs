@@ -131,12 +131,12 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
             return await query.ToListAsync();
         }
 
-        public async Task<List<MonthlyResumeDto>> GetMonthlyResumesAsync(DateTime startTime, DateTime endTime)
+        public async Task<List<StatisticResumeDto>> GetStatisticResumesAsync(DateTime startTime, DateTime endTime, AuditStatus? auditStatus)
         {
             var query = from a in _context.Resumes
                         join b in _context.Users on a.CreatorUserId equals b.Id
                         where a.CreationTime >= startTime && a.CreationTime <= endTime
-                        select new MonthlyResumeDto()
+                        select new StatisticResumeDto()
                         {
                             OwnerUserId = a.OwnerUserId,
                             CreatorUserId = a.CreatorUserId,
@@ -145,7 +145,8 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                             AuditStatus = a.AuditStatus,
                             CreatorUserPhoto = b.Photo
                         };
-
+            if (auditStatus.HasValue)
+                query = query.Where(w => w.AuditStatus == auditStatus);
             return await query.ToListAsync();
         }
 
@@ -173,6 +174,8 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                             Status = bbb == null ? (InvestigationStatus?)null : bbb.Status,
                             InvestigationDate = bbb == null ? (DateTime?)null : bbb.InvestigateDate,
                         };
+            if (ownerUserId.HasValue)
+                query = query.Where(w => w.OwnerUserId == ownerUserId);
             return await query.ToListAsync();
         }
     }
