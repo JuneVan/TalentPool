@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Van.TalentPool.Application;
@@ -39,7 +40,8 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                             AuditStatus = a.AuditStatus,
                             PlatformName = a.PlatformName,
                             PlatformId = a.PlatformId,
-                            Enable = a.Enable
+                            Enable = a.Enable,
+                            EnableReason = a.EnableReason
                         };
 
             if (!string.IsNullOrEmpty(input.Keyword))
@@ -100,8 +102,31 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                             LastModifierUserName = e.FullName
                         };
 
-            return await query.FirstOrDefaultAsync();
+            var resume = await query.FirstOrDefaultAsync();
+            resume.ResumeAuditRecords = await GetResumeAuditRecordsAsync(id);
+            return resume;
 
+        }
+
+        public async Task<List<ResumeAuditRecordDto>> GetResumeAuditRecordsAsync(Guid resumeId)
+        {
+            if (resumeId == null)
+                throw new ArgumentNullException(nameof(resumeId));
+            var query = from a in _context.ResumeAuditRecords
+                        join b in _context.Users on a.CreatorUserId equals b.Id
+                        where a.ResumeId == resumeId
+                        select new ResumeAuditRecordDto()
+                        {
+
+                            Id = a.Id,
+                            CreatorUserId = a.CreatorUserId,
+                            CreationTime = a.CreationTime,
+                            CreatorUserName = b.FullName,
+                            Passed = a.Passed,
+                            Remark = a.Remark
+                        };
+
+            return await query.ToListAsync();
         }
     }
 }

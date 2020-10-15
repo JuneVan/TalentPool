@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\lib\jquery-ui\ui\" />
+    <Folder Include="wwwroot\lib-ext\jquery-ui\ui\" />
   </ItemGroup>
 
 </Project>

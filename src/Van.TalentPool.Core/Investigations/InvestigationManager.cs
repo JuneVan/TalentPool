@@ -66,7 +66,7 @@ namespace Van.TalentPool.Investigations
                 throw new InvalidOperationException("意向调查还未开始，无法进行审核。");
 
             investigation.IsQualified = isQualified;
-            investigation.Remark = remark;
+            investigation.QualifiedRemark = remark;
 
             await InvestigaionStore.UpdateAsync(investigation, CancellationToken);
         }

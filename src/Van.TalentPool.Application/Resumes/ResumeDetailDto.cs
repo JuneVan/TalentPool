@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Van.TalentPool.Resumes;
 
 namespace Van.TalentPool.Application.Resumes
@@ -24,6 +25,7 @@ namespace Van.TalentPool.Application.Resumes
         public string Email { get; set; }
         public string Description { get; set; }
         public string LastModifierUserName { get; set; }
-        public DateTime? LastModificationTime { get; set; }
+        public DateTime? LastModificationTime { get; set; } 
+        public List<ResumeAuditRecordDto> ResumeAuditRecords { get; set; }
     }
 }

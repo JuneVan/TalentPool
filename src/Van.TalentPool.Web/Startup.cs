@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Van.TalentPool.Application.Dictionaries;
+using Van.TalentPool.Application.Investigations;
 using Van.TalentPool.Application.Jobs;
 using Van.TalentPool.Application.Resumes;
 using Van.TalentPool.Application.Roles;
@@ -21,6 +22,7 @@ using Van.TalentPool.Infrastructure;
 using Van.TalentPool.Infrastructure.Message.Email;
 using Van.TalentPool.Infrastructure.Message.Sms;
 using Van.TalentPool.Infrastructure.Notify;
+using Van.TalentPool.Investigations;
 using Van.TalentPool.Jobs;
 using Van.TalentPool.Navigations;
 using Van.TalentPool.Permissions;
@@ -99,7 +101,9 @@ namespace Van.TalentPool.Web
             services.AddTransient<ResumeManager>();
             services.AddTransient<IResumeAuditSettingStore, ResumeAuditSettingStore>();
             services.AddTransient<ResumeAuditSettingManager>();
-            
+            services.AddTransient<IInvestigationStore, InvestigationStore>();
+            services.AddTransient<InvestigationManager>();
+
             // infrastructure
             services.AddScoped<INotifier, Notifier>();
             services.AddTransient<IEmailSender, EmailSender>();
@@ -112,6 +116,7 @@ namespace Van.TalentPool.Web
             services.AddTransient<IDictionaryQuerier, DictionaryQuerier>();
             services.AddTransient<IJobQuerier, JobQuerier>();
             services.AddTransient<IResumeQuerier, ResumeQuerier>();
+            services.AddTransient<IInvestigationQuerier, InvestigationQuerier>();
 
             // automapper
             services.AddMappingProfiles();

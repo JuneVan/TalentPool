@@ -1,0 +1,25 @@
+﻿@model Van.TalentPool.Web.Models.InvestigationViewModels.FinshOrRestoreModel
+@{ ViewData["Header"] = "面试调查管理";
+                ViewData["Title"] = "恢复一条调查记录 - " + Model.Name; }
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">
+                    操作提示
+                </h3>
+            </div>
+            <form role="form" asp-action="Restore" method="post">
+                <input type="hidden" asp-for="Id">
+                <div class="card-body">
+                    <i class="fas fa-question-circle fa-2x"></i> 请问是否确定重新恢复对 "@Model.Name" 调查记录吗？
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-danger">确定</button>
+                    <a asp-action="List" class="btn btn-default">返回列表</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

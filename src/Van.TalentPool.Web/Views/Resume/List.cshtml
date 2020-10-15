@@ -57,7 +57,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>是否合适</label>
-                        <input type="hidden" value="" name="AuditStatus">
+                        <input type="hidden" value="@Model.Pagination.Parameter.AuditStatus" name="AuditStatus">
                         <select class="form-control" id="auditStatusSelect" asp-items="@Html.GetEnumSelectList<AuditStatus>()">
                             <option value="">=请选择状态=</option>
                         </select>
@@ -67,8 +67,8 @@
                     <div class="form-group">
                         <label>创建时间</label>
                         <input type="text" class="form-control" placeholder="请选择创建时间" id="createdDaterangepicker">
-                        <input type="hidden" value="" name="StartTime">
-                        <input type="hidden" value="" name="EndTime">
+                        <input type="hidden" value="@Model.Pagination.Parameter.StartTime" name="StartTime">
+                        <input type="hidden" value="@Model.Pagination.Parameter.EndTime" name="EndTime">
                     </div>
                 </div>
 
@@ -145,7 +145,7 @@
                                     }
                                     else
                                     {
-                                        <span class="badge badge-danger">无效</span>
+                                        <span class="badge badge-danger" title="无效，@item.EnableReason">无效</span>
                                     }
                                 </td>
 
@@ -156,7 +156,6 @@
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="group-dropdown">
                                             @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Resume/View/" + item.Id, Pages.Resume, "dropdown-item"))
-                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("审批", "/Resume/Audit/" + item.Id, Pages.Resume_Audit, "dropdown-item"))
                                             @if (item.AuditStatus == AuditStatus.Complete)//合适状态可以进行的操作
                                             {
                                                 if (!string.IsNullOrEmpty(item.OwnerUserName))
@@ -172,15 +171,16 @@
                                                 <a href="/Investigation/View/@item.InvestigationId" class="dropdown-item">查看调查</a>
                                             }
 
-                                            @if (item.AuditStatus == AuditStatus.Complete && !string.IsNullOrEmpty(item.Name))//合适状态可以进行的操作
+
+                                            @if (item.AuditStatus == AuditStatus.Complete && !string.IsNullOrEmpty(item.Name) && item.Enable)//合适状态可以进行的操作
                                             {
                                                 if (item.OwnerUserId == UserIdentifier.UserId && !item.InvestigationId.HasValue)
-                                                { 
+                                                {
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("添加调查", "/Investigation/Create/" + item.Id, Pages.Investigation_Create, "dropdown-item"))
                                                 }
                                                 if (item.OwnerUserId == UserIdentifier.UserId)
                                                 {
-                                                    <a href="/Interview/Create/@item.Id" class="dropdown-item">添加面试预约</a>
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("添加面试预约", "/Interview/Create/" + item.Id, Pages.Interview_Create, "dropdown-item"))
                                                 }
                                             }
                                             @if (item.AuditStatus == AuditStatus.Unpassed || item.AuditStatus == AuditStatus.NoStart)
@@ -188,11 +188,20 @@
                                                 //不合格状态或未处理状态可以删除
                                                 <a href="/Resume/Delete/@item.Id" class="dropdown-item">删除</a>
                                             }
-                                            <a href="/Resume/Edit/@item.Id" class="dropdown-item">编辑</a>
-                                            @if (item.AuditStatus == AuditStatus.Complete)
+                                            @if (item.Enable)
                                             {
-                                                <a href="/Resume/SendEmail/@item.Id" class="dropdown-item">发送面试邀请</a>
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("审批", "/Resume/Audit/" + item.Id, Pages.Resume_Audit, "dropdown-item"))
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Resume/Edit/" + item.Id, Pages.Resume_Edit, "dropdown-item"))
+                                                @if (item.AuditStatus == AuditStatus.Complete)
+                                                {
+                                                    <a href="/Resume/SendEmail/@item.Id" class="dropdown-item">发送面试邀请</a>
+                                                }
+                                                @if (!item.InvestigationId.HasValue)
+                                                {
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("设置无效", "/Resume/Trash/" + item.Id, Pages.Resume_Edit, "dropdown-item"))
+                                                } 
                                             }
+
                                         </div>
                                     </div>
 

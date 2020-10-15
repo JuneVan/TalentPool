@@ -18,7 +18,7 @@ namespace Van.TalentPool.EntityFrameworkCore.EntityTypeConfigurations
             builder.Property(p => p.CityOfResidence).HasMaxLength(128);
             builder.Property(p => p.CityOfDomicile).HasMaxLength(128);
             builder.Property(p => p.NotAcceptTravelReason).HasMaxLength(256);
-            builder.Property(p => p.Remark).HasMaxLength(512);
+            builder.Property(p => p.QualifiedRemark).HasMaxLength(512);
 
             builder.HasQueryFilter(f => !f.IsDeleted);//未删除的数据
         }

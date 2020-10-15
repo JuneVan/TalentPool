@@ -15,7 +15,7 @@
             if (record.Passed.HasValue)
             {
                 <div class="time-label">
-                    <span class="bg-gray-light">@record.CreatedTime.Value.ToString("yyyy-MM-dd HH:mm:ss")</span>
+                    <span class="bg-gray-light">@record.CreationTime.Value.ToString("yyyy-MM-dd HH:mm:ss")</span>
                 </div>
                 <div>
                     @if (record.Passed.Value)
@@ -27,7 +27,7 @@
                         <i class="fas fa-window-close bg-danger"></i>
                     }
                     <div class="timeline-item">
-                        <h3 class="timeline-header">@record.CreatedName</h3>
+                        <h3 class="timeline-header">@record.CreatorUserName</h3>
                         <div class="timeline-body">
 
                             @if (record.Passed.Value)
@@ -40,7 +40,7 @@
                             }
                             <p>@record.Remark</p>
                             <p>
-                                @if (UserIdentifier.UserId == record.CreatedBy)
+                                @if (UserIdentifier.UserId == record.CreatorUserId)
                                 {
                                     <a href="/Resume/CancelAudit?auditRecordId=@record.Id" class="btn btn-danger">撤销记录</a>
                                 }
@@ -54,7 +54,7 @@
                 <div>
                     <i class="far fa-dot-circle bg-gray"></i>
                     <div class="timeline-item">
-                        <h3 class="timeline-header">@record.CreatedName</h3>
+                        <h3 class="timeline-header">@record.CreatorUserName</h3>
                         <div class="timeline-body">
                             @if (!string.IsNullOrEmpty(record.Remark))
                             {

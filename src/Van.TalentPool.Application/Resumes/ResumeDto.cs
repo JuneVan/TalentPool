@@ -17,6 +17,7 @@ namespace Van.TalentPool.Application.Resumes
         public Guid? InvestigationId { get; set; }
         public AuditStatus AuditStatus { get; set; }
         public bool Enable { get; set; }
+        public string EnableReason { get; set; }
         public string PlatformName { get; set; }
         public string PlatformId { get; set; }  
     }

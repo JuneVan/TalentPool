@@ -118,13 +118,16 @@ namespace Van.TalentPool.Web.Controllers
                 _ = Mapper.Map(model, resume);
 
                 resume.KeyMaps = new List<ResumeKeyMap>();
-                var keywords = model.Keywords.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                foreach (var keyword in keywords)
+                if (!string.IsNullOrEmpty(model.Keywords))
                 {
-                    resume.KeyMaps.Add(new ResumeKeyMap()
+                    var keywords = model.Keywords.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var keyword in keywords)
                     {
-                        Keyword = keyword
-                    });
+                        resume.KeyMaps.Add(new ResumeKeyMap()
+                        {
+                            Keyword = keyword
+                        });
+                    }
                 }
                 await _resumeManager.UpdateAsync(resume);
                 Notifier.Success("你已成功编辑了一条简历记录。");
@@ -210,7 +213,7 @@ namespace Van.TalentPool.Web.Controllers
 
             var model = new CreateAuditViewModel();
             //审批记录
-            var auditedRecords = await _resumeManager.GetAuditRecordsByResumeIdAsync(id);
+            var auditedRecords = await _resumeQuerier.GetResumeAuditRecordsAsync(id);
             //审批设置
             var auditedSettings = await _resumeAuditSettingManager.GetAuditSettingsAsync();
 
@@ -238,7 +241,7 @@ namespace Van.TalentPool.Web.Controllers
                 {
                     model.AuditRecords.Add(new AuditRecordModel()
                     {
-                        CreatedName = item.UserName
+                        CreatorUserName = item.UserName
                     });
                 }
             }
@@ -363,11 +366,11 @@ namespace Van.TalentPool.Web.Controllers
         #region 简历责任人分配
         [PermissionCheck(Pages.Resume_AssignUser)]
         public async Task<IActionResult> Assign(Guid id)
-        { 
+        {
             var resume = await _resumeManager.FindByIdAsync(id);
             if (resume == null)
-                return NotFound(id); 
-            var model = Mapper.Map<AssignUserViewModel>(resume);  
+                return NotFound(id);
+            var model = Mapper.Map<AssignUserViewModel>(resume);
             return await BuildAssignDisplayAsync(model);
         }
         [PermissionCheck(Pages.Resume_AssignUser)]
@@ -398,7 +401,7 @@ namespace Van.TalentPool.Web.Controllers
 
                 return RedirectToAction(nameof(List));
             }
-            return await BuildAssignDisplayAsync(model); 
+            return await BuildAssignDisplayAsync(model);
         }
         private async Task<IActionResult> BuildAssignDisplayAsync(AssignUserViewModel model)
         {
@@ -414,6 +417,33 @@ namespace Van.TalentPool.Web.Controllers
 
         #endregion
 
+        #region 有效性
+
+        public async Task<IActionResult> Trash(Guid id)
+        {
+            var resume = await _resumeManager.FindByIdAsync(id);
+            if (resume == null)
+                return NotFound(id);
+            return View(Mapper.Map<TrashResumeViewModel>(resume));
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Trash(TrashResumeViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var resume = await _resumeManager.FindByIdAsync(model.Id);
+                if (resume == null)
+                    return NotFound(model.Id);
+
+                await _resumeManager.TrashAsync(resume, model.EnableReason);
+                Notifier.Success($"你成功将{resume.Name}的简历设置为无效。");
+                return RedirectToAction(nameof(List));
+            }
+
+            return View(model);
+        }
+        #endregion
 
         private IActionResult NotFound(Guid id)
         {

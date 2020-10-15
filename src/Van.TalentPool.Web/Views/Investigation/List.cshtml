@@ -1,4 +1,4 @@
-﻿@using Van.TalentPool.Investigations 
+﻿@using Van.TalentPool.Investigations
 @inject IUserIdentifier UserIdentifier
 
 @model Van.TalentPool.Web.Models.InvestigationViewModels.QueryInvestigationViewModel
@@ -38,16 +38,16 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>负责人</label>
-                        <input type="hidden" class="form-control" value="" readonly name="HandledBy" >
+                        <input type="hidden" class="form-control" value="" readonly name="HandledBy">
                         <select class="form-control" id="handledBySelect" asp-items="@Model.Users">
-                            <option value="@Guid.Empty">=请选择创建人=</option> 
+                            <option value="@Guid.Empty">=请选择创建人=</option>
                         </select>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>调查状态</label>
-                        <input type="hidden" class="form-control" value="@ViewBag.Parameter.Status" readonly name="Status">
+                        <input type="hidden" class="form-control" value="@Model.Pagination.Parameter.Status" readonly name="Status">
                         <select class="form-control" id="statusSelect" asp-items="@Html.GetEnumSelectList<InvestigationStatus>()">
                             <option value="">=请选择调查状态=</option>
                         </select>
@@ -56,8 +56,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>调查时间</label>
-                        <input type="hidden" class="form-control" value="@ViewBag.Parameter.StartTime" readonly name="StartTime">
-                        <input type="hidden" class="form-control" value="@ViewBag.Parameter.EndTime" readonly name="EndTime">
+                        <input type="hidden" class="form-control" value="@Model.Pagination.Parameter.StartTime" readonly name="StartTime">
+                        <input type="hidden" class="form-control" value="@Model.Pagination.Parameter.EndTime" readonly name="EndTime">
                         <input type="text" class="form-control" id="createdDaterangepicker">
                     </div>
                 </div>
@@ -191,8 +191,9 @@
                                             <i class="fas fa-cog"></i> 操作菜单
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="group-dropdown">
-                                            <a href="/Investigation/View/@item.Id" class="dropdown-item" target="_blank">查看调查</a>
-                                            <a href="/Resume/View/@item.ResumeId" class="dropdown-item">查看简历</a>
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看调查", "/Investigation/View/" + item.Id, Pages.Investigation, "dropdown-item"))
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看简历", "/Resume/View/" + item.ResumeId, Pages.Resume, "dropdown-item"))
+
                                             @if (!item.IsQualified.HasValue || !item.IsQualified.Value)
                                             {
                                                 @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("标记合适", "/Investigation/Audit/" + item.Id, Pages.Investigation_Audit, "dropdown-item"))
@@ -205,13 +206,8 @@
                                             {
                                                 if (item.OwnerUserId == UserIdentifier.UserId)
                                                 {
-                                                    <a href="/Investigation/Edit/@item.Id" class="dropdown-item">调查</a>
-                                                    <a href="/Evaluation/SelectExamine?InvestigationId=@item.Id" class="dropdown-item">技术评测</a>
-                                                    <a href="/Investigation/Finsh/@item.Id" class="dropdown-item">结束调查</a>
-                                                }
-                                                else
-                                                {
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("调查", "/Investigation/Edit/" + item.Id, Pages.Investigation_Edit, "dropdown-item"))
+                                                    <a href="/Evaluation/SelectExamine?InvestigationId=@item.Id" class="dropdown-item">技术评测</a>
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("结束调查", "/Investigation/Finsh/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))
                                                 }
 
@@ -224,13 +220,8 @@
                                             {
                                                 if (item.OwnerUserId == UserIdentifier.UserId)
                                                 {
-                                                    <a href="/Investigation/Delete/@item.Id" class="dropdown-item" target="_blank">删除</a>
-                                                }
-                                                else
-                                                {
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("删除", "/Investigation/Delete/" + item.Id, Pages.Investigation_Delete, "dropdown-item"))
-                                                }
-
+                                                } 
                                             }
                                         </div>
                                     </div>

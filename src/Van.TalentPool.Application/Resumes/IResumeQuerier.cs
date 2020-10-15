@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Van.TalentPool.Application.Resumes
@@ -7,5 +8,6 @@ namespace Van.TalentPool.Application.Resumes
     {
         Task<PaginationOutput<ResumeDto>> GetListAsync(QueryResumeInput input);
         Task<ResumeDetailDto> GetResumeAsync(Guid id);
+        Task<List<ResumeAuditRecordDto>> GetResumeAuditRecordsAsync(Guid resumeId);
     }
 }

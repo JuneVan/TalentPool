@@ -12,8 +12,7 @@ namespace Van.TalentPool.Resumes
         Task<Resume> FindByPlatformAsync(string platformId, CancellationToken cancellationToken);
         Task<Resume> CreateAsync(Resume resume, CancellationToken cancellationToken);
         Task<Resume> UpdateAsync(Resume resume, CancellationToken cancellationToken);
-        Task<Resume> DeleteAsync(Resume resume, CancellationToken cancellationToken);
-        Task<IList<ResumeAuditRecord>> GetAuditRecordsByResumeIdAsync(Guid resumeId, CancellationToken cancellationToken);
+        Task<Resume> DeleteAsync(Resume resume, CancellationToken cancellationToken); 
         Task<ResumeAuditRecord> GetAuditRecordByIdAsync(Guid auditRecordId, CancellationToken cancellationToken);
         Task<ResumeAuditRecord> AddAuditRecordAsync(Resume resume, ResumeAuditRecord auditRecord, CancellationToken cancellationToken);
         Task<ResumeAuditRecord> RemoveAuditRecordAsync(Resume resume, ResumeAuditRecord auditRecord, CancellationToken cancellationToken);

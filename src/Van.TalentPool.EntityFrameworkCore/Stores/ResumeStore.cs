@@ -80,7 +80,9 @@ namespace Van.TalentPool.EntityFrameworkCore.Stores
             ThrowIfDisposed();
             if (resumeId == null)
                 throw new ArgumentNullException(nameof(resumeId));
-            return await Context.Resumes.FirstOrDefaultAsync(f => f.Id == resumeId, cancellationToken);
+            return await Context.Resumes.Include(i => i.KeyMaps)
+                .Include(i => i.ResumeCompares) 
+                .FirstOrDefaultAsync(f => f.Id == resumeId, cancellationToken);
 
         }
         public async Task<Resume> FindByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken)
@@ -101,14 +103,6 @@ namespace Van.TalentPool.EntityFrameworkCore.Stores
             return await Context.Resumes.FirstOrDefaultAsync(f => f.PlatformId == platformId, cancellationToken);
         }
 
-        public async Task<IList<ResumeAuditRecord>> GetAuditRecordsByResumeIdAsync(Guid resumeId, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            ThrowIfDisposed();
-            if (resumeId == null)
-                throw new ArgumentNullException(nameof(resumeId));
-            return await Context.ResumeAuditRecords.Where(w => w.ResumeId == resumeId).ToListAsync();
-        }
 
         public async Task<ResumeAuditRecord> GetAuditRecordByIdAsync(Guid auditRecordId, CancellationToken cancellationToken)
         {

@@ -16,9 +16,7 @@ namespace Van.TalentPool.Resumes
         /// <summary>
         /// 是否审核通过
         /// </summary>
-        public bool Passed { get; set; }
-
-
+        public bool Passed { get; set; } 
         public virtual Guid CreatorUserId { get; set; }
         public virtual DateTime CreationTime { get; set; }
     }

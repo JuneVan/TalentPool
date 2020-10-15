@@ -14,6 +14,7 @@ namespace Van.TalentPool.Web.Profiles
             services.AddAutoMapper(typeof(SettingMappingProfile));
             services.AddAutoMapper(typeof(JobMappingProfile));
             services.AddAutoMapper(typeof(ResumeMappingProfile));
+            services.AddAutoMapper(typeof(InvestigationMappingProfile));
             return services;
         }
     }

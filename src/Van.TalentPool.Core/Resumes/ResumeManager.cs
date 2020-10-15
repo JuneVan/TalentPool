@@ -88,13 +88,7 @@ namespace Van.TalentPool.Resumes
             return await ResumeStore.FindByPlatformAsync(platformId, CancellationToken);
         }
 
-        public async Task<IList<ResumeAuditRecord>> GetAuditRecordsByResumeIdAsync(Guid resumeId)
-        {
-            if (resumeId == null)
-                throw new ArgumentNullException(nameof(resumeId));
-
-            return await ResumeStore.GetAuditRecordsByResumeIdAsync(resumeId, CancellationToken);
-        }
+       
         public async Task<ResumeAuditRecord> GetAuditRecordByIdAsync(Guid auditRecordId)
         {
             if (auditRecordId == null)
@@ -162,6 +156,18 @@ namespace Van.TalentPool.Resumes
 
             await ResumeStore.UpdateAsync(resume, CancellationToken);
             
+        }
+
+        public async Task TrashAsync(Resume resume,string enableReason)
+        {
+            if (resume == null)
+                throw new ArgumentNullException(nameof(resume));
+            if (string.IsNullOrEmpty(enableReason))
+                throw new ArgumentNullException(nameof(enableReason)); 
+            resume.Enable = false;
+            resume.EnableReason = enableReason; 
+            await ResumeStore.UpdateAsync(resume, CancellationToken);
+
         }
 
         public void Dispose()

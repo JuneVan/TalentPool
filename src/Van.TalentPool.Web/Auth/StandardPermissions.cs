@@ -44,6 +44,11 @@ namespace Van.TalentPool.Web.Auth
         public const string Investigation_FinshOrRestore = "Pages.Investigation.FinshOrRestore";
         public const string Investigation_Audit = "Pages.Investigation.Audit";
 
+        public const string Interview = "Pages.Interview";
+        public const string Interview_Create = "Pages.Interview.Create";
+        public const string Interview_Edit = "Pages.Interview.Edit";
+        public const string Interview_Delete = "Pages.Interview.Delete";
+
 
     }
     public class StandardPermissionProvider : IPermissionProvider
@@ -85,11 +90,17 @@ namespace Van.TalentPool.Web.Auth
             investigation.AddChild(Pages.Investigation_FinshOrRestore, "结束调查/恢复调查");
             investigation.AddChild(Pages.Investigation_Audit, "审核调查");
 
+            var interview = new PermissionDefinition(Pages.Interview, "面试预约", "拥有面试预约的管理权限。");
+            interview.AddChild(Pages.Interview_Create, "创建面试预约");
+            interview.AddChild(Pages.Interview_Edit, "编辑面试预约");
+            interview.AddChild(Pages.Interview_Delete, "删除面试预约"); 
+
             return new[] {
             authorization,
             configuration,
             resume,
-            investigation
+            investigation,
+            interview
             };
         }
     }

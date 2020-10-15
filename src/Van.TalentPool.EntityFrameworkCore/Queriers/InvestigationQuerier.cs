@@ -16,6 +16,8 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
             _context = context;
         }
 
+
+
         public async Task<PaginationOutput<InvestigationDto>> GetListAsync(QueryInvestigaionInput input)
         {
             var query = from a in _context.Investigations
@@ -37,7 +39,8 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                             OwnerUserId = b.OwnerUserId,
                             OwnerUserName = d.FullName,
                             InvestigateDate = a.InvestigateDate,
-                            AcceptTravelStatus = a.AcceptTravelStatus
+                            AcceptTravelStatus = a.AcceptTravelStatus,
+                            IsConnected = a.IsConnected
                         };
             if (!string.IsNullOrEmpty(input.Keyword))
                 query = query.Where(w => w.Name.Contains(input.Keyword)
@@ -59,6 +62,47 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                 .Take(input.PageSize)
                  .ToListAsync();
             return new PaginationOutput<InvestigationDto>(totalSize, investigations);
+        }
+        public async Task<InvestigationDetailDto> GetInvestigationAsync(Guid id)
+        {
+            var query = from a in _context.Investigations
+                        join b in _context.Resumes on a.ResumeId equals b.Id
+                        join c in _context.Jobs on b.JobId equals c.Id
+                        join d in _context.Users on b.OwnerUserId equals d.Id
+                        join e in _context.Users on a.CreatorUserId equals e.Id
+                        join f in _context.Users on a.LastModifierUserId equals f.Id into ff
+                        from fff in ff.DefaultIfEmpty()
+                        where a.Id == id
+                        select new InvestigationDetailDto()
+                        {
+                            Name = a.Name,
+                            Id = a.Id,
+                            JobName = c.Title,
+                            ResumeId = a.ResumeId,
+                            PhoneNumber = b.PhoneNumber,
+                            Status = a.Status,
+                            IsQualified = a.IsQualified,
+                            QualifiedRemark = a.QualifiedRemark,
+                            OwnerUserName = d.FullName,
+                            InvestigateDate = a.InvestigateDate,
+                            AcceptTravelStatus = a.AcceptTravelStatus,
+                            CityOfDomicile = a.CityOfDomicile,
+                            CityOfResidence = a.CityOfResidence,
+                            Email = b.Email,
+                            Evaluation = a.Evaluation,
+                            ExpectedDate = a.ExpectedDate,
+                            ExpectedInterviewDate = a.ExpectedInterviewDate,
+                            ExpectedPhoneInterviewDate = a.ExpectedPhoneInterviewDate,
+                            ExpectedSalary = a.ExpectedSalary,
+                            Information = a.Information,
+                            IsAcceptInterview = a.IsAcceptInterview,
+                            IsConnected = a.IsConnected,
+                            CreationTime = a.CreationTime,
+                            CreatorUserName = e.FullName,
+                            LastModificationTime = a.LastModificationTime,
+                            LastModifierUserName = fff != null ? fff.FullName : string.Empty
+                        };
+            return await query.FirstOrDefaultAsync();
         }
     }
 }

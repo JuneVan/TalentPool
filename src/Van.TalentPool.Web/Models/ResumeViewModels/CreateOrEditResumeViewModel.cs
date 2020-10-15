@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Van.TalentPool.Resumes;
 
 namespace Van.TalentPool.Web.Models.ResumeViewModels
 {
@@ -29,11 +28,7 @@ namespace Van.TalentPool.Web.Models.ResumeViewModels
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
         public string Description { get; set; }
-
-    
-
-        public AuditStatus AuditStatus { get; set; }
-        public bool Enable { get; set; }
+          
         public string Keywords { get; set; }
     }
 }

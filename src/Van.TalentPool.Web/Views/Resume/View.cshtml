@@ -29,8 +29,7 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label>求职意向城市</label>
-                    <input type="text" class="form-control" placeholder="请输入求职意向城市" asp-for="City">
-                    <span asp-validation-for="City" class="text-danger"></span>
+                    <input type="text" class="form-control" placeholder="请输入求职意向城市" asp-for="City" readonly>
                 </div>
                 <div class="form-group col-md-12">
                     <label>相似度结果</label>
@@ -79,6 +78,41 @@
                     else
                     {<input type="text" class="form-control text-danger" value="无效，@Model.EnableReason" readonly>
                     }
+                </div>
+                <div class="form-group col-md-12">
+                    <label>审核记录</label>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>审核人</th>
+                                <th>记录</th>
+                                <th>时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ResumeAuditRecords != null)
+                            {
+                                foreach (var auditRecord in Model.ResumeAuditRecords)
+                                {
+                                    <tr>
+                                        <td>@auditRecord.CreatorUserName</td>
+                                        <td>
+                                            @if (auditRecord.Passed)
+                                            {
+                                                <span class="text-success">通过</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-danger">未通过</span>
+                                                <text>@auditRecord.Remark</text>
+                                            }
+                                        </td>
+                                        <td>@auditRecord.CreationTime</td>
+                                    </tr> 
+                                }
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
