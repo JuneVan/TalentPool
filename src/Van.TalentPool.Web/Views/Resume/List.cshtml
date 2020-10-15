@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col-12">
-        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("新增简历", "/Resume/Create", Pages.Resume_Create, "btn-sm btn btn-primary", "fas fa-plus"))
+        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("新增简历", "/Resume/Create", Pages.Resume_CreateOrEditOrDelete, "btn-sm btn btn-primary", "fas fa-plus"))
     </div>
 </div>
 
@@ -24,13 +24,13 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>关键词</label>
-                        <input type="text" class="form-control" placeholder="请输入姓名/手机号/简历编号" name="Keyword" value="@Model.Pagination.Parameter.Keyword">
+                        <input type="text" class="form-control" placeholder="请输入姓名/手机号/简历编号" name="Keyword" value="@Model.Output.Parameter.Keyword">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>职位</label>
-                        <input type="hidden" value="@Model.Pagination.Parameter.JobId" name="JobId">
+                        <input type="hidden" value="@Model.Output.Parameter.JobId" name="JobId">
                         <select class="form-control" id="selectJobId" asp-items="@Model.Jobs">
                             <option value="">==请选择职位==</option>
                         </select>
@@ -57,7 +57,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>是否合适</label>
-                        <input type="hidden" value="@Model.Pagination.Parameter.AuditStatus" name="AuditStatus">
+                        <input type="hidden" value="@Model.Output.Parameter.AuditStatus" name="AuditStatus">
                         <select class="form-control" id="auditStatusSelect" asp-items="@Html.GetEnumSelectList<AuditStatus>()">
                             <option value="">=请选择状态=</option>
                         </select>
@@ -67,8 +67,8 @@
                     <div class="form-group">
                         <label>创建时间</label>
                         <input type="text" class="form-control" placeholder="请选择创建时间" id="createdDaterangepicker">
-                        <input type="hidden" value="@Model.Pagination.Parameter.StartTime" name="StartTime">
-                        <input type="hidden" value="@Model.Pagination.Parameter.EndTime" name="EndTime">
+                        <input type="hidden" value="@Model.Output.Parameter.StartTime" name="StartTime">
+                        <input type="hidden" value="@Model.Output.Parameter.EndTime" name="EndTime">
                     </div>
                 </div>
 
@@ -106,7 +106,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.Pagination.Items)
+                        @foreach (var item in Model.Output.Items)
                         {
                             <tr>
                                 <td>@item.Name</td>
@@ -176,11 +176,11 @@
                                             {
                                                 if (item.OwnerUserId == UserIdentifier.UserId && !item.InvestigationId.HasValue)
                                                 {
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("添加调查", "/Investigation/Create/" + item.Id, Pages.Investigation_Create, "dropdown-item"))
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("添加调查", "/Investigation/Create/" + item.Id, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
                                                 }
                                                 if (item.OwnerUserId == UserIdentifier.UserId)
                                                 {
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("添加面试预约", "/Interview/Create/" + item.Id, Pages.Interview_Create, "dropdown-item"))
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("添加面试预约", "/Interview/Create/" + item.Id, Pages.Interview, "dropdown-item"))
                                                 }
                                             }
                                             @if (item.AuditStatus == AuditStatus.Unpassed || item.AuditStatus == AuditStatus.NoStart)
@@ -191,14 +191,14 @@
                                             @if (item.Enable)
                                             {
                                                 @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("审批", "/Resume/Audit/" + item.Id, Pages.Resume_Audit, "dropdown-item"))
-                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Resume/Edit/" + item.Id, Pages.Resume_Edit, "dropdown-item"))
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Resume/Edit/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
                                                 @if (item.AuditStatus == AuditStatus.Complete)
                                                 {
                                                     <a href="/Resume/SendEmail/@item.Id" class="dropdown-item">发送面试邀请</a>
                                                 }
                                                 @if (!item.InvestigationId.HasValue)
                                                 {
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("设置无效", "/Resume/Trash/" + item.Id, Pages.Resume_Edit, "dropdown-item"))
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("设置无效", "/Resume/Trash/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
                                                 } 
                                             }
 
@@ -215,7 +215,7 @@
         </div>
     </div>
     <div class="card-footer">
-        @await Html.PartialAsync("Partials/_PaginationPartial", Model.Pagination)
+        @await Html.PartialAsync("Partials/_PaginationPartial", Model.Output)
     </div>
 </div>
 <blockquote class="quote-primary">

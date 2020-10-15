@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Van.TalentPool.Application.Dictionaries;
+using Van.TalentPool.Application.Evaluations;
+using Van.TalentPool.Application.Interviews;
 using Van.TalentPool.Application.Investigations;
 using Van.TalentPool.Application.Jobs;
 using Van.TalentPool.Application.Resumes;
@@ -18,10 +20,12 @@ using Van.TalentPool.EntityFrameworkCore;
 using Van.TalentPool.EntityFrameworkCore.Queriers;
 using Van.TalentPool.EntityFrameworkCore.Seeds;
 using Van.TalentPool.EntityFrameworkCore.Stores;
+using Van.TalentPool.Evaluations;
 using Van.TalentPool.Infrastructure;
 using Van.TalentPool.Infrastructure.Message.Email;
 using Van.TalentPool.Infrastructure.Message.Sms;
 using Van.TalentPool.Infrastructure.Notify;
+using Van.TalentPool.Interviews;
 using Van.TalentPool.Investigations;
 using Van.TalentPool.Jobs;
 using Van.TalentPool.Navigations;
@@ -103,6 +107,10 @@ namespace Van.TalentPool.Web
             services.AddTransient<ResumeAuditSettingManager>();
             services.AddTransient<IInvestigationStore, InvestigationStore>();
             services.AddTransient<InvestigationManager>();
+            services.AddTransient<IInterviewStore, InterviewStore>();
+            services.AddTransient<InterviewManager>();
+            services.AddTransient<IEvaluationStore, EvaluationStore>();
+            services.AddTransient<EvaluationManager>();
 
             // infrastructure
             services.AddScoped<INotifier, Notifier>();
@@ -117,6 +125,8 @@ namespace Van.TalentPool.Web
             services.AddTransient<IJobQuerier, JobQuerier>();
             services.AddTransient<IResumeQuerier, ResumeQuerier>();
             services.AddTransient<IInvestigationQuerier, InvestigationQuerier>();
+            services.AddTransient<IInterviewQuerier, InterviewQuerier>();
+            services.AddTransient<IEvaluationQuerier, EvaluationQuerier>();
 
             // automapper
             services.AddMappingProfiles();

@@ -26,6 +26,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(maxLength: 128, nullable: true),
+                    JobId = table.Column<Guid>(nullable: false),
                     CreatorUserId = table.Column<Guid>(nullable: false),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     LastModifierUserId = table.Column<Guid>(nullable: true),
@@ -47,6 +48,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     ResumeId = table.Column<Guid>(nullable: false),
                     Remark = table.Column<string>(maxLength: 256, nullable: true),
+                    Name = table.Column<string>(maxLength: 256, nullable: true),
                     AppointmentTime = table.Column<DateTime>(nullable: false),
                     VisitedTime = table.Column<DateTime>(nullable: true),
                     Status = table.Column<short>(nullable: false),
@@ -72,10 +74,9 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                     ResumeId = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(maxLength: 32, nullable: true),
                     InvestigateDate = table.Column<DateTime>(nullable: false),
-                    OwnerUserId = table.Column<Guid>(nullable: false),
                     Status = table.Column<short>(nullable: false),
                     IsQualified = table.Column<bool>(nullable: true),
-                    Remark = table.Column<string>(maxLength: 512, nullable: true),
+                    QualifiedRemark = table.Column<string>(maxLength: 512, nullable: true),
                     IsConnected = table.Column<bool>(nullable: true),
                     UnconnectedRemark = table.Column<string>(nullable: true),
                     AcceptTravelStatus = table.Column<short>(nullable: true),
@@ -151,7 +152,6 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    No = table.Column<string>(maxLength: 32, nullable: true),
                     Name = table.Column<string>(maxLength: 32, nullable: true),
                     JobId = table.Column<Guid>(nullable: false),
                     City = table.Column<string>(maxLength: 32, nullable: true),
@@ -162,6 +162,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                     PlatformId = table.Column<string>(maxLength: 256, nullable: true),
                     AuditStatus = table.Column<int>(nullable: false),
                     Enable = table.Column<bool>(nullable: false),
+                    EnableReason = table.Column<string>(maxLength: 256, nullable: true),
                     OwnerUserId = table.Column<Guid>(nullable: false),
                     CreatorUserId = table.Column<Guid>(nullable: false),
                     CreationTime = table.Column<DateTime>(nullable: false),
@@ -281,10 +282,10 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
+                    EvaluationId = table.Column<Guid>(nullable: false),
                     Keyword = table.Column<string>(maxLength: 128, nullable: true),
                     Description = table.Column<string>(maxLength: 1024, nullable: true),
-                    Weight = table.Column<int>(nullable: false),
-                    EvaluationId = table.Column<Guid>(nullable: true)
+                    Weight = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -294,7 +295,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                         column: x => x.EvaluationId,
                         principalTable: "Evaluations",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -469,9 +470,11 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
+                    EvaluationId = table.Column<Guid>(nullable: false),
+                    SubjectId = table.Column<Guid>(nullable: false),
                     Description = table.Column<string>(maxLength: 1024, nullable: true),
                     ReferenceAnswer = table.Column<string>(maxLength: 1024, nullable: true),
-                    EvaluationId = table.Column<Guid>(nullable: true),
+                    Order = table.Column<int>(nullable: false),
                     EvaluationSubjectId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
@@ -482,7 +485,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                         column: x => x.EvaluationId,
                         principalTable: "Evaluations",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EvaluationQuestions_EvaluationSubjects_EvaluationSubjectId",
                         column: x => x.EvaluationSubjectId,

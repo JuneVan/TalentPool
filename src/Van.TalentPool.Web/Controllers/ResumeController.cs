@@ -50,7 +50,7 @@ namespace Van.TalentPool.Web.Controllers
             var output = await _resumeQuerier.GetListAsync(input);
 
             var model = new QueryResumeViewModel();
-            model.Pagination = new PaginationModel<ResumeDto>(output, input);
+            model.Output = new PaginationModel<ResumeDto>(output, input);
             return await BuildListDisplayAsync(model);
         }
         private async Task<IActionResult> BuildListDisplayAsync(QueryResumeViewModel model)

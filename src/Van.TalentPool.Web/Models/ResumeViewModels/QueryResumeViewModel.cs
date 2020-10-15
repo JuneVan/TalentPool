@@ -7,7 +7,7 @@ namespace Van.TalentPool.Web.Models.ResumeViewModels
 {
     public class QueryResumeViewModel
     {
-        public PaginationModel<ResumeDto> Pagination { get; set; }
+        public PaginationModel<ResumeDto> Output { get; set; }
         public List<SelectListItem> Jobs { get; set; }
         public List<SelectListItem> Users { get; set; } 
     }

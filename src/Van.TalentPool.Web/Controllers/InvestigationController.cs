@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Van.TalentPool.Application.Evaluations;
 using Van.TalentPool.Application.Investigations;
 using Van.TalentPool.Application.Jobs;
 using Van.TalentPool.Application.Resumes;
@@ -22,14 +24,14 @@ namespace Van.TalentPool.Web.Controllers
         private readonly IInvestigationQuerier _investigationQuerier;
         private readonly IJobQuerier _jobQuerier;
         private readonly IUserQuerier _userQuerier;
-        private readonly IResumeQuerier _resumeQuerier;
+        private readonly IResumeQuerier _resumeQuerier; 
         private readonly ResumeManager _resumeManager;
         private readonly InvestigationManager _investigationManager;
         public InvestigationController(IServiceProvider serviceProvider,
             IInvestigationQuerier investigationQuerier,
             IJobQuerier jobQuerier,
             IUserQuerier userQuerier,
-            IResumeQuerier resumeQuerier,
+            IResumeQuerier resumeQuerier, 
             ResumeManager resumeManager,
             InvestigationManager investigationManager)
             : base(serviceProvider)
@@ -37,7 +39,7 @@ namespace Van.TalentPool.Web.Controllers
             _investigationQuerier = investigationQuerier;
             _jobQuerier = jobQuerier;
             _userQuerier = userQuerier;
-            _resumeQuerier = resumeQuerier;
+            _resumeQuerier = resumeQuerier; 
             _resumeManager = resumeManager;
             _investigationManager = investigationManager;
         }
@@ -47,7 +49,7 @@ namespace Van.TalentPool.Web.Controllers
             var output = await _investigationQuerier.GetListAsync(input);
             var model = new QueryInvestigationViewModel()
             {
-                Pagination = new PaginationModel<InvestigationDto>(output, input)
+                Output = new PaginationModel<InvestigationDto>(output, input)
             };
             return await BuildListDisplayAsync(model);
         }
@@ -158,10 +160,10 @@ namespace Van.TalentPool.Web.Controllers
             return View(model);
         }
         public async Task<IActionResult> View(Guid id)
-        { 
-            var investigation = await _investigationQuerier.GetInvestigationAsync(id); 
+        {
+            var investigation = await _investigationQuerier.GetInvestigationAsync(id);
             if (investigation == null)
-                return NotFound(id); 
+                return NotFound(id);
             return View(investigation);
         }
         #endregion
@@ -290,9 +292,54 @@ namespace Van.TalentPool.Web.Controllers
                 return RedirectToAction(nameof(List));
             }
             return View(model);
-            
+
         }
         #endregion
+
+
+        [PermissionCheck(Pages.Investigation_CreateOrEditOrDelete)]
+        [HttpPost]
+        public async Task<IActionResult> Evaluate(EvaluateResultModel model)
+        {
+
+            if (model == null || model.Questions == null)
+            {
+                Notifier.Error("提交评测参数异常！");
+                return BadRequest();
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append("<ol>");
+            for (int i = 0; i < model.Questions.Count; i++)
+            {
+                stringBuilder.Append($"<li>【{model.Questions[i].Keyword}】{model.Questions[i].Description}评分：{model.Questions[i].Score}</li>");
+            }
+            stringBuilder.Append("</ol>");
+            var investigation = await _investigationManager.FindByIdAsync(model.InvestigationId);
+            if (investigation == null)
+            {
+                return NotFound(model.InvestigationId);
+            }
+            var evaluation = stringBuilder.ToString();
+            await _investigationManager.EvaluateAsync(investigation, evaluation);
+
+            Notifier.Success("你成功提交了技术测评结果！");
+
+
+            ////通知审核管理员
+            //var auditUsers = await _resumeManager.ResumeAuditSettings.ToListAsync();
+            //var notification = new NotifyEntry()
+            //{
+            //    Content = $"我刚刚提交了关于“{investigation.Name}”的技术测评结果，<a href=\"/Investigation/View/{investigation.Id}\">查看意向调查</a>"
+            //};
+            //foreach (var auditUser in auditUsers)
+            //{
+            //    notification.Receivers.Add(auditUser.UserId);
+            //}
+            //await Notifier.NotifyAsync(notification);
+
+            return Ok();
+        }
+
         private IActionResult NotFound(Guid id)
         {
             Notifier.Warning($"未找到id:“{id}”的调查记录。");

@@ -1,0 +1,140 @@
+﻿@model Van.TalentPool.Web.Models.EvaluationViewModels.EvaluateViewModel
+
+@{
+    ViewData["Header"] = "技术评测管理";
+    ViewData["Title"] = "开始技术评测 - " + Model.Name;
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"]</h3>
+            </div>
+
+            <div class="card-body">
+
+                <ol class="subject-list">
+                    @if (Model.Evaluation.Subjects != null)
+                    {
+                        foreach (var subject in Model.Evaluation.Subjects)
+                        {
+                            <li class="border-bottom mb-md-2 p-md-2">
+                                <dl>
+                                    <dt class="text-blue">@subject.Keyword <span class="badge badge-success">@subject.Weight</span> </dt>
+                                    <dd>@subject.Description</dd>
+                                    <dd>
+                                        <ol class="question-list">
+                                            @if (subject.Questions != null)
+                                            {
+                                                foreach (var question in subject.Questions)
+                                                {
+                                                    <li>
+                                                        <dl>
+                                                            <dt class="text-blue">@question.Description</dt>
+                                                            @if (!string.IsNullOrEmpty(question.ReferenceAnswer))
+                                                            {
+                                                                <dd>@Html.Raw(question.ReferenceAnswer.Replace("\n", "<br/>"))</dd>
+                                                            }
+                                                            <dd>
+                                                                <div class="input-group" id="q-@question.Id">
+                                                                    <div class="input-group-prepend">
+                                                                        <button type="button" class="btn btn-default" style="background:rgba(0,138,0,0)" onclick="addScore('@question.Id',0)">不知道</button>
+                                                                        <button type="button" class="btn btn-success" style="background:rgba(0,138,0,0.3)" onclick="addScore('@question.Id',30)">听过</button>
+                                                                        <button type="button" class="btn btn-success" style="background:rgba(0,138,0,0.6)" onclick="addScore('@question.Id',60)">用过</button>
+                                                                        <button type="button" class="btn btn-success" style="background:rgba(0,138,0,0.8)" onclick="addScore('@question.Id',80)">熟悉</button>
+                                                                        <button type="button" class="btn btn-success" style="background:rgba(0,138,0,1)" onclick="addScore('@question.Id',100)">精通</button>
+                                                                    </div>
+                                                                    <input type="number" value="0" max="100" min="0" name="Score" data-question-id="@question.Id" data-description="@question.Description" data-keyword="@subject.Keyword" />
+                                                                </div>
+
+
+                                                            </dd>
+                                                        </dl>
+                                                    </li>
+                                                }
+                                            }
+                                        </ol>
+                                    </dd>
+                                </dl>
+                            </li>
+                        }
+                    }
+                </ol>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-primary" onclick="evaluationResult()">提交评测结果</button>
+                <a href="/Investigation/List" class="btn btn-default">返回意向调查列表</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{ 
+    <script type="text/javascript"> 
+        //添加分数
+        function addScore(elementId, value) {
+            $("#q-" + elementId).find("input[name='Score']").val(value);
+            store();//触发存储
+        }
+
+
+        var localStorageKey = "LocalStorage.Evaluation.Temp.Key-@Model.InvestigationId";
+
+        function restore() {
+            var localStorageValue = localStorage.getItem(localStorageKey);
+            if (!localStorageValue)
+                return;
+            var scores = JSON.parse(localStorageValue);
+
+            var scoreInputs = $("input[name='Score']");
+            for (var i = 0; i < scoreInputs.length; i++) {
+                for (var j = 0; j < scores.length; j++) {
+                    if ($(scoreInputs[i]).data("question-id") == scores[j].QuestionId) {
+                        $(scoreInputs[i]).val(scores[j].Value);
+                        break;
+                    }
+                }
+            }
+        }
+        restore();
+
+      function store() {
+            var socres = [];
+            var scoreInputs = $("input[name='Score']");
+
+            for (var i = 0; i < scoreInputs.length; i++) {
+                socres.push({
+                    QuestionId: $(scoreInputs[i]).data("question-id"),
+                    Description: $(scoreInputs[i]).data("description"),
+                    Value: $(scoreInputs[i]).val()
+                });
+            }
+            localStorage.removeItem(localStorageKey);//清除之前的存储
+            localStorage.setItem(localStorageKey, JSON.stringify(socres));
+        }
+
+
+        //查看评估
+        function evaluationResult() {
+            var data = {
+                InvestigationId: "@Model.InvestigationId",
+                Questions: []
+            };
+
+            var scoreInputs = $("input[name='Score']");
+            for (var i = 0; i < scoreInputs.length; i++) {
+                data.Questions.push({
+                    Keyword: $(scoreInputs[i]).data("keyword"),
+                    Description: $(scoreInputs[i]).data("description"),
+                    Score: $(scoreInputs[i]).val()
+                });
+            }
+            $.post("/Investigation/Evaluate", data, function (res) {
+                location.href = "/Investigation/Edit/@Model.InvestigationId";
+            })
+
+        } 
+       
+
+    </script>
+}

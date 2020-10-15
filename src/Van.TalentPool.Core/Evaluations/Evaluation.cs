@@ -10,6 +10,7 @@ namespace Van.TalentPool.Evaluations
         /// 标题
         /// </summary>
         public virtual string Title { get; set; }
+        public virtual Guid JobId { get; set; }
 
         public virtual ICollection<EvaluationSubject> Subjects { get; set; }
         public virtual ICollection<EvaluationQuestion> Questions { get; set; }

@@ -69,9 +69,7 @@ namespace Van.TalentPool.Investigations
             investigation.QualifiedRemark = remark;
 
             await InvestigaionStore.UpdateAsync(investigation, CancellationToken);
-        }
-
-       
+        } 
         public async Task DeleteAsync(Investigation investigation)
         {
             if (investigation == null)
@@ -92,6 +90,15 @@ namespace Van.TalentPool.Investigations
             return await InvestigaionStore.FindByResumeIdAsync(resumeId, CancellationToken);
         }
 
+        public async Task EvaluateAsync(Investigation investigation,string evaluation)
+        {
+            if (investigation == null)
+                throw new ArgumentNullException(nameof(investigation));
+            if (evaluation == null)
+                throw new ArgumentNullException(nameof(evaluation));
+            investigation.Evaluation = evaluation;
+            await UpdateAsync(investigation);
+        }
         public void Dispose()
         {
             Dispose(true);

@@ -7,7 +7,7 @@ namespace Van.TalentPool.Web.Models.InvestigationViewModels
 {
     public class QueryInvestigationViewModel
     {
-        public PaginationModel<InvestigationDto> Pagination { get; set; }
+        public PaginationModel<InvestigationDto> Output { get; set; }
         public List<SelectListItem> Jobs { get; set; }
         public List<SelectListItem> Users { get; set; }
     }

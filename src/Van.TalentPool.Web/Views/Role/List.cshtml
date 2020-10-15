@@ -6,7 +6,7 @@
 
 <div class="row">
     <div class="col-12"> 
-        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("新建角色", "/Role/Create", Pages.Authorization_Role_Create, "btn btn-primary", "fas fa-plus"))
+        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("新建角色", "/Role/Create", Pages.Authorization_Role_CreateOrEditOrDelete, "btn-sm btn btn-primary", "fas fa-plus"))
     </div>
 </div>
 
@@ -62,14 +62,19 @@
                                     }
                                 </td> 
                                 <td>
-                                    <div class="btn-group btn-group-sm">
-                                        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Role/Edit/" + item.Id, Pages.Authorization_Role_Edit, "btn btn-secondary"))
-                                        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("分配权限", "/Role/AssignPermission/" + item.Id, Pages.Authorization_Role_AssignPermission, "btn btn-default"))
-                                        @if (item.Protected)
-                                        {
-                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("删除", "/Role/Delete/" + item.Id, Pages.Authorization_Role_Delete, "btn btn-danger"))
-                                        }
-                                    </div>
+                                    <div class="btn-group  btn-group-sm" role="group">
+                                        <button id="group-dropdown" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-cog"></i> 操作菜单
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="group-dropdown"> 
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Role/Edit/" + item.Id, Pages.Authorization_User_CreateOrEditOrDelete, "dropdown-item"))
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("分配权限", "/Role/AssignPermission/" + item.Id, Pages.Authorization_Role_AssignPermission, "dropdown-item"))
+                                            @if (item.Protected)
+                                            {
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("删除", "/Role/Delete/" + item.Id, Pages.Authorization_User_CreateOrEditOrDelete, "dropdown-item"))
+                                            }
+                                        </div>
+                                    </div> 
                                 </td>
                             </tr>
                         }

@@ -10,7 +10,7 @@ using Van.TalentPool.EntityFrameworkCore;
 namespace Van.TalentPool.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(VanDbContext))]
-    [Migration("20201014023905_initialize-database")]
+    [Migration("20201015075545_initialize-database")]
     partial class initializedatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -222,6 +222,9 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("JobId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
@@ -247,15 +250,21 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                         .HasColumnType("nvarchar(1024)")
                         .HasMaxLength(1024);
 
-                    b.Property<Guid?>("EvaluationId")
+                    b.Property<Guid>("EvaluationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("EvaluationSubjectId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
                     b.Property<string>("ReferenceAnswer")
                         .HasColumnType("nvarchar(1024)")
                         .HasMaxLength(1024);
+
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -276,7 +285,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                         .HasColumnType("nvarchar(1024)")
                         .HasMaxLength(1024);
 
-                    b.Property<Guid?>("EvaluationId")
+                    b.Property<Guid>("EvaluationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Keyword")
@@ -325,6 +334,10 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
 
                     b.Property<Guid?>("LastModifierUserId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<string>("Remark")
                         .HasColumnType("nvarchar(256)")
@@ -427,10 +440,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<Guid>("OwnerUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Remark")
+                    b.Property<string>("QualifiedRemark")
                         .HasColumnType("nvarchar(512)")
                         .HasMaxLength(512);
 
@@ -552,6 +562,10 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                     b.Property<bool>("Enable")
                         .HasColumnType("bit");
 
+                    b.Property<string>("EnableReason")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -565,10 +579,6 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(32)")
-                        .HasMaxLength(32);
-
-                    b.Property<string>("No")
                         .HasColumnType("nvarchar(32)")
                         .HasMaxLength(32);
 
@@ -919,10 +929,12 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                 {
                     b.HasOne("Van.TalentPool.Evaluations.Evaluation", null)
                         .WithMany("Questions")
-                        .HasForeignKey("EvaluationId");
+                        .HasForeignKey("EvaluationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Van.TalentPool.Evaluations.EvaluationSubject", null)
-                        .WithMany("EvaluationQuestions")
+                        .WithMany("Questions")
                         .HasForeignKey("EvaluationSubjectId");
                 });
 
@@ -930,7 +942,9 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                 {
                     b.HasOne("Van.TalentPool.Evaluations.Evaluation", null)
                         .WithMany("Subjects")
-                        .HasForeignKey("EvaluationId");
+                        .HasForeignKey("EvaluationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Van.TalentPool.Resumes.ResumeAuditRecord", b =>
