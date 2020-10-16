@@ -145,12 +145,16 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                             AcceptTravelStatus = a.AcceptTravelStatus,
                             CityOfResidence = a.CityOfResidence,
                             CityOfDomicile = a.CityOfDomicile,
+                            ExpectedSalary = a.ExpectedSalary,
+                            IsAcceptInterview = a.IsAcceptInterview,
                             ExpectedInterviewDate = a.ExpectedInterviewDate,
                             ExpectedPhoneInterviewDate = a.ExpectedPhoneInterviewDate,
                             IsConnected = a.IsConnected,
                             IsQualified = a.IsQualified,
+                            UnconnectedRemark = a.UnconnectedRemark,
                             OwnerUserName = d.FullName,
-                            Status = a.Status
+                            Status = a.Status,
+                            Information = a.Information
                         };
 
             return await query.ToListAsync();

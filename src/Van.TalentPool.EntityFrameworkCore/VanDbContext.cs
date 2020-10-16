@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Van.TalentPool.Configurations;
+using Van.TalentPool.DailyStatistics;
 using Van.TalentPool.Dictionaries;
 using Van.TalentPool.Entities;
 using Van.TalentPool.EntityFrameworkCore.EntityTypeConfigurations;
@@ -38,7 +39,7 @@ namespace Van.TalentPool.EntityFrameworkCore
         public DbSet<Resume> Resumes { get; set; }
         public DbSet<ResumeAuditRecord> ResumeAuditRecords { get; set; }
         public DbSet<ResumeAuditSetting> ResumeAuditSettings { get; set; }
-        public DbSet<ResumeKeyMap> ResumeKeyMaps { get; set; }
+        public DbSet<ResumeKeywordMap> ResumeKeyMaps { get; set; }
         public DbSet<ResumeCompare> ResumeCompares { get; set; }
 
         public DbSet<Investigation> Investigations { get; set; }
@@ -50,6 +51,9 @@ namespace Van.TalentPool.EntityFrameworkCore
         public DbSet<EvaluationQuestion> EvaluationQuestions { get; set; }
 
         public DbSet<Job> Jobs { get; set; }
+
+        public DbSet<DailyStatistic> DailyStatistics { get; set; }
+        public DbSet<DailyStatisticItem> DailyStatisticItems { get; set; }
          
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -74,6 +78,8 @@ namespace Van.TalentPool.EntityFrameworkCore
             builder.ApplyConfiguration(new EvaluationEntityTypeConfiguration());
             builder.ApplyConfiguration(new EvaluationSubjectEntityTypeConfiguration());
             builder.ApplyConfiguration(new EvaluationQuestionEntityTypeConfiguration());
+            builder.ApplyConfiguration(new DailyStatisticEntityTypeConfiguration());
+            builder.ApplyConfiguration(new DailyStatisticItemEntityTypeConfiguration());
         }
 
         protected IUserIdentifier UserIdentifier { get; }

@@ -17,6 +17,8 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
         {
             _context = context;
         }
+
+
         public async Task<PaginationOutput<ResumeDto>> GetListAsync(QueryResumeInput input)
         {
             var query = from a in _context.Resumes
@@ -176,6 +178,48 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                         };
             if (ownerUserId.HasValue)
                 query = query.Where(w => w.OwnerUserId == ownerUserId);
+            return await query.ToListAsync();
+        }
+
+
+        public async Task<List<ResumeExportDto>> GetExportResumesAsync(QueryExportResumeInput input)
+        {
+            var query = from a in _context.Resumes
+                        join c in _context.Jobs on a.JobId equals c.Id
+                        join d in _context.Users on a.CreatorUserId equals d.Id
+                        join e in _context.Users on a.OwnerUserId equals e.Id
+                        select new ResumeExportDto
+                        {
+                            Id = a.Id,
+                            Name = a.Name,
+                            JobId = a.JobId,
+                            JobName = c.Title,
+                            PhoneNumber = a.PhoneNumber,
+                            CreationTime = a.CreationTime,
+                            AuditStatus = a.AuditStatus,
+                            PlatformName = a.PlatformName,
+                            PlatformId = a.PlatformId,
+                            CreatorUserId = a.CreatorUserId,
+                            OwnerUserId = a.OwnerUserId,
+                            City = a.City,
+                            Description = a.Description
+                        };
+
+            if (!string.IsNullOrEmpty(input.Keyword))
+                query = query.Where(w => w.Name.Contains(input.Keyword)
+                || w.PhoneNumber.Contains(input.Keyword)
+               || w.PlatformId.Contains(input.Keyword));
+            if (input.JobId.HasValue)
+                query = query.Where(w => w.JobId == input.JobId.Value);
+            if (input.CreatorUserId.HasValue)
+                query = query.Where(w => w.CreatorUserId == input.CreatorUserId.Value);
+            if (input.OwnerUserId.HasValue)
+                query = query.Where(w => w.OwnerUserId == input.OwnerUserId.Value);
+            if (input.StartTime.HasValue && input.EndTime.HasValue)
+                query = query.Where(w => w.CreationTime >= input.StartTime.Value && w.CreationTime <= input.EndTime.Value);
+            if (input.AuditStatus.HasValue)
+                query = query.Where(w => w.AuditStatus == (AuditStatus)input.AuditStatus.Value);
+
             return await query.ToListAsync();
         }
     }

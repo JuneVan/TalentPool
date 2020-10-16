@@ -29,6 +29,7 @@ namespace Van.TalentPool.Web.Profiles
             CreateMap<CreateAuditViewModel, ResumeAuditRecord>();
             CreateMap<ResumeAuditRecordDto, AuditRecordModel>(); 
             CreateMap<Resume, TrashResumeViewModel>();
+            CreateMap<Resume, SendEmailViewModel>();
         }
     }
 }

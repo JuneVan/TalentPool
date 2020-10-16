@@ -1,14 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Van.TalentPool.Application.Dictionaries;
 using Van.TalentPool.Application.Jobs;
 using Van.TalentPool.Application.Resumes;
 using Van.TalentPool.Application.Users;
+using Van.TalentPool.Infrastructure.Extensions;
+using Van.TalentPool.Infrastructure.Message.Email;
 using Van.TalentPool.Infrastructure.Notify;
+using Van.TalentPool.Jobs;
 using Van.TalentPool.Permissions;
 using Van.TalentPool.Resumes;
 using Van.TalentPool.Web.Auth;
@@ -25,23 +35,35 @@ namespace Van.TalentPool.Web.Controllers
         private readonly IJobQuerier _jobQuerier;
         private readonly IDictionaryQuerier _dictionaryQuerier;
         private readonly IUserQuerier _userQuerier;
+        private readonly JobManager _jobManager;
         private readonly ResumeManager _resumeManager;
         private readonly ResumeAuditSettingManager _resumeAuditSettingManager;
+        private readonly IWebHostEnvironment _environment;
+        private readonly IConfiguration _configuration;
+        private readonly IEmailSender _emailSender;
         public ResumeController(IResumeQuerier resumeQuerier,
             IJobQuerier jobQuerier,
             IDictionaryQuerier dictionaryQuerier,
             IUserQuerier userQuerier,
+            JobManager jobManager,
             ResumeManager resumeManager,
             ResumeAuditSettingManager resumeAuditSettingManager,
+            IWebHostEnvironment environment,
+            IConfiguration configuration,
+            IEmailSender emailSender,
             IServiceProvider serviceProvider)
             : base(serviceProvider)
         {
             _resumeQuerier = resumeQuerier;
             _dictionaryQuerier = dictionaryQuerier;
             _jobQuerier = jobQuerier;
+            _jobManager = jobManager;
             _resumeManager = resumeManager;
             _resumeAuditSettingManager = resumeAuditSettingManager;
             _userQuerier = userQuerier;
+            _emailSender = emailSender;
+            _environment = environment;
+            _configuration = configuration;
         }
 
         #region CURD
@@ -117,15 +139,17 @@ namespace Van.TalentPool.Web.Controllers
             {
                 _ = Mapper.Map(model, resume);
 
-                resume.KeyMaps = new List<ResumeKeyMap>();
+                resume.KeyMaps = new List<ResumeKeywordMap>();
                 if (!string.IsNullOrEmpty(model.Keywords))
                 {
                     var keywords = model.Keywords.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                     foreach (var keyword in keywords)
                     {
-                        resume.KeyMaps.Add(new ResumeKeyMap()
+                        resume.KeyMaps.Add(new ResumeKeywordMap()
                         {
-                            Keyword = keyword
+                            Keyword = keyword,
+                            OriginData = model.Keywords,
+                            Name = model.Name
                         });
                     }
                 }
@@ -445,6 +469,149 @@ namespace Van.TalentPool.Web.Controllers
         }
         #endregion
 
+
+        #region 面试邀请邮件 
+        public async Task<IActionResult> SendEmail(Guid id)
+        {
+
+            var resume = await _resumeManager.FindByIdAsync(id);
+            if (resume == null)
+                return NotFound(id);
+
+            var job = await _jobManager.FindByIdAsync(resume.JobId);
+            var model = Mapper.Map<SendEmailViewModel>(resume);
+            var templatePath = _configuration.GetValue<string>("EmailTemplates:JobDescription");
+            var fileProvider = _environment.WebRootFileProvider;
+            var fileInfo = fileProvider.GetFileInfo(templatePath);
+            if (fileInfo.Exists)
+            {
+                using (var reader = new StreamReader(fileInfo.PhysicalPath))
+                {
+                    var template = reader.ReadToEnd();
+                    template = template.Replace("$Name$", resume.Name);
+                    template = template.Replace("$JobName$", job.Title);
+                    template = template.Replace("$Requirements$", job.Requirements);
+                    template = template.Replace("$Description$", job.Description);
+                    model.Body = template;
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendEmail(SendEmailViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _emailSender.SendEmailAsync(new EmailEntry()
+                {
+                    ToName = model.Name,
+                    ToEmailAddress = model.Email,
+                    Subject = model.Subject,
+                    Body = model.Body
+                });
+                Notifier.Success($"你已经成功给{model.Name}发送了面试邀请！");
+                return RedirectToAction(nameof(List));
+            }
+            return View(model);
+        }
+        #endregion
+
+
+        #region 导出
+        public async Task<IActionResult> Export(QueryExportResumeInput input)
+        {
+            var resumes = await _resumeQuerier.GetExportResumesAsync(input);
+            var columnNames = new string[] {
+                    "简历编号",
+                    "来源",
+                    "职位",
+                    "简历",
+                    "审核情况",
+                    "姓名",
+                    "电话",
+                    "求职意向城市",
+                };
+
+            using (ExcelPackage package = new ExcelPackage())
+            {
+
+                var worksheet01 = package.Workbook.Worksheets.Add("简历列表");
+                for (int i = 0; i < columnNames.Length; i++)
+                {
+                    worksheet01.Cells[1, i + 1].Value = columnNames[i];
+                }
+                worksheet01.Cells[1, 1, 1, 6].Style.Font.Bold = true;
+
+                for (int i = 0; i < resumes.Count; i++)
+                {
+                    worksheet01.Cells[i + 2, 1].Value = resumes[i].PlatformName;
+                    worksheet01.Cells[i + 2, 2].Value = resumes[i].JobName;
+                    if (!string.IsNullOrEmpty(resumes[i].Description))
+                    {
+                        //添加简历记录
+                        var name = !string.IsNullOrEmpty(resumes[i].Name) ? resumes[i].Name : i.ToString();
+                        var resumeWorksheet = package.Workbook.Worksheets.Add($"简历{name}");
+                        AddHtmlToWorksheet(resumes[i].Description, resumeWorksheet, "简历列表!A1");
+
+                        worksheet01.Cells[i + 2, 4].Style.Font.UnderLine = true;
+                        worksheet01.Cells[i + 2, 4].Style.Font.Color.SetColor(Color.Blue);
+                        worksheet01.Cells[i + 2, 4].Hyperlink = new ExcelHyperLink($"简历{name}!A1", "简历");
+
+                    }
+
+                    worksheet01.Cells[i + 2, 5].Value = resumes[i].AuditStatus.GetDescription();
+                    worksheet01.Cells[i + 2, 6].Value = resumes[i].Name;
+                    worksheet01.Cells[i + 2, 7].Value = resumes[i].PhoneNumber;
+                    worksheet01.Cells[i + 2, 8].Value = resumes[i].City;
+                }
+                return File(package.GetAsByteArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "简历报告.xlsx");
+            }
+        }
+
+        public static void AddHtmlToWorksheet(string htmlValue, ExcelWorksheet worksheet, string returnLink)
+        {
+
+            var replacement = htmlValue;
+            replacement = new Regex("</span>|</td>|</button>|</a>|</font>").Replace(replacement, "{column}");// span td 替换成 列
+            replacement = new Regex("</div>|</tr>|</p>|</li>|</ul>|</dt>|</dd>|</dl>|\\r\\n|</h[1-6]>").Replace(replacement, "{row}");// div tr p 替换成 行
+            replacement = new Regex("<[^>]*?>").Replace(replacement, "");// 其他html标签清除 
+
+            replacement = replacement.Replace("&nbsp;", "{column}");//空格替换成列
+            var rows = replacement.Split("{row}", StringSplitOptions.RemoveEmptyEntries);
+            var tables = new string[rows.Length][];
+            //转换成行数组
+            int maxRowCount = rows.Length;
+            for (int i = 0; i < rows.Length; i++)
+            {
+                //转换成列数组
+                var columns = rows[i].Split("{column}", StringSplitOptions.RemoveEmptyEntries);
+                tables[i] = columns;
+            }
+            if (maxRowCount <= 0)
+                return;
+            worksheet.Cells[1, 1, maxRowCount, 20].Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+            worksheet.Cells[1, 1, maxRowCount, 20].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+            worksheet.Cells[1, 1, maxRowCount, 20].IsRichText = true;
+            worksheet.Cells[1, 1, maxRowCount, 20].Merge = true;
+
+            for (int i = 0; i < tables.Length; i++)
+            {
+                if (tables[i] != null)
+                {
+                    string line = string.Join("", tables[i]);
+                    worksheet.Cells[1, 1, maxRowCount, 20].RichText.Add(line, true);
+                }
+            }
+
+            worksheet.Cells[1, 21].Style.Font.UnderLine = true;
+            worksheet.Cells[1, 21].Style.Font.Color.SetColor(Color.Blue);
+            worksheet.Cells[1, 21].Style.Font.Size = 14;
+            worksheet.Cells[1, 21].Hyperlink = new ExcelHyperLink(returnLink, "返回");
+        }
+        #endregion
         private IActionResult NotFound(Guid id)
         {
             Notifier.Warning($"未找到id:{id}的简历记录。");

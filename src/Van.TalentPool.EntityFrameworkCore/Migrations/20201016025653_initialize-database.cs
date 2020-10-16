@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Van.TalentPool.EntityFrameworkCore.Migrations
@@ -7,6 +8,24 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "DailyStatistics",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Platform = table.Column<string>(maxLength: 128, nullable: true),
+                    Date = table.Column<DateTime>(nullable: false),
+                    Description = table.Column<string>(maxLength: 512, nullable: true),
+                    CreatorUserId = table.Column<Guid>(nullable: false),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    LastModifierUserId = table.Column<Guid>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DailyStatistics", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Dictionaries",
                 columns: table => new
@@ -51,7 +70,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                     Name = table.Column<string>(maxLength: 256, nullable: true),
                     AppointmentTime = table.Column<DateTime>(nullable: false),
                     VisitedTime = table.Column<DateTime>(nullable: true),
-                    Status = table.Column<short>(nullable: false),
+                    Status = table.Column<sbyte>(nullable: false),
                     CreatorUserId = table.Column<Guid>(nullable: false),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     LastModifierUserId = table.Column<Guid>(nullable: true),
@@ -74,15 +93,15 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                     ResumeId = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(maxLength: 32, nullable: true),
                     InvestigateDate = table.Column<DateTime>(nullable: false),
-                    Status = table.Column<short>(nullable: false),
+                    Status = table.Column<sbyte>(nullable: false),
                     IsQualified = table.Column<bool>(nullable: true),
                     QualifiedRemark = table.Column<string>(maxLength: 512, nullable: true),
                     IsConnected = table.Column<bool>(nullable: true),
                     UnconnectedRemark = table.Column<string>(nullable: true),
-                    AcceptTravelStatus = table.Column<short>(nullable: true),
+                    AcceptTravelStatus = table.Column<sbyte>(nullable: true),
                     NotAcceptTravelReason = table.Column<string>(maxLength: 256, nullable: true),
                     ExpectedSalary = table.Column<string>(maxLength: 128, nullable: true),
-                    WorkState = table.Column<short>(nullable: true),
+                    WorkState = table.Column<sbyte>(nullable: true),
                     ExpectedDate = table.Column<string>(maxLength: 128, nullable: true),
                     IsAcceptInterview = table.Column<bool>(nullable: true),
                     ExpectedInterviewDate = table.Column<string>(maxLength: 128, nullable: true),
@@ -258,6 +277,27 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DailyStatisticItems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    JobName = table.Column<string>(maxLength: 128, nullable: true),
+                    UpdateCount = table.Column<int>(nullable: false),
+                    DownloadCount = table.Column<int>(nullable: false),
+                    DailyStatisticId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DailyStatisticItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DailyStatisticItems_DailyStatistics_DailyStatisticId",
+                        column: x => x.DailyStatisticId,
+                        principalTable: "DailyStatistics",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DictionaryItems",
                 columns: table => new
                 {
@@ -345,7 +385,9 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
                     Keyword = table.Column<string>(maxLength: 128, nullable: true),
+                    OriginData = table.Column<string>(nullable: true),
                     ResumeId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -364,7 +406,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     RoleId = table.Column<Guid>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -385,7 +427,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<Guid>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -495,11 +537,15 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_DailyStatisticItems_DailyStatisticId",
+                table: "DailyStatisticItems",
+                column: "DailyStatisticId");
+
+            migrationBuilder.CreateIndex(
                 name: "NameIndex",
                 table: "Dictionaries",
                 column: "Name",
-                unique: true,
-                filter: "[Name] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_DictionaryItems_DictionaryId",
@@ -550,8 +596,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                 name: "RoleNameIndex",
                 table: "Roles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserClaims_UserId",
@@ -577,12 +622,14 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                 name: "UserNameIndex",
                 table: "Users",
                 column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "DailyStatisticItems");
+
             migrationBuilder.DropTable(
                 name: "DictionaryItems");
 
@@ -627,6 +674,9 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserTokens");
+
+            migrationBuilder.DropTable(
+                name: "DailyStatistics");
 
             migrationBuilder.DropTable(
                 name: "Dictionaries");

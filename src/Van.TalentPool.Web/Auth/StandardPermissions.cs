@@ -35,7 +35,7 @@ namespace Van.TalentPool.Web.Auth
         public const string Resume_AuditSetting = "Pages.Resume.AuditSetting";
 
         public const string Investigation = "Pages.Investigation";
-        public const string Investigation_CreateOrEditOrDelete = "Pages.Investigation._CreateOrEditOrDelete";
+        public const string Investigation_CreateOrEditOrDelete = "Pages.Investigation.CreateOrEditOrDelete";
         public const string Investigation_FinshOrRestore = "Pages.Investigation.FinshOrRestore";
         public const string Investigation_Audit = "Pages.Investigation.Audit";
 
@@ -43,7 +43,11 @@ namespace Van.TalentPool.Web.Auth
         public const string Interview_CreateOrEditOrDelete = "Pages.Interview.CreateOrEditOrDelete";
 
         public const string Evaluation = "Pages.Evaluation";
-        public const string Evaluation_CreateOrEditOrDelete = "Pages.Evaluation._CreateOrEditOrDelete";
+        public const string Evaluation_CreateOrEditOrDelete = "Pages.Evaluation.CreateOrEditOrDelete";
+
+        public const string DailyStatistic = "Pages.DailyStatistic";
+        public const string DailyStatistic_CreateOrEditOrDelete = "Pages.DailyStatistic.CreateOrEditOrDelete";
+
 
 
     }
@@ -88,6 +92,10 @@ namespace Van.TalentPool.Web.Auth
 
             var evaluation = new PermissionDefinition(Pages.Evaluation, "技术评测", "拥有技术评测的权限。");
             evaluation.AddChild(Pages.Evaluation_CreateOrEditOrDelete, "创建、编辑、删除技术评测");
+
+            var dailyStatistic = new PermissionDefinition(Pages.DailyStatistic, "每日数据统计", "拥有每日数据统计的权限。");
+            dailyStatistic.AddChild(Pages.DailyStatistic_CreateOrEditOrDelete, "创建、编辑、删除每日数据统计");
+
             return new[] {
             authorization,
             configuration,
@@ -95,7 +103,8 @@ namespace Van.TalentPool.Web.Auth
             resume,
             investigation,
             interview,
-            evaluation
+            evaluation,
+            dailyStatistic
             };
         }
     }
@@ -122,6 +131,7 @@ namespace Van.TalentPool.Web.Auth
             var interview = new NavigationDefinition("面试预约", "/Interview/List", "fas fa-calendar-alt", Pages.Interview);
             var job = new NavigationDefinition("职位管理", "/Job/List", "fas fa-user-md", Pages.Job);
             var evaluation = new NavigationDefinition("技术评测", "/Evaluation/List", "fas fa-newspaper", Pages.Evaluation);
+            var dailyStatistic = new NavigationDefinition("每日统计", "/DailyStatistic/List", "fas fa-chart-pie", Pages.DailyStatistic);
 
             return new[]
             {
@@ -132,7 +142,8 @@ namespace Van.TalentPool.Web.Auth
                 job,
                 evaluation,
                 authorization,
-                configuration
+                configuration,
+                dailyStatistic
                 };
         }
     }

@@ -216,6 +216,11 @@
                                             {
                                                 @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("结束调查", "/Investigation/Restore/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))
                                             }
+                                            else if (item.Status == InvestigationStatus.Complete)
+                                            { 
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("恢复调查", "/Investigation/Restore/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))
+                                            }
+
                                             @if (item.Status != InvestigationStatus.Complete)
                                             {
                                                 if (item.OwnerUserId == UserIdentifier.UserId)

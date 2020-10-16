@@ -16,11 +16,16 @@ namespace Van.TalentPool.Application.Investigations
         public AcceptTravelStatus? AcceptTravelStatus { get; set; }
         public string CityOfResidence { get; set; }
         public string CityOfDomicile { get; set; }
+        public string ExpectedSalary { get; set; }
+        public bool? IsAcceptInterview { get; set; }
         public string ExpectedInterviewDate { get; set; }
         public string ExpectedPhoneInterviewDate { get; set; }
         public bool? IsConnected { get; set; }
         public bool? IsQualified { get; set; }
+        public string UnconnectedRemark { get; set; }
         public string OwnerUserName { get; set; }
-        public InvestigationStatus Status { get; set; } 
+        public InvestigationStatus Status { get; set; }
+        public string Information { get; set; }
+        public string Evaluation { get; set; }
     }
 }
