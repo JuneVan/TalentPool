@@ -5,7 +5,10 @@ using Van.TalentPool.Application.Resumes;
 namespace Van.TalentPool.Web.Models.IndexViewModels
 {
     public class IndexViewModel
-    { // 月新增数据
+    {
+        public bool OnlyMyself { get; set; } = false;
+
+        // 月新增数据
         public MonthlyIncreaseData MonthlyIncreaseData { get; set; }
         // 月简历数统计   
         public MonthlyData ResumeMonthlyData { get; set; }
@@ -22,6 +25,7 @@ namespace Van.TalentPool.Web.Models.IndexViewModels
         // 调查排行榜
         public RankData InvestigaionRankData { get; set; }
 
+        
         //待处理的简历
         public List<UncompleteResumeDto> TodoTasks { get; set; }
 

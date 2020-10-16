@@ -33,7 +33,7 @@ namespace Van.TalentPool.Web.Controllers
         public async Task<IActionResult> Index(bool onlyMyself = true)
         {
 
-            var model = new IndexViewModel();
+            var model = new IndexViewModel() { OnlyMyself = onlyMyself };
             //当前用户 
             var userId = UserIdentifier.UserId;
             //用于过滤导入数据的时间界限

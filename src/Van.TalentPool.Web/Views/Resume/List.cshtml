@@ -141,11 +141,15 @@
                                 <td>
                                     @if (item.Enable)
                                     {
-                                        <span class="badge badge-success">有效</span>
+                                        <span class="badge badge-success">
+                                            <i class="fas fa-check"></i>
+                                        </span>
                                     }
                                     else
                                     {
-                                        <span class="badge badge-danger" title="无效，@item.EnableReason">无效</span>
+                                        <span class="badge badge-danger" title="无效，@item.EnableReason" data-toggle="tooltip" data-placement="top">
+                                            <i class="fas fa-times"></i>
+                                        </span>
                                     }
                                 </td>
 
@@ -155,7 +159,7 @@
                                             <i class="fas fa-cog"></i> 操作菜单
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="group-dropdown">
-                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Resume/View/" + item.Id, Pages.Resume, "dropdown-item"))
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Resume/View/" + item.Id, Pages.Resume, "dropdown-item",blank:true))
                                             @if (item.AuditStatus == AuditStatus.Complete)//合适状态可以进行的操作
                                             {
                                                 if (!string.IsNullOrEmpty(item.OwnerUserName))
@@ -168,7 +172,7 @@
                                         }
                                             @if (item.InvestigationId.HasValue)
                                             {
-                                                <a href="/Investigation/View/@item.InvestigationId" class="dropdown-item">查看调查</a>
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Investigation/View/" + item.InvestigationId, Pages.Investigation, "dropdown-item")) 
                                             }
 
 
@@ -199,7 +203,7 @@
                                                 @if (!item.InvestigationId.HasValue)
                                                 {
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("设置无效", "/Resume/Trash/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
-                                                } 
+                                                }
                                             }
 
                                         </div>

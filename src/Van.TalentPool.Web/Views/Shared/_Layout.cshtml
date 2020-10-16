@@ -82,7 +82,7 @@
             <a href="/Admin" class="brand-link bg-blue text-white">
                 @if (string.IsNullOrEmpty(siteSettings.Logo))
                 {
-                    <img src="~/lib/admin-lte/img/AdminLTELogo.png" alt="Logo" class="brand-image img-rounded">
+                    <img src="~/img/Logo.png" alt="Logo" class="brand-image img-rounded">
                 }
                 else
                 {
@@ -150,6 +150,7 @@
     <script src="~/lib/admin-lte/js/adminlte.min.js" asp-append-version="true"></script>
     <script src="~/lib/jquery-validate/jquery.validate.min.js" asp-append-version="true"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+    <script src="~/js/van.admin.js" asp-append-version="true"></script>
     @RenderSection("scripts", false)
 </body>
 </html>

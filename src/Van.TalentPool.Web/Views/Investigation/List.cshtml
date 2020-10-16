@@ -191,8 +191,8 @@
                                             <i class="fas fa-cog"></i> 操作菜单
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="group-dropdown">
-                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看调查", "/Investigation/View/" + item.Id, Pages.Investigation, "dropdown-item"))
-                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看简历", "/Resume/View/" + item.ResumeId, Pages.Resume, "dropdown-item"))
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看调查", "/Investigation/View/" + item.Id, Pages.Investigation, "dropdown-item", blank: true))
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看简历", "/Resume/View/" + item.ResumeId, Pages.Resume, "dropdown-item", blank: true))
 
                                             @if (!item.IsQualified.HasValue || !item.IsQualified.Value)
                                             {
@@ -217,7 +217,7 @@
                                                 @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("结束调查", "/Investigation/Restore/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))
                                             }
                                             else if (item.Status == InvestigationStatus.Complete)
-                                            { 
+                                            {
                                                 @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("恢复调查", "/Investigation/Restore/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))
                                             }
 

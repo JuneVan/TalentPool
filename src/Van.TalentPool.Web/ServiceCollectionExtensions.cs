@@ -17,6 +17,7 @@ using Van.TalentPool.EntityFrameworkCore.Queriers;
 using Van.TalentPool.EntityFrameworkCore.Stores;
 using Van.TalentPool.Evaluations;
 using Van.TalentPool.Infrastructure;
+using Van.TalentPool.Infrastructure.Exceptions;
 using Van.TalentPool.Infrastructure.Message.Email;
 using Van.TalentPool.Infrastructure.Message.Sms;
 using Van.TalentPool.Infrastructure.Notify;
@@ -38,9 +39,10 @@ namespace Van.TalentPool.Web
         public static IServiceCollection AddTalentPoolWeb(this IServiceCollection services)
         {
           
-            services.Configure<MvcOptions>(configureOptions =>
+            services.Configure<MvcOptions>(cfg =>
             {
-                configureOptions.Filters.Add<NotifyFilter>();
+                cfg.Filters.Add<NotifyFilter>();
+                cfg.Filters.Add<GlobalExceptionFilter>();
             });
             // core
             services.AddTransient<IUserIdentifier, ClaimPrincipalUserIdentifier>();
@@ -86,6 +88,7 @@ namespace Van.TalentPool.Web
 
             // infrastructure
             services.AddScoped<INotifier, Notifier>();
+            services.AddTransient<INotifySerializer, NotifySerializer>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ISmsSender, SmsSender>();
             services.AddMemoryCache();

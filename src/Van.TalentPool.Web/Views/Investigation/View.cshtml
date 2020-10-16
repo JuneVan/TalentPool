@@ -1,12 +1,20 @@
 ﻿@model Van.TalentPool.Application.Investigations.InvestigationDetailDto
+@inject Van.TalentPool.Jobs.JobManager JobManager
+
 @{
-    ViewData["Header"] = "意向调查管理";
+    ViewData["PageHeader"] = "意向调查管理";
     ViewData["Title"] = $"查看意向调查 - {Model.JobName} - { Model.Name}";
+    var job = await JobManager.FindByIdAsync(Model.JobId);
 }
 
 <div class="card card-default">
     <div class="card-header">
         <h3 class="card-title">@ViewData["Title"]</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
+                <i class="fas fa-question-circle"></i>岗位说明
+            </button>
+        </div>
     </div>
 
     <div class="card-body">
@@ -166,8 +174,7 @@
     </div>
 </div>
 
-
-
+@await Html.PartialAsync("Partials/_JobPartial", job)
 
 @section styles {
     <link href="~/lib/summernote/summernote-bs4.min.css" rel="stylesheet" />

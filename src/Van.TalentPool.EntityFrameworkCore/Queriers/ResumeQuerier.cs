@@ -81,6 +81,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                         join d in _context.Users on a.CreatorUserId equals d.Id
                         join e in _context.Users on a.OwnerUserId equals e.Id
                         join f in _context.Users on a.OwnerUserId equals f.Id
+                        where a.Id == id
                         select new ResumeDetailDto
                         {
                             Id = a.Id,

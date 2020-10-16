@@ -108,6 +108,7 @@ namespace Van.TalentPool.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 var resume = Mapper.Map<Resume>(model);
                 resume.OwnerUserId = UserIdentifier.UserId.Value;
                 resume.Enable = true;

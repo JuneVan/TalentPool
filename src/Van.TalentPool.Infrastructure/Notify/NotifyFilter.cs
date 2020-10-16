@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace Van.TalentPool.Infrastructure.Notify
@@ -15,33 +11,29 @@ namespace Van.TalentPool.Infrastructure.Notify
     public class NotifyFilter : IActionFilter, IAsyncResultFilter
     {
         public const string CookiePrefix = "van_notify";
-        private readonly INotifier _notifier; 
-        private readonly IDataProtectionProvider _dataProtectionProvider;
-
+        private readonly INotifier _notifier;
+        private readonly INotifySerializer _notifySerializer;
         private NotifyEntry[] _existingEntries = Array.Empty<NotifyEntry>();
-        private bool _shouldDeleteCookie;  
-        private readonly ILogger<NotifyFilter> _logger;
+        private bool _shouldDeleteCookie;
 
         public NotifyFilter(
-            INotifier notifier, 
-            IDataProtectionProvider dataProtectionProvider, 
-            ILogger<NotifyFilter> logger)
-        { 
-            _logger = logger;
-            _dataProtectionProvider = dataProtectionProvider;
-             
-            _notifier = notifier;  
+            INotifier notifier,
+            INotifySerializer notifySerializer)
+        {
+            _notifySerializer = notifySerializer;
+
+            _notifier = notifier;
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var messages = Convert.ToString(filterContext.HttpContext.Request.Cookies[CookiePrefix]);
-            if (String.IsNullOrEmpty(messages))
+            if (string.IsNullOrEmpty(messages))
             {
                 return;
             }
 
-            DeserializeNotifyEntries(messages, out NotifyEntry[] messageEntries);
+            NotifyEntry[] messageEntries = _notifySerializer.Deserialize(messages);
 
             if (messageEntries == null)
             {
@@ -61,7 +53,7 @@ namespace Van.TalentPool.Infrastructure.Notify
 
         public void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            var messageEntries = _notifier.List().ToArray();
+            var messageEntries = _notifier.NotifyEntries;
 
             // Don't touch temp data if there's no work to perform.
             if (messageEntries.Length == 0 && _existingEntries.Length == 0)
@@ -78,7 +70,7 @@ namespace Van.TalentPool.Infrastructure.Notify
             // String data type used instead of complex array to be session-friendly.
             if (!(filterContext.Result is ViewResult || filterContext.Result is PageResult) && _existingEntries.Length > 0)
             {
-                filterContext.HttpContext.Response.Cookies.Append(CookiePrefix, SerializeNotifyEntry(_existingEntries), new CookieOptions { HttpOnly = true });
+                filterContext.HttpContext.Response.Cookies.Append(CookiePrefix, _notifySerializer.Serialize(_existingEntries), new CookieOptions { HttpOnly = true });
             }
         }
 
@@ -104,7 +96,7 @@ namespace Van.TalentPool.Infrastructure.Notify
                 return;
             }
 
-          ((Controller)filterContext.Controller).ViewData["NotifyEntities"] = _existingEntries; 
+          ((Controller)filterContext.Controller).ViewData["NotifyEntities"] = _existingEntries;
             DeleteCookies(filterContext);
 
             await next();
@@ -113,42 +105,6 @@ namespace Van.TalentPool.Infrastructure.Notify
         private void DeleteCookies(ResultExecutingContext filterContext)
         {
             filterContext.HttpContext.Response.Cookies.Delete(CookiePrefix, new CookieOptions { HttpOnly = true });
-        }
-
-        private string SerializeNotifyEntry(NotifyEntry[] notifyEntries)
-        {
-            var settings = new JsonSerializerSettings();
-            settings.Converters.Add(new NotifyEntryConverter());
-
-            try
-            {
-                var protector = _dataProtectionProvider.CreateProtector(nameof(NotifyFilter));
-                var signed = protector.Protect(JsonConvert.SerializeObject(notifyEntries, settings));
-                return WebUtility.UrlEncode(signed);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        private void DeserializeNotifyEntries(string value, out NotifyEntry[] messageEntries)
-        {
-            var settings = new JsonSerializerSettings();
-            settings.Converters.Add(new NotifyEntryConverter());
-
-            try
-            {
-                var protector = _dataProtectionProvider.CreateProtector(nameof(NotifyFilter));
-                var decoded = protector.Unprotect(WebUtility.UrlDecode(value));
-                messageEntries = JsonConvert.DeserializeObject<NotifyEntry[]>(decoded, settings);
-            }
-            catch
-            {
-                messageEntries = null;
-
-                _logger.LogWarning("The notification entries could not be decrypted");
-            }
         }
     }
 }

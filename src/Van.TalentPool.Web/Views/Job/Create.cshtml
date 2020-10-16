@@ -56,7 +56,7 @@
                         <label class="form-check-label" asp-for="Enable">可用</label>
                     </div>
                 </div>
-            </div> 
+            </div>
         </div>
         <div class="card-footer">
             <button type="submit" class="btn btn-primary">提交</button>
@@ -64,4 +64,30 @@
         </div>
     </form>
 </div>
- 
+@section styles {
+    <link href="~/lib/summernote/summernote-bs4.min.css" rel="stylesheet" />
+}
+@section scripts{
+    <script src="~/lib/summernote/summernote-bs4.min.js"></script>
+    <script src="~/lib/summernote/lang/summernote-zh-CN.min.js"></script>
+    <script>
+        $(function () {
+            $("textarea[name='Requirements'],textarea[name='Description'],textarea[name='Remark']").summernote({
+                lang: 'zh-CN',
+                fontsize: '16',
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontsize', ['fontsize']],
+                    ['fontname', ['fontname']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'hr']],
+                    ['view', ['fullscreen', 'codeview']]
+                ]
+            });
+        })
+    </script>
+}

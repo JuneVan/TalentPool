@@ -64,6 +64,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                  .ToListAsync();
             return new PaginationOutput<InvestigationDto>(totalSize, investigations);
         }
+
         public async Task<InvestigationDetailDto> GetInvestigationAsync(Guid id)
         {
             var query = from a in _context.Investigations
@@ -78,6 +79,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                         {
                             Name = a.Name,
                             Id = a.Id,
+                            JobId = b.JobId,
                             JobName = c.Title,
                             ResumeId = a.ResumeId,
                             PhoneNumber = b.PhoneNumber,

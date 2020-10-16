@@ -3,13 +3,19 @@
 @model Van.TalentPool.Web.Models.IndexViewModels.IndexViewModel
 
 @{
-    ViewData["Header"] = "我的工作台";
+    ViewData["PageHeader"] = "我的工作台";
     ViewData["Title"] = "首页";
 
 }
 
-
+ 
 <div class="row">
+    <div class="col-md-12 mb-2">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="OnlyMyself">
+            <label class="form-check-label" asp-for="OnlyMyself"><a asp-action="Index" asp-route-OnlyMyself="@(!Model.OnlyMyself)">仅看我的预约和调查</a></label>
+        </div>
+    </div>
     <div class="col-12  col-md-4">
         <div class="info-box mb-3">
             <span class="info-box-icon bg-primary"><i class="fas fa-id-card"></i></span>
@@ -361,7 +367,7 @@
 
 
 @section styles{
-    <link href="~/lib/chart.js/Chart.min.css" rel="stylesheet" />
+    <link href="~/lib/Chart.js/Chart.min.css" rel="stylesheet" />
     <style>
         .list-group-item {
             padding: 0 .5rem;
