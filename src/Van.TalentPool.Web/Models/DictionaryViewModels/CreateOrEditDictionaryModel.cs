@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Van.TalentPool.Web.Models.DictionaryViewModels
 {
@@ -10,6 +11,7 @@ namespace Van.TalentPool.Web.Models.DictionaryViewModels
 
         public List<SelectListItem> InjectDictionaries { get; set; }
 
+        [Required(ErrorMessage ="请选择字典名称。")]
         public string Name { get; set; }
 
         public string DisplayName { get; set; }
@@ -20,6 +22,7 @@ namespace Van.TalentPool.Web.Models.DictionaryViewModels
     public class DictionaryItemModel
     { 
         public string Name { get; set; }
+        [Required(ErrorMessage = "字典的值不能为空。")]
         public int Value { get; set; }
     }
 }

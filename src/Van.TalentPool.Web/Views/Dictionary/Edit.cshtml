@@ -12,20 +12,23 @@
     <form role="form" method="post" asp-controller="Dictionary" asp-action="Edit">
         <input type="hidden" asp-for="Id" />
         <div class="card-body">
+            <div asp-validation-summary="All"></div>
             <div class="form-group">
                 <label>名称</label>
                 <select class="form-control" asp-for="Name" asp-items="Model.InjectDictionaries">
                     <option value="">==请选择字典==</option>
                 </select>
                 <input type="hidden" asp-for="DisplayName" />
-            </div> 
+
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
             <div class="form-group value-list">
                 <label>字典值</label>
                 @{
                     var dictionaryItems = Model.DictionaryItems.OrderBy(o => o.Value).ToList();
                     for (int i = 0; i < dictionaryItems.Count; i++)
                     {
-                        <div class="input-group child mb-md-1"> 
+                        <div class="input-group child mb-md-1">
                             <input type="text" class="form-control" placeholder="请输入字典的名称" name="DictionaryItems[@i].Name" value="@dictionaryItems[i].Name" />
                             <input type="number" class="form-control" placeholder="请输入字典的值" name="DictionaryItems[@i].Value" value="@dictionaryItems[i].Value" />
                             <div class="input-group-prepend">

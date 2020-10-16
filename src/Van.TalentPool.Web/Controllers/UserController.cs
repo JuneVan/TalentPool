@@ -45,13 +45,13 @@ namespace Van.TalentPool.Web.Controllers
 
         // 创建用户
 
-        [PermissionCheck(Pages.Authorization_User_Create)]
+        [PermissionCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
         public IActionResult Create()
         {
             return View();
         }
 
-        [PermissionCheck(Pages.Authorization_User_Create)]
+        [PermissionCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateOrEditUserViewModel model)
@@ -75,7 +75,7 @@ namespace Van.TalentPool.Web.Controllers
 
         // 编辑用户
 
-        [PermissionCheck(Pages.Authorization_User_Edit)]
+        [PermissionCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
         public async Task<IActionResult> Edit(Guid id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
@@ -86,7 +86,7 @@ namespace Van.TalentPool.Web.Controllers
             return View(model);
         }
 
-        [PermissionCheck(Pages.Authorization_User_Edit)]
+        [PermissionCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CreateOrEditUserViewModel model)
@@ -163,7 +163,7 @@ namespace Van.TalentPool.Web.Controllers
             return View(model);
         }
         // 删除用户
-        [PermissionCheck(Pages.Authorization_User_Delete)]
+        [PermissionCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
@@ -177,7 +177,7 @@ namespace Van.TalentPool.Web.Controllers
             return View(model);
         }
 
-        [PermissionCheck(Pages.Authorization_User_Delete)]
+        [PermissionCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(DeleteUserViewModel model)

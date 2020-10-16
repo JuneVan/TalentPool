@@ -7,7 +7,7 @@
 
 <div class="row">
     <div class="col-12">
-        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("新建职位", "/Job/Create", string.Empty, "btn btn-primary", "fas fa-plus"))
+        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("新建职位", "/Job/Create", Pages.Job_CreateOrEditOrDelete, "btn-sm btn btn-primary", "fas fa-plus"))
     </div>
 </div>
 
@@ -65,10 +65,15 @@
                                 </td>
                                 <td>@item.CreationTime </td>
                                 <td>
-                                    <div class="btn-group  btn-group-sm">
-                                        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Job/Edit/" + item.Id, string.Empty, "btn btn-default"))
-                                        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("删除", "/Job/Delete/" + item.Id, string.Empty, "btn btn-danger"))
-                                    </div>
+                                    <div class="btn-group  btn-group-sm" role="group">
+                                        <button id="group-dropdown" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-cog"></i> 操作菜单
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="group-dropdown">
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Job/Edit/" + item.Id, Pages.Job_CreateOrEditOrDelete, "dropdown-item"))
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("删除", "/Job/Delete/" + item.Id, Pages.Job_CreateOrEditOrDelete, "dropdown-item")) 
+                                        </div>
+                                    </div> 
                                 </td>
                             </tr>
 

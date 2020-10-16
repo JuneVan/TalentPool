@@ -1,6 +1,6 @@
 ﻿@model Van.TalentPool.Web.Models.ResumeViewModels.AuditSettingViewModel
 @{
-    ViewData["Header"] = "简历审批设置";
+    ViewData["PageHeader"] = "简历审批设置";
     ViewData["Title"] = "设置简历审批流程";
 }
 
@@ -69,7 +69,7 @@
 </div>
 
 @section scripts{
-    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/lib-ext/jquery-ui/jquery-ui.min.js"></script>
     <script>
         $(function () {
             $('.audit-list').sortable({

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Van.TalentPool.Interviews
 {
-    public interface IInterviewStore
+    public interface IInterviewStore : IDisposable
     {
         Task<Interview> CreateAsync(Interview interview, CancellationToken cancellationToken);
         Task<Interview> UpdateAsync(Interview interview, CancellationToken cancellationToken);

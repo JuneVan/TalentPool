@@ -5,14 +5,14 @@ namespace Van.TalentPool.Infrastructure.Notify
 {
     public class Notifier : INotifier
     {
-        private readonly IList<NotifyEntry> _entries;
-
         public Notifier(ILogger<Notifier> logger)
         {
             Logger = logger;
-            _entries = new List<NotifyEntry>();
+            _notifyEntries = new List<NotifyEntry>();
         }
         public ILogger Logger { get; set; }
+        private List<NotifyEntry> _notifyEntries;
+        public NotifyEntry[] NotifyEntries => _notifyEntries.ToArray();
 
         public void Add(NotifyType type, string message)
         {
@@ -20,13 +20,8 @@ namespace Van.TalentPool.Infrastructure.Notify
             {
                 Logger.LogInformation("Notification '{NotificationType}' with message '{NotificationMessage}'", type, message);
             }
-
-            _entries.Add(new NotifyEntry { Type = type, Message = message });
+            _notifyEntries.Add(new NotifyEntry { Type = type, Message = message });
         }
 
-        public IList<NotifyEntry> List()
-        {
-            return _entries;
-        }
     }
 }

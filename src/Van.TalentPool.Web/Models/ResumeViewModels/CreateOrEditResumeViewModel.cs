@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Van.TalentPool.Resumes;
 
 namespace Van.TalentPool.Web.Models.ResumeViewModels
 {
@@ -21,6 +20,8 @@ namespace Van.TalentPool.Web.Models.ResumeViewModels
         [Required(ErrorMessage = "请输入招聘平台ID")]
         public string PlatformId { get; set; }
 
+        public bool ActiveDelivery { get; set; }
+
         /* Edit ↓ */
         public string Name { get; set; }
 
@@ -29,11 +30,7 @@ namespace Van.TalentPool.Web.Models.ResumeViewModels
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
         public string Description { get; set; }
-
-    
-
-        public AuditStatus AuditStatus { get; set; }
-        public bool Enable { get; set; }
+          
         public string Keywords { get; set; }
     }
 }

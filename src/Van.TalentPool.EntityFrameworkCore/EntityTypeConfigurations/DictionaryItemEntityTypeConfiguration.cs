@@ -9,12 +9,7 @@ namespace Van.TalentPool.EntityFrameworkCore.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<DictionaryItem> builder)
         {
             builder.ToTable("DictionaryItems");
-            builder.Property(p => p.Name).HasMaxLength(128);
-
-            builder.HasOne(o => o.Dictionary)
-              .WithMany(m => m.DictionaryItems)
-              .HasForeignKey(f => f.DictionaryId)
-              .IsRequired();
+            builder.Property(p => p.Name).HasMaxLength(128); 
         }
     }
 }

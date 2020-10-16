@@ -36,12 +36,12 @@ namespace Van.TalentPool.Web.Controllers
 
         // 创建角色
 
-        [PermissionCheck(Pages.Authorization_Role_Create)]
+        [PermissionCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
         public IActionResult Create()
         {
             return View();
         }
-        [PermissionCheck(Pages.Authorization_Role_Create)]
+        [PermissionCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateOrEditRoleViewModel model)
@@ -58,7 +58,7 @@ namespace Van.TalentPool.Web.Controllers
 
         // 编辑角色
 
-        [PermissionCheck(Pages.Authorization_Role_Edit)]
+        [PermissionCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
         public async Task<IActionResult> Edit(Guid id)
         {
             var role = await _roleManager.FindByIdAsync(id.ToString());
@@ -67,7 +67,7 @@ namespace Van.TalentPool.Web.Controllers
             var model = Mapper.Map<CreateOrEditRoleViewModel>(role);
             return View(model);
         }
-        [PermissionCheck(Pages.Authorization_Role_Edit)]
+        [PermissionCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CreateOrEditRoleViewModel model)
@@ -134,7 +134,7 @@ namespace Van.TalentPool.Web.Controllers
         }
 
 
-        [PermissionCheck(Pages.Authorization_Role_Delete)]
+        [PermissionCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var role = await _roleManager.FindByIdAsync(id.ToString());
@@ -142,7 +142,7 @@ namespace Van.TalentPool.Web.Controllers
                 return NotFound(id);
             return View(Mapper.Map<DeleteRoleViewModel>(role));
         }
-        [PermissionCheck(Pages.Authorization_Role_Delete)]
+        [PermissionCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(DeleteRoleViewModel model)

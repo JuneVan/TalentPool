@@ -4,9 +4,9 @@ using Van.TalentPool.Resumes;
 
 namespace Van.TalentPool.EntityFrameworkCore.EntityTypeConfigurations
 {
-    class ResumeKeyMapEntityTypeConfiguration: IEntityTypeConfiguration<ResumeKeyMap>
+    class ResumeKeyMapEntityTypeConfiguration: IEntityTypeConfiguration<ResumeKeywordMap>
     { 
-        public void Configure(EntityTypeBuilder<ResumeKeyMap> builder)
+        public void Configure(EntityTypeBuilder<ResumeKeywordMap> builder)
         {
             builder.ToTable("ResumeKeyMaps");
             builder.HasKey(k => k.Id);

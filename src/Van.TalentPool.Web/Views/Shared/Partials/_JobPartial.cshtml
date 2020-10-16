@@ -1,0 +1,28 @@
+﻿@model Van.TalentPool.Jobs.Job
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog  modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">岗位说明</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="group">
+                    <label>任职要求：</label>
+                    @Html.Raw(Model.Requirements)
+                </div>
+                <div class="group">
+                    <label>岗位职责：</label>
+                    @Html.Raw(Model.Description)
+                </div>
+                <div class="group">
+                    <label>特别说明：</label>
+                    @Html.Raw(Model.Remark)
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

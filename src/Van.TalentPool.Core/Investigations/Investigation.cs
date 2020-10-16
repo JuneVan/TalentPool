@@ -12,7 +12,7 @@ namespace Van.TalentPool.Investigations
         /// <summary>
         /// 姓名
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } 
         /// <summary>
         /// 调查日期（默认为创建时间，但当电话未接通或者考虑情况下，可以通过更新该字段，来更新到当日的调查记录列表）
         /// </summary>
@@ -29,7 +29,7 @@ namespace Van.TalentPool.Investigations
         /// <summary>
         /// 记录是否合适的原因
         /// </summary>
-        public virtual string Remark { get; set; }
+        public virtual string QualifiedRemark { get; set; }
 
         /// <summary>
         /// 联系情况

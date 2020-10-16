@@ -8,16 +8,16 @@ namespace Van.TalentPool.Resumes
 {
     public class ResumeManager : IDisposable
     {
-        private bool _disposed; 
+        private bool _disposed;
         public ResumeManager(IResumeStore resumeStore,
             IResumeAuditSettingStore resumeAuditSettingStore,
             IEnumerable<IResumeValidator> resumeValidators,
-            IResumeComparer resumeComparer )
+            IResumeComparer resumeComparer)
         {
             ResumeStore = resumeStore;
             ResumeValidators = resumeValidators;
             ResumeComparer = resumeComparer;
-            ResumeAuditSettingStore = resumeAuditSettingStore; 
+            ResumeAuditSettingStore = resumeAuditSettingStore;
         }
         protected IResumeStore ResumeStore { get; }
         protected IResumeAuditSettingStore ResumeAuditSettingStore { get; }
@@ -88,13 +88,6 @@ namespace Van.TalentPool.Resumes
             return await ResumeStore.FindByPlatformAsync(platformId, CancellationToken);
         }
 
-        public async Task<IList<ResumeAuditRecord>> GetAuditRecordsByResumeIdAsync(Guid resumeId)
-        {
-            if (resumeId == null)
-                throw new ArgumentNullException(nameof(resumeId));
-
-            return await ResumeStore.GetAuditRecordsByResumeIdAsync(resumeId, CancellationToken);
-        }
         public async Task<ResumeAuditRecord> GetAuditRecordByIdAsync(Guid auditRecordId)
         {
             if (auditRecordId == null)
@@ -102,7 +95,6 @@ namespace Van.TalentPool.Resumes
 
             return await ResumeStore.GetAuditRecordByIdAsync(auditRecordId, CancellationToken);
         }
-
         public async Task AuditAsync(Resume resume, bool passed, Guid auditedUserId, ResumeAuditRecord auditRecord)
         {
             if (resume == null)
@@ -130,7 +122,6 @@ namespace Van.TalentPool.Resumes
             resume.AuditStatus = auditStatus;
             await ResumeStore.UpdateAsync(resume, CancellationToken);
         }
-
         public async Task CancelAuditAsync(Resume resume, Guid auditedUserId, ResumeAuditRecord auditRecord)
         {
 
@@ -149,7 +140,6 @@ namespace Van.TalentPool.Resumes
             resume.AuditStatus = AuditStatus.Ongoing;
             await ResumeStore.UpdateAsync(resume, CancellationToken);
         }
-
         public async Task AssignUserAsync(Resume resume, Guid ownerUserId)
         {
             if (resume == null)
@@ -161,8 +151,26 @@ namespace Van.TalentPool.Resumes
             resume.OwnerUserId = ownerUserId;
 
             await ResumeStore.UpdateAsync(resume, CancellationToken);
-            
+
         }
+        public async Task TrashAsync(Resume resume, string enableReason)
+        {
+            if (resume == null)
+                throw new ArgumentNullException(nameof(resume));
+            if (string.IsNullOrEmpty(enableReason))
+                throw new ArgumentNullException(nameof(enableReason));
+            resume.Enable = false;
+            resume.EnableReason = enableReason;
+            await ResumeStore.UpdateAsync(resume, CancellationToken);
+
+        }
+
+        //internal async Task<List<ResumeKeywordMap>> GetResumeKeyMapsAsync(string keyword)
+        //{
+        //    if (string.IsNullOrEmpty(keyword))
+        //        throw new ArgumentNullException(nameof(keyword));
+        //    return await ResumeStore.GetResumeKeyMapsAsync(keyword, CancellationToken);
+        //}
 
         public void Dispose()
         {

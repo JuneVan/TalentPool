@@ -4,11 +4,14 @@ using System.Threading.Tasks;
 using Van.TalentPool.Application.Jobs;
 using Van.TalentPool.Infrastructure.Notify;
 using Van.TalentPool.Jobs;
+using Van.TalentPool.Permissions;
+using Van.TalentPool.Web.Auth;
 using Van.TalentPool.Web.Models.CommonModels;
 using Van.TalentPool.Web.Models.JobViewModels;
 
 namespace Van.TalentPool.Web.Controllers
 {
+    [PermissionCheck(Pages.Job)]
     public class JobController : WebControllerBase
     {
         private readonly IJobQuerier _jobQuerier;
@@ -27,10 +30,12 @@ namespace Van.TalentPool.Web.Controllers
             return View(new PaginationModel<JobDto>(output, input));
         }
 
+        [PermissionCheck(Pages.Job_CreateOrEditOrDelete)]
         public IActionResult Create()
         {
             return View();
         }
+        [PermissionCheck(Pages.Job_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateOrEditJobViewModel model)
@@ -44,7 +49,7 @@ namespace Van.TalentPool.Web.Controllers
             }
             return View(model);
         }
-
+        [PermissionCheck(Pages.Job_CreateOrEditOrDelete)]
         public async Task<IActionResult> Edit(Guid id)
         {
             var job = await _jobManager.FindByIdAsync(id);
@@ -53,6 +58,7 @@ namespace Van.TalentPool.Web.Controllers
             var model = Mapper.Map<CreateOrEditJobViewModel>(job);
             return View(model);
         }
+        [PermissionCheck(Pages.Job_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CreateOrEditJobViewModel model)
@@ -69,7 +75,7 @@ namespace Van.TalentPool.Web.Controllers
             }
             return View(model);
         }
-
+        [PermissionCheck(Pages.Job_CreateOrEditOrDelete)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var job = await _jobManager.FindByIdAsync(id);
@@ -78,6 +84,7 @@ namespace Van.TalentPool.Web.Controllers
             var model = Mapper.Map<DeleteJobViewModel>(job);
             return View(model);
         }
+        [PermissionCheck(Pages.Job_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(DeleteJobViewModel model)

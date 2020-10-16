@@ -49,12 +49,15 @@ namespace Van.TalentPool.Resumes
         /// <summary>
         /// 失效理由
         /// </summary>
-        public virtual string EnableReason { get; set; }
-
+        public virtual string EnableReason { get; set; } 
+        /// <summary>
+        /// 主动投递
+        /// </summary>
+        public virtual bool ActiveDelivery { get; set; }
         /// <summary>
         /// 简历关键词
         /// </summary>
-        public virtual ICollection<ResumeKeyMap> KeyMaps { get; set; }
+        public virtual ICollection<ResumeKeywordMap> KeyMaps { get; set; }
         /// <summary>
         /// 相似简历
         /// </summary>
