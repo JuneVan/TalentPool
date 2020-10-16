@@ -81,6 +81,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                             Id = a.Id,
                             JobId = b.JobId,
                             JobName = c.Title,
+                            ActiveDelivery = b.ActiveDelivery,
                             ResumeId = a.ResumeId,
                             PhoneNumber = b.PhoneNumber,
                             Status = a.Status,

@@ -22,7 +22,8 @@
                         <label>所属招聘平台</label>
                         <select class="form-control" asp-for="Platform" asp-items="@Model.Platforms">
                             <option value="">==请选择招聘平台==</option>
-                        </select>
+                        </select> 
+                        <span asp-validation-for="Platform" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">

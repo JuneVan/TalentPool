@@ -12,8 +12,14 @@
     <form role="form" method="post" asp-action="Edit">
         <div class="card-body">
             <input type="hidden" class="form-control" asp-for="Id">
-            <div class="row"> 
-                <div class="form-group col-md-6">
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="ActiveDelivery">
+                        <label asp-for="ActiveDelivery">主动投递</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
                     <label>姓名</label>
                     <input type="text" class="form-control" placeholder="请输入姓名，例如：张三" asp-for="Name">
                     <span asp-validation-for="Name" class="text-danger"></span>
@@ -35,14 +41,15 @@
                     </select>
                     <span asp-validation-for="JobId" class="text-danger"></span>
                 </div>
+
                 <div class="form-group col-md-6">
                     <label>求职意向城市</label>
-                    <input type="text" class="form-control" placeholder="请输入求职意向城市" asp-for="City"> 
+                    <input type="text" class="form-control" placeholder="请输入求职意向城市" asp-for="City">
                 </div>
                 <div class="form-group col-md-12">
                     <label>相似度结果</label>
                     <br />
-                     
+
                 </div>
                 <div class="form-group col-md-12">
                     <div class="form-check" style="padding-left:0;">
@@ -52,7 +59,7 @@
                 </div>
                 <div class="form-group col-md-12">
                     <label>简历内容</label>
-                    <textarea type="text" class="form-control"  asp-for="Description"></textarea>
+                    <textarea type="text" class="form-control" asp-for="Description"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 

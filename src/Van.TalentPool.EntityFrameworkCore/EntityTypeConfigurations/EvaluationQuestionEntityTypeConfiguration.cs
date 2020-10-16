@@ -11,7 +11,7 @@ namespace Van.TalentPool.EntityFrameworkCore.EntityTypeConfigurations
             builder.ToTable("EvaluationQuestions");
             builder.HasKey(k => k.Id);
             builder.Property(p => p.Description).HasMaxLength(1024); 
-            builder.Property(p => p.ReferenceAnswer).HasMaxLength(1024);
+            builder.Property(p => p.ReferenceAnswer).HasMaxLength(3072);
         }
     }
 }

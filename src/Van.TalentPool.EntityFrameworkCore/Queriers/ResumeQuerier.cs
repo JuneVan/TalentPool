@@ -104,7 +104,8 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                             Email = a.Email,
                             Description = a.Description,
                             LastModificationTime = a.LastModificationTime,
-                            LastModifierUserName = e.FullName
+                            LastModifierUserName = e.FullName,
+                            ActiveDelivery = a.ActiveDelivery
                         };
 
             var resume = await query.FirstOrDefaultAsync();
@@ -160,7 +161,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                         from bbb in bb.DefaultIfEmpty()
                         join c in _context.Jobs on a.JobId equals c.Id
                         join d in _context.Users on a.OwnerUserId equals d.Id
-                        where a.AuditStatus == AuditStatus.Complete && (bbb == null || bbb.Status != InvestigationStatus.Complete)
+                        where a.AuditStatus == AuditStatus.Complete && (bbb == null || bbb.Status != InvestigationStatus.Complete) && a.Enable == true
                         orderby a.CreationTime
                         select new UncompleteResumeDto
                         {

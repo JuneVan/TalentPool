@@ -582,6 +582,9 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<bool>("ActiveDelivery")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<int>("AuditStatus")
                         .HasColumnType("int");
 

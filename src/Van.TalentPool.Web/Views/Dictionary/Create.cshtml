@@ -11,12 +11,15 @@
     </div>
     <form role="form" method="post" asp-action="Create">
         <div class="card-body">
+             <div asp-validation-summary="All"></div>
             <div class="form-group">
                 <label>名称</label>
                 <select class="form-control" name="Name" asp-items="Model.InjectDictionaries">
                     <option value="">==请选择字典==</option>
                 </select>
                 <input type="hidden" asp-for="DisplayName" />
+
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div> 
             <div class="form-group value-list">
                 <label>字典值</label>

@@ -27,5 +27,6 @@ namespace Van.TalentPool.Application.Resumes
         public string LastModifierUserName { get; set; }
         public DateTime? LastModificationTime { get; set; } 
         public List<ResumeAuditRecordDto> ResumeAuditRecords { get; set; }
+        public bool ActiveDelivery { get; set; }
     }
 }

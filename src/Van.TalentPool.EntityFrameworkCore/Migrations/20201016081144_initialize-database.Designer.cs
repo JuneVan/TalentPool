@@ -9,7 +9,7 @@ using Van.TalentPool.EntityFrameworkCore;
 namespace Van.TalentPool.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(VanDbContext))]
-    [Migration("20201016025653_initialize-database")]
+    [Migration("20201016081144_initialize-database")]
     partial class initializedatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -583,6 +583,9 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<bool>("ActiveDelivery")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("AuditStatus")
                         .HasColumnType("int");

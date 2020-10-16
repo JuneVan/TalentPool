@@ -182,6 +182,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Migrations
                     AuditStatus = table.Column<int>(nullable: false),
                     Enable = table.Column<bool>(nullable: false),
                     EnableReason = table.Column<string>(maxLength: 256, nullable: true),
+                    ActiveDelivery = table.Column<bool>(nullable: false),
                     OwnerUserId = table.Column<Guid>(nullable: false),
                     CreatorUserId = table.Column<Guid>(nullable: false),
                     CreationTime = table.Column<DateTime>(nullable: false),

@@ -49,8 +49,11 @@ namespace Van.TalentPool.Resumes
         /// <summary>
         /// 失效理由
         /// </summary>
-        public virtual string EnableReason { get; set; }
-
+        public virtual string EnableReason { get; set; } 
+        /// <summary>
+        /// 主动投递
+        /// </summary>
+        public virtual bool ActiveDelivery { get; set; }
         /// <summary>
         /// 简历关键词
         /// </summary>

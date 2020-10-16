@@ -20,6 +20,8 @@ namespace Van.TalentPool.Web.Models.ResumeViewModels
         [Required(ErrorMessage = "请输入招聘平台ID")]
         public string PlatformId { get; set; }
 
+        public bool ActiveDelivery { get; set; }
+
         /* Edit ↓ */
         public string Name { get; set; }
 
