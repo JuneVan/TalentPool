@@ -1,0 +1,25 @@
+﻿@model Une.TalentPool.Web.Models.ResumeViewModels.CancelAuditViewModel
+@{ ViewData["PageHeader"] = "简历库管理";
+    ViewData["Title"] = "撤销审核记录 "; }
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">
+                    操作提示
+                </h3>
+            </div>
+            <form role="form" asp-action="CancelAudit" method="post">
+                <input type="hidden" asp-for="AuditRecordId">
+                <div class="card-body">
+                    <i class="fas fa-question-circle fa-2x"></i>请问是否确定撤销该审核记录？
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-danger">确定</button>
+                    <a href="/Resume/List" class="btn btn-default">返回简历列表</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
