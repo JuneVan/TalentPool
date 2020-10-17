@@ -78,3 +78,6 @@ dt {
     -o-object-fit: cover;
     object-fit: cover;
 }
+.info-box .info-box-text {
+     white-space: normal !important; 
+}

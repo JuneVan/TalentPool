@@ -119,6 +119,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                         {
                             OwnerUserId = b.OwnerUserId,
                             OwnerUserName = c.FullName,
+                            OwnerUserPhoto = c.Photo,
                             CreationTime = a.CreationTime,
                             AcceptTravelStatus = a.AcceptTravelStatus,
                             IsConnected = a.IsConnected

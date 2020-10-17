@@ -12,7 +12,7 @@ namespace Van.TalentPool.Application.Resumes
         // 详情
         Task<ResumeDetailDto> GetResumeAsync(Guid id);
         Task<List<ResumeAuditRecordDto>> GetResumeAuditRecordsAsync(Guid resumeId);
-
+        // 指定时间的简历统计
         Task<List<StatisticResumeDto>> GetStatisticResumesAsync(DateTime startTime, DateTime endTime, AuditStatus? auditStatus);
         Task<List<UncompleteResumeDto>> GetUncompleteResumesAsync(Guid? ownerUserId);
         // 导出数据

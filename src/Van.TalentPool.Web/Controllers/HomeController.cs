@@ -67,10 +67,21 @@ namespace Van.TalentPool.Web.Controllers
             monthlyIncreaseData.NewResumeTotalCount = mothlyResumes.Count;
 
             // 简历审核情况统计
-            var todayResumes = mothlyResumes.Where(w => w.CreatorUserId == userId && w.CreationTime >= startTime && w.CreationTime <= endTime).ToList();
-            todayResumeData.UnpassedCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.Unpassed);
-            todayResumeData.PassedCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.Complete);
-            todayResumeData.UnhandledCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.NoStart || w.AuditStatus == AuditStatus.Ongoing);
+            if (onlyMyself)
+            {
+                var todayResumes = mothlyResumes.Where(w => w.CreatorUserId == userId && w.CreationTime >= startTime && w.CreationTime <= endTime).ToList();
+                todayResumeData.PassedCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.Complete && w.Enable);
+                todayResumeData.UnpassedCount = todayResumes.Count - todayResumeData.PassedCount;
+                todayResumeData.UnhandledCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.NoStart || w.AuditStatus == AuditStatus.Ongoing);
+            }
+            else
+            {
+                var todayResumes = mothlyResumes.Where(w =>w.CreationTime >= startTime && w.CreationTime <= endTime).ToList();
+                todayResumeData.PassedCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.Complete && w.Enable);
+                todayResumeData.UnpassedCount = todayResumes.Count - todayResumeData.PassedCount;
+                todayResumeData.UnhandledCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.NoStart || w.AuditStatus == AuditStatus.Ongoing);
+            }
+           
 
 
 
@@ -81,11 +92,23 @@ namespace Van.TalentPool.Web.Controllers
             monthlyIncreaseData.NewInvestigationTotalCount = monthlyInvestigations.Count;
 
             // 调查情况统计
-            var todayInvestigations = monthlyInvestigations.Where(w => w.OwnerUserId == userId && w.CreationTime >= startTime && w.CreationTime <= endTime).ToList();
-            todayInvestigationData.AcceptCount = todayInvestigations.Count(w => w.AcceptTravelStatus == AcceptTravelStatus.Accept);
-            todayInvestigationData.RefuseCount = todayInvestigations.Count(w => w.AcceptTravelStatus == AcceptTravelStatus.Refuse);
-            todayInvestigationData.ConsiderCount = todayInvestigations.Count(w => w.AcceptTravelStatus == AcceptTravelStatus.Consider);
-            todayInvestigationData.MissedCount = todayInvestigations.Count(w => w.IsConnected == false);
+            if (onlyMyself)
+            {
+                var todayInvestigations = monthlyInvestigations.Where(w => w.OwnerUserId == userId && w.CreationTime >= startTime && w.CreationTime <= endTime).ToList();
+                todayInvestigationData.AcceptCount = todayInvestigations.Count(w => w.AcceptTravelStatus == AcceptTravelStatus.Accept);
+                todayInvestigationData.RefuseCount = todayInvestigations.Count(w => w.AcceptTravelStatus == AcceptTravelStatus.Refuse);
+                todayInvestigationData.ConsiderCount = todayInvestigations.Count(w => w.AcceptTravelStatus == AcceptTravelStatus.Consider);
+                todayInvestigationData.MissedCount = todayInvestigations.Count(w => w.IsConnected == false);
+            }
+            else
+            {
+                var todayInvestigations = monthlyInvestigations.Where(w =>  w.CreationTime >= startTime && w.CreationTime <= endTime).ToList();
+                todayInvestigationData.AcceptCount = todayInvestigations.Count(w => w.AcceptTravelStatus == AcceptTravelStatus.Accept);
+                todayInvestigationData.RefuseCount = todayInvestigations.Count(w => w.AcceptTravelStatus == AcceptTravelStatus.Refuse);
+                todayInvestigationData.ConsiderCount = todayInvestigations.Count(w => w.AcceptTravelStatus == AcceptTravelStatus.Consider);
+                todayInvestigationData.MissedCount = todayInvestigations.Count(w => w.IsConnected == false);
+            }
+           
 
             model.MonthlyIncreaseData = monthlyIncreaseData;
             model.TodayResumeData = todayResumeData;
@@ -181,7 +204,7 @@ namespace Van.TalentPool.Web.Controllers
                 {
                     FullName = group.Key,
                     TotalCount = mothlyResumesByGroup.Count,
-                    QualifiedCount = mothlyResumesByGroup.Count(c => c.AuditStatus == AuditStatus.Complete),
+                    QualifiedCount = mothlyResumesByGroup.Count(c => c.AuditStatus == AuditStatus.Complete && c.Enable),
                     Photo = photo
                 });
 
@@ -192,7 +215,7 @@ namespace Van.TalentPool.Web.Controllers
                 {
                     FullName = group.Key,
                     TotalCount = weekResumesByGroup.Count,
-                    QualifiedCount = weekResumesByGroup.Count(c => c.AuditStatus == AuditStatus.Complete),
+                    QualifiedCount = weekResumesByGroup.Count(c => c.AuditStatus == AuditStatus.Complete && c.Enable),
                     Photo = photo
                 });
                 // 天
@@ -201,7 +224,7 @@ namespace Van.TalentPool.Web.Controllers
                 {
                     FullName = group.Key,
                     TotalCount = dayResumesByGroup.Count,
-                    QualifiedCount = dayResumesByGroup.Count(c => c.AuditStatus == AuditStatus.Complete),
+                    QualifiedCount = dayResumesByGroup.Count(c => c.AuditStatus == AuditStatus.Complete && c.Enable),
                     Photo = photo
                 });
 

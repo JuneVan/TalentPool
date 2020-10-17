@@ -39,7 +39,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>创建人</label>
-                        <input type="hidden" value="" name="CreatorUserId">
+                        <input type="hidden" value="@Model.Output.Parameter.CreatorUserId" name="CreatorUserId">
                         <select class="form-control" id="creatorUserIdBySelect" asp-items="@Model.Users">
                             <option value="">=请选择创建人=</option>
                         </select>
@@ -48,9 +48,16 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>负责人</label>
-                        <input type="hidden" value="" name="OwnerUserId">
+                        @if (Model.Output.Parameter.OwnerUserId!=null)
+                        {
+                            <input type="hidden" value="@Model.Output.Parameter.OwnerUserId" name="OwnerUserId">
+                        }
+                        else
+                        {
+                            <input type="hidden" value="@UserIdentifier.UserId.Value" name="OwnerUserId">
+                        } 
                         <select class="form-control" id="ownerUserIdBySelect" asp-items="@Model.Users">
-                            <option value="@Guid.Empty">=请选择负责人=</option>
+                            <option value="">=请选择负责人=</option>
                         </select>
                     </div>
                 </div>
@@ -159,53 +166,45 @@
                                             <i class="fas fa-cog"></i> 操作菜单
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="group-dropdown">
-                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Resume/View/" + item.Id, Pages.Resume, "dropdown-item",blank:true))
-                                            @if (item.AuditStatus == AuditStatus.Complete)//合适状态可以进行的操作
-                                            {
-                                                if (!string.IsNullOrEmpty(item.OwnerUserName))
-                                                {
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("重新分配负责人", "/Resume/Assign/" + item.Id, Pages.Resume_AssignUser, "dropdown-item"))
-                                                }
-                                                else
-                                                {@await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("分配负责人", "/Resume/Assign/" + item.Id, Pages.Resume_AssignUser, "dropdown-item"))
-                                            }
-                                        }
-                                            @if (item.InvestigationId.HasValue)
-                                            {
-                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Investigation/View/" + item.InvestigationId, Pages.Investigation, "dropdown-item")) 
-                                            }
 
-
-                                            @if (item.AuditStatus == AuditStatus.Complete && !string.IsNullOrEmpty(item.Name) && item.Enable)//合适状态可以进行的操作
-                                            {
-                                                if (item.OwnerUserId == UserIdentifier.UserId && !item.InvestigationId.HasValue)
-                                                {
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("添加调查", "/Investigation/Create/" + item.Id, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
-                                                }
-                                                if (item.OwnerUserId == UserIdentifier.UserId)
-                                                {
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("添加面试预约", "/Interview/Create/" + item.Id, Pages.Interview, "dropdown-item"))
-                                                }
-                                            }
-                                            @if (item.AuditStatus == AuditStatus.Unpassed || item.AuditStatus == AuditStatus.NoStart)
-                                            {
-                                                //不合格状态或未处理状态可以删除
-                                                <a href="/Resume/Delete/@item.Id" class="dropdown-item">删除</a>
-                                            }
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Resume/View/" + item.Id, Pages.Resume, "dropdown-item", blank: true))
                                             @if (item.Enable)
                                             {
-                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("审批", "/Resume/Audit/" + item.Id, Pages.Resume_Audit, "dropdown-item"))
-                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Resume/Edit/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
                                                 @if (item.AuditStatus == AuditStatus.Complete)
                                                 {
-                                                    <a href="/Resume/SendEmail/@item.Id" class="dropdown-item">发送面试邀请</a>
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("重新分配负责人", "/Resume/Assign/" + item.Id, Pages.Resume_AssignUser, "dropdown-item"))
+                                                    if (item.OwnerUserId == UserIdentifier.UserId && !string.IsNullOrEmpty(item.Name))
+                                                    {
+                                                        if (!item.InvestigationId.HasValue)
+                                                        {
+                                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("添加调查", "/Investigation/Create/" + item.Id, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
+                                                        }
+                                                        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("添加面试预约", "/Interview/Create/" + item.Id, Pages.Interview, "dropdown-item"))
+                                                        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("发送面试邀请", "/Resume/SendEmail/" + item.Id, Pages.Resume_SendEmail, "dropdown-item"))
+                                                    }
                                                 }
-                                                @if (!item.InvestigationId.HasValue)
+                                                else if (item.AuditStatus == AuditStatus.NoStart && item.OwnerUserId == UserIdentifier.UserId)
                                                 {
+                                                    //未处理状态可以删除
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("删除", "/Resume/Delete/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
+                                                }
+                                                // 审核是可以回撤的，所以任何审核状态都可以审核
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("审核", "/Resume/Audit/" + item.Id, Pages.Resume_Audit, "dropdown-item"))
+
+                                                if (item.OwnerUserId == UserIdentifier.UserId)
+                                                {
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Resume/Edit/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
+                                                }
+                                                @if (item.InvestigationId.HasValue)
+                                                {
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看调查记录", "/Investigation/View/" + item.InvestigationId, Pages.Investigation, "dropdown-item"))
+                                                }
+                                                else
+                                                {
+                                                    //无调查记录的情况下，才可以将简历设置无效
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("设置无效", "/Resume/Trash/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
                                                 }
                                             }
-
                                         </div>
                                     </div>
 
@@ -225,10 +224,10 @@
 <blockquote class="quote-primary">
     <h3>简历处理规则</h3>
     <ol>
-        <li>新创建的简历需进行审批，审批流程中的状态为审批中、合格\不合格</li>
-        <li>审批通过的简历必须先编辑才能进行调查和预约面试</li>
-        <li>管理员创建的简历处理人为空，需分配给指定的处理人</li>
-        <li>未审核或审核未通过的简历，才可以由创建人、处理人或管理员删除</li>
+        <li>新创建的简历需进行审批，审批流程中的状态为审批中、合格\不合；</li>
+        <li>审批通过的简历必须先编辑才能进行调查、预约面试、发送面试邀请；</li>
+        <li>未审核的简历，才可以由处理人删除；</li>
+        <li>无调查记录的简历才可以被设置成无效状态；</li>
     </ol>
 </blockquote>
 @section styles{
