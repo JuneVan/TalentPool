@@ -1,0 +1,58 @@
+﻿@using Une.TalentPool.Users
+@using Une.TalentPool.Configurations
+@using Une.TalentPool.Web.Models.AccountViewModels
+@using Microsoft.AspNetCore.Identity;
+@model LoginViewModel
+@inject SignInManager<User> SignInManager
+@inject ConfigurationManager ConfigurationManager
+@{
+    Layout = "_AccountLayout";
+    ViewData["Title"] = "登录";
+    var setting = await ConfigurationManager.GetSettingAsync<UserSetting>();
+}
+
+<form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+    <h4>账户登录</h4>
+    <hr />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="请输入用户名或邮箱" asp-for="UserNameOrEmail">
+        <div class="input-group-append">
+            <div class="input-group-text">
+                <span class="fas fa-user"></span>
+            </div>
+        </div>
+    </div>
+    <div class="input-group mb-3">
+        <input type="password" class="form-control" placeholder="请输入密码" asp-for="Password">
+        <div class="input-group-append">
+            <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <div class="checkbox">
+                <label asp-for="RememberMe">
+                    <input asp-for="RememberMe" />
+                    记住我
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10">
+            <button type="submit" class="btn btn-default">登录</button>
+        </div>
+    </div>
+    @if (setting.AllowedForNewUsers)
+    {
+        <p>
+            <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">注册一个新账户</a>
+        </p>
+    }
+    <p>
+        <a asp-action="ForgotPassword">忘记密码</a>
+    </p>
+</form>

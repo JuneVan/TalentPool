@@ -1,0 +1,71 @@
+﻿@model PaginationModel<Une.TalentPool.Application.Evaluations.SubjectDto>
+@{
+    ViewData["PageHeader"] = "技术评测管理";
+    ViewData["Title"] = "技术点列表";
+}
+<div class="row">
+    <div class="col-12">
+
+        <div class="btn-group btn-group-sm">
+            <a asp-action="List" class="btn btn-default">
+                <i class="fa fa-list"></i>  返回技术评测列表
+            </a>  
+            <a asp-action="CreateSubject" asp-route-EvaluationId="@Model.Parameter.EvaluationId" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i>
+                新增技术点
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"]</h3>
+    </div>
+    <div class="card-body">
+        <div class="row table-responsive">
+            <div class="col-md-12">
+                <table class="table table-hover text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>关键项</th>
+                            <th>权重</th>
+                            <th>技术点描述</th> 
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>@item.Keyword</td>
+                                <td>@item.Weight</td>
+                                <td title="@item.Description">@item.Description.ToSubString(20)</td> 
+                                <td>
+                                    <div class="btn-group  btn-group-sm" role="group">
+                                        <button id="group-dropdown" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-cog"></i> 操作菜单
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="group-dropdown">
+                                            <a href="/Evaluation/EditSubject/@item.Id" class="dropdown-item">编辑</a>
+                                            <a href="/Evaluation/Questions?SubjectId=@item.Id&EvaluationId=@item.EvaluationId" class="dropdown-item">问题管理</a>
+                                            <a href="/Evaluation/DeleteSubject/@item.Id" class="dropdown-item">删除</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="card-footer">
+        @await Html.PartialAsync("Partials/_PaginationPartial", Model)
+    </div>
+</div>
+

@@ -1,0 +1,45 @@
+﻿@model Une.TalentPool.Web.Models.ResumeViewModels.TrashResumeViewModel
+@{ ViewData["PageHeader"] = "简历库管理";
+    ViewData["Title"] = "设置为不可用状态 - " + Model.Name; }
+<div class="row">
+    <div class="col-12">
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"]</h3>
+            </div>
+            <form role="form" method="post" asp-action="Trash">
+                <div class="card-body">
+                    <input type="hidden" asp-for="Id">
+                    <div class="form-group">
+                        <label>简历姓名</label>
+                        <input type="text" class="form-control" placeholder="请输入姓名，例如：张三" value="@Model.Name" name="Name" readonly>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label>处理理由</label>
+                        <div class="btn-group btn-group-sm" id="btn-remarks">
+                            <button type="button" class="btn btn-default" data-remark="无法下载">无法下载</button>
+                            <button type="button" class="btn btn-default" data-remark="简历重复">简历重复</button>
+                            <button type="button" class="btn btn-default" data-remark="其他">其他（请写明理由）</button>
+                        </div>
+                        <textarea class="form-control" asp-for="EnableReason"></textarea>
+                        <span asp-validation-for="EnableReason"></span>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">提交</button>
+                    <a asp-action="List" class="btn btn-default">返回简历列表</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+    $(function () {
+            $("#btn-remarks button").click(function () {
+                $("textarea[name='EnableReason']").val($(this).data("remark"));
+            })
+        });</script>
+}

@@ -1,0 +1,16 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Une.TalentPool.DailyStatistics;
+
+namespace Une.TalentPool.EntityFrameworkCore.EntityTypeConfigurations
+{
+    public class DailyStatisticItemEntityTypeConfiguration : IEntityTypeConfiguration<DailyStatisticItem>
+    {
+        public void Configure(EntityTypeBuilder<DailyStatisticItem> builder)
+        {
+            builder.ToTable("DailyStatisticItems");
+            builder.HasKey(k => k.Id);
+            builder.Property(p => p.JobName).HasMaxLength(128); 
+        }
+    }
+}

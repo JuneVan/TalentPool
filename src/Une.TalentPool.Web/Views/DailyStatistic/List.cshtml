@@ -1,0 +1,68 @@
+﻿@model PaginationModel<Une.TalentPool.Application.DailyStatistics.DailyStatisticDto>
+@{
+    ViewData["PageHeader"] = "日统计数据管理";
+    ViewData["Title"] = "日统计数据列表";
+}
+
+
+<div class="row">
+    <div class="col-12">
+        <a href="/DailyStatistic/Create" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus"></i>
+            新增日数据
+        </a>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"]</h3>
+    </div>
+    <div class="card-body">
+
+        <div class="row table-responsive">
+            <div class="col-md-12">
+                <table class="table table-hover  text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>统计日期</th>
+                            <th>平台</th>
+                            <th>创建时间</th>
+                            <th>创建人</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>@(item.Date.ToString("yyyy年MM月dd日"))</td>
+                                <td>@item.Platform</td>
+                                <td>@item.CreationTime</td>
+                                <td>@item.CreatorUserName</td>
+                                <td>
+                                    <div class="btn-group  btn-group-sm" role="group">
+                                        <button id="group-dropdown" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-cog"></i> 操作菜单
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="group-dropdown">
+                                            <a href="/DailyStatistic/Edit/@item.Id" class="dropdown-item">编辑</a>
+                                            <a href="/DailyStatistic/Delete/@item.Id" class="dropdown-item">删除</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="card-footer">
+        @await Html.PartialAsync("Partials/_PaginationPartial", Model)
+    </div>
+</div>
+

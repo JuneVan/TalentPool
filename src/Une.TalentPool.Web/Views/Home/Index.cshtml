@@ -1,0 +1,561 @@
+﻿@using Une.TalentPool.Investigations
+@inject IUserIdentifier UserIdentifier
+@model Une.TalentPool.Web.Models.IndexViewModels.IndexViewModel
+
+@{
+    ViewData["PageHeader"] = "我的工作台";
+    ViewData["Title"] = "首页";
+
+}
+
+ 
+<div class="row">
+    <div class="col-md-12 mb-2">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="OnlyMyself">
+            <label class="form-check-label" asp-for="OnlyMyself"><a asp-action="Index" asp-route-OnlyMyself="@(!Model.OnlyMyself)">仅看我的预约和调查</a></label>
+        </div>
+    </div>
+    <div class="col-12  col-md-4">
+        <div class="info-box mb-3">
+            <span class="info-box-icon bg-primary"><i class="fas fa-id-card"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">我新增的简历数量/本月总共简历的数量</span>
+                <span class="info-box-number">
+                    @Model.MonthlyIncreaseData.NewResumeCount / @Model.MonthlyIncreaseData.NewResumeTotalCount
+                </span>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-12  col-md-4">
+        <div class="info-box mb-3">
+            <span class="info-box-icon bg-success"><i class="fas fa-pen-alt"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">我新增的调查数量/本月总共调查的数量</span>
+                <span class="info-box-number">
+                    @Model.MonthlyIncreaseData.NewInvestigationCount / @Model.MonthlyIncreaseData.NewInvestigationTotalCount
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-12  col-md-4">
+        <div class="info-box mb-3">
+            <span class="info-box-icon bg-danger"><i class="fas fa-calendar-alt"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">我新增的预约数量/本月总共预约的数量</span>
+                <span class="info-box-number">
+                    @Model.MonthlyIncreaseData.NewInterviewCount / @Model.MonthlyIncreaseData.NewInterviewTotalCount
+                </span>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-3">
+        <div class="card user-rank">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-thumbs-up"></i>
+                    简历排行榜
+                </h3>
+                <div class="card-tools">
+                    <div class="list-group list-group-horizontal" id="list-tab" role="tablist">
+                        <a class="list-group-item active" data-toggle="list" href="#list-resume-day" role="tab" aria-controls="day">今日</a>
+                        <a class="list-group-item" data-toggle="list" href="#list-resume-week" role="tab" aria-controls="week">本周</a>
+                        <a class="list-group-item " data-toggle="list" href="#list-resume-monthly" role="tab" aria-controls="monthly">本月</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active  table-responsive" id="list-resume-day" role="tabpanel">
+                        @if (Model.ResumeRankData != null)
+                        {
+                            @await Html.PartialAsync("Partials/_UserRankPartial", new { RankData = Model.ResumeRankData.DayUserRanks, RankDataType = 0 })
+                        }
+                    </div>
+                    <div class="tab-pane fade  table-responsive" id="list-resume-week" role="tabpanel">
+                        @if (Model.ResumeRankData != null)
+                        {
+                            @await Html.PartialAsync("Partials/_UserRankPartial", new { RankData = Model.ResumeRankData.WeekUserRanks, RankDataType = 0 })
+                        }
+                    </div>
+
+                    <div class="tab-pane fade table-responsive" id="list-resume-monthly" role="tabpanel">
+                        @if (Model.ResumeRankData != null)
+                        {
+                            @await Html.PartialAsync("Partials/_UserRankPartial", new { RankData = Model.ResumeRankData.MonthlyUserRanks, RankDataType = 0 })
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card user-rank">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-trophy"></i>
+                    调查排行榜
+                </h3>
+                <div class="card-tools">
+                    <div class="list-group list-group-horizontal" id="list-tab" role="tablist">
+                        <a class="list-group-item active" data-toggle="list" href="#list-investigation-day" role="tab" aria-controls="day">今日</a>
+                        <a class="list-group-item" data-toggle="list" href="#list-investigation-week" role="tab" aria-controls="week">本周</a>
+                        <a class="list-group-item " data-toggle="list" href="#list-investigation-monthly" role="tab" aria-controls="monthly">本月</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active  table-responsive" id="list-investigation-day" role="tabpanel">
+                        @if (Model.InvestigaionRankData != null)
+                        {
+                            @await Html.PartialAsync("Partials/_UserRankPartial", new { RankData = Model.InvestigaionRankData.DayUserRanks, RankDataType = 1 })
+                        }
+                    </div>
+                    <div class="tab-pane fade  table-responsive" id="list-investigation-week" role="tabpanel">
+                        @if (Model.InvestigaionRankData != null)
+                        {
+                            @await Html.PartialAsync("Partials/_UserRankPartial", new { RankData = Model.InvestigaionRankData.WeekUserRanks, RankDataType = 1 })
+                        }
+                    </div>
+
+                    <div class="tab-pane fade table-responsive" id="list-investigation-monthly" role="tabpanel">
+                        @if (Model.InvestigaionRankData != null)
+                        {
+                            @await Html.PartialAsync("Partials/_UserRankPartial", new { RankData = Model.InvestigaionRankData.MonthlyUserRanks, RankDataType = 1 })
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-id-card mr-1"></i>
+                    今日简历
+                </h3>
+            </div>
+            <div class="card-body">
+                <canvas id="resume-canvas" style="min-height: 250px;  max-width: 100%;"></canvas>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-pen-alt mr-1"></i>
+                    今日调查
+                </h3>
+            </div>
+            <div class="card-body">
+                <canvas id="investigation-canvas" style="min-height: 250px;  max-width: 100%;"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-12  col-md-9">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-chart-pie mr-1"></i>
+                    月统计数据
+                </h3>
+                <div class="card-tools">
+                    <ul class="nav nav-pills ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#revenue-chart" data-toggle="tab">简历</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#sales-chart" data-toggle="tab">调查</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="tab-content p-0">
+                    <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 300px;">
+                        <canvas id="monthy-resumes-canvas" style="min-height: 250px;  max-width: 100%;"></canvas>
+                    </div>
+                    <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;">
+                        <canvas id="monthy-investigaions-canvas" style="min-height: 250px;  max-width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-2">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-calendar-alt"></i>
+                    预约中的面试
+                </h3>
+            </div>
+            <div class="card-body p-0 table-responsive">
+                <table class="table table-hover  text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>姓名</th>
+                            <th>职位</th>
+                            <th>手机号</th>
+                            <th>预约时间</th>
+                            <th>预约人</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.InterviewTasks != null && Model.InterviewTasks.Count > 0)
+                        {
+                            @foreach (var item in Model.InterviewTasks)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.Name
+                                        @if (item.AppointmentTime < DateTime.Now)
+                                        {
+                                            <span class="badge badge-danger">已过期</span>
+                                        }
+                                    </td>
+                                    <td>@item.JobName</td>
+                                    <td>@item.PhoneNumber</td>
+                                    <td>
+                                        @item.AppointmentTime
+
+                                    </td>
+                                    <td>
+                                        @item.CreatorUserName
+                                    </td>
+                                    <td>
+                                        <div class="btn-group  btn-group-sm" role="group">
+                                            <button id="group-dropdown" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-cog"></i> 操作菜单
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="group-dropdown">
+                                                <a href="/Interview/Edit/@item.Id" class="dropdown-item">编辑</a>
+                                                <a href="/Interview/ChangeState/@item.Id" class="dropdown-item">履约/爽约</a>
+                                                <a href="/Interview/Cancel/@item.Id" class="dropdown-item">取消预约</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+
+                            <tr>
+                                <td colspan="6" class="text-md-center">
+                                    无预约记录
+                                </td>
+                            </tr>
+
+
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card mb-2">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-th-list"></i>
+                    待办的调查任务
+                </h3>
+            </div>
+            <div class="card-body p-0 table-responsive">
+                <table class="table table-hover  text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>姓名</th>
+                            <th>职位</th>
+                            <th>来源平台</th>
+                            <th>平台ID</th>
+                            <th>手机号</th>
+                            <th>当前调查日期</th>
+                            <th>状态</th>
+                            <th>处理人</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.TodoTasks != null && Model.TodoTasks.Count > 0)
+                        {
+                            @foreach (var item in Model.TodoTasks)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.Name
+                                        @if (item.CreationTime < DateTime.Now.Date)
+                                        {
+                                            <span class="badge badge-danger" title="往期未完成任务，请及时跟进。">待跟进</span>
+                                        }
+                                        else if (item.CreationTime > DateTime.Now.Date && !item.Status.HasValue)
+                                        {
+                                            <small class="badge badge-success" title="今日新增简历，未安排调查">新增</small>
+                                        }
+                                    </td>
+                                    <td>@item.JobName</td>
+                                    <td>@item.PlatformName</td>
+                                    <td onclick="onCopy(this)" title="单击本区域，可复制平台ID" data-toggle="tooltip" data-placement="top">@item.PlatformId</td>
+                                    <td>@item.PhoneNumber</td>
+                                    <td>@item.InvestigationDate?.Date.ToShortDateString()</td>
+                                    <td>
+                                        @if (!item.Status.HasValue)
+                                        {
+                                            <span class="badge badge-secondary">未开始</span>
+                                        }
+                                        else if (item.Status.HasValue && item.Status != InvestigationStatus.Complete)
+                                        {
+                                            <span class="badge badge-info">进行中</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.OwnerUserName
+                                    </td>
+                                    <td>
+                                        <div class="btn-group  btn-group-sm" role="group">
+                                            <button id="group-dropdown" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-cog"></i> 操作菜单
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="group-dropdown">
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Resume/View/" + item.Id, Pages.Resume, "dropdown-item", blank: true))
+                                                @if (item.OwnerUserId == UserIdentifier.UserId)
+                                                {
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Resume/Edit/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
+                                                    if (string.IsNullOrEmpty(item.Name))
+                                                    {
+                                                        <a href="javascript:void(0)" class="dropdown-item bg-warning">调查前请先补充简历信息</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        if (!item.InvestigationId.HasValue)
+                                                        {
+                                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("开始调查", "/Investigation/Create/" + item.Id, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
+                                                        }
+                                                        else
+                                                        {
+                                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("继续调查", "/Investigation/Edit/" + item.InvestigationId.Value, Pages.Investigation_CreateOrEditOrDelete, "dropdown - item"))
+                                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("技术评测", "/Evaluation/SelectEvaluation?InvestigationId=" + item.Id + "&JobId=" + item.JobId, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
+                                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("结束调查", "/Investigation/Finsh/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))
+                                                        }
+                                                    }
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="9" class="text-md-center">
+                                    无任务记录
+                                </td>
+                            </tr>
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+@section styles{
+    <link href="~/lib/Chart.js/Chart.min.css" rel="stylesheet" />
+    <style>
+        .list-group-item {
+            padding: 0 .5rem;
+        }
+
+        .user-rank .card-body {
+            padding: 0;
+        }
+
+        .table-responsive {
+            min-height: 150px;
+        }
+    </style>
+}
+@section scripts{
+    <script src="~/lib/chart.js/Chart.min.js"></script>
+    <script type="text/javascript">
+        var colors = ['#007bff', '#28a745', '#e83e8c', '#ffc107'];// 预留颜色数组
+        function createLineChart(chartId, data,title) {
+            var ticksStyle = {
+                fontColor: '#495057',
+                fontStyle: 'bold'
+            };
+
+            var mode = 'index';
+            var intersect = true;
+            var $chart = $(chartId);
+            new Chart($chart, {
+                data: data,
+                options: {
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    hover: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 10,
+                            fontColor: '#1d7af3',
+                        }
+                    },
+                    scales: {
+                        yAxes: [{
+                            display: true,
+                            gridLines: {
+                                display: true
+                            },
+                            ticks: $.extend({
+                                beginAtZero: true
+                            }, ticksStyle)
+                        }],
+                        xAxes: [{
+                            display: true,
+                            gridLines: {
+                                display: true
+                            },
+                            ticks: ticksStyle
+                        }]
+                    },
+                    layout: {
+                        padding: { left: 15, right: 15, top: 15, bottom: 15 }
+                    },
+                    title: {
+                        display: true,
+                        text: title
+                    }
+                }
+            })
+        }
+        // 月简历统计
+
+        var resumeMonthlyData = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ResumeMonthlyData)))');
+
+        var resumeMonthlyDatasets = [];
+        for (var i = 0; i < resumeMonthlyData.Datasets.length; i++) {
+            var color = colors[i];
+            resumeMonthlyDatasets.push({
+                label: resumeMonthlyData.Datasets[i].Label,
+                type: 'line',
+                data: resumeMonthlyData.Datasets[i].Values,
+                backgroundColor: 'transparent',
+                borderColor: color,
+                pointBorderColor: "#FFF",
+                pointBackgroundColor: color,
+                pointRadius: 4,
+                fill: false,
+                borderWidth: 2,
+            });
+        };
+
+        createLineChart("#monthy-resumes-canvas", {
+            labels: resumeMonthlyData.Labels,
+            datasets: resumeMonthlyDatasets
+        }, '每日简历统计表（鼠标悬停可查看）');
+
+         // 月调查统计
+
+        var investigaionMonthlyData = JSON.parse('@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.InvestigaionMonthlyData)))');
+
+        var investigaionMonthlyDatasets = [];
+        for (var i = 0; i < investigaionMonthlyData.Datasets.length; i++) {
+            var color = colors[i];
+            investigaionMonthlyDatasets.push({
+                label: investigaionMonthlyData.Datasets[i].Label,
+                type: 'line',
+                data: investigaionMonthlyData.Datasets[i].Values,
+                backgroundColor: 'transparent',
+                borderColor: color,
+                pointBorderColor: "#FFF",
+                pointBackgroundColor: color,
+                pointRadius: 4,
+                fill: false,
+                borderWidth: 2,
+            });
+        };
+
+        createLineChart("#monthy-investigaions-canvas", {
+            labels: investigaionMonthlyData.Labels,
+            datasets: investigaionMonthlyDatasets
+        }, '每日调查统计表（鼠标悬停可查看）');
+
+
+
+        // 今日简历/调查统计
+        var pieOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'top',
+                labels: {
+                    fontColor: 'rgb(0, 0, 0)',
+                    fontSize: 12,
+                    usePointStyle: true
+                }
+            },
+            tooltips: false,
+            layout: {
+                padding: {
+                    left: 20,
+                    right: 20,
+                    top: 0,
+                    bottom: 0
+                }
+            }
+        }
+        new Chart($('#resume-canvas'), {
+            type: 'pie',
+            data: {
+                labels: [
+                    '已通过（'+@Model.TodayResumeData.PassedCount+'）',
+                    '未通过（'+@Model.TodayResumeData.UnpassedCount+'）',
+                    '未处理（'+@Model.TodayResumeData.UnhandledCount+'）'
+                ],
+                datasets: [
+                    {
+                        data: [@Model.TodayResumeData.PassedCount, @Model.TodayResumeData.UnpassedCount,@Model.TodayResumeData.UnhandledCount],
+                        backgroundColor: ['#28a745', '#dc3545', '#6c757d'],
+                        borderWidth: 0
+                    }
+                ]
+            },
+            options: pieOptions
+        })
+        new Chart($('#investigation-canvas'), {
+            type: 'pie',
+            data: {
+                labels: [
+                    '接受人数（'+@Model.TodayInvestigationData.AcceptCount+'）',
+                    '拒绝人数（'+@Model.TodayInvestigationData.RefuseCount+'）',
+                    '考虑（'+@Model.TodayInvestigationData.ConsiderCount+'）',
+                    '未接人数（'+@Model.TodayInvestigationData.MissedCount+'）'
+                ],
+                datasets: [
+                    {
+                        data: [@Model.TodayInvestigationData.AcceptCount, @Model.TodayInvestigationData.RefuseCount,@Model.TodayInvestigationData.ConsiderCount,@Model.TodayInvestigationData.MissedCount],
+                        backgroundColor: ['#28a745', '#dc3545', '#ffc107', '#6c757d'],
+                    }
+                ]
+            },
+            options: pieOptions
+        })
+
+
+    </script>
+}
