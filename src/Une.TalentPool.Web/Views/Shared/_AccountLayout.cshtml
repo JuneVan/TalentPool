@@ -1,14 +1,18 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@using Une.TalentPool.Configurations
+@inject ConfigurationManager ConfigurationManager
+@{ 
+                var siteSettings = await ConfigurationManager.GetSettingAsync<SiteSetting>(); }
+<!DOCTYPE html>
+<html lang="zh">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 3 | @ViewData["Title"]</title> 
+    <title>@ViewData["Title"] - @siteSettings.SiteName</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
     <link href="~/lib/admin-lte/css/adminlte.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> 
-    <link href="~/css/van.account.css" rel="stylesheet" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link href="~/css/talent.account.css" rel="stylesheet" asp-append-version="true" />
 </head>
 <body class="hold-transition login-page">
     <div class="vague-background"></div>
@@ -17,10 +21,7 @@
             <i class="fas fa-heart"></i>
         </button>
     </p>
-    <div class="login-box">
-        <div class="login-logo">
-            <b>Admin</b>LTE
-        </div>
+    <div class="login-box"> 
         <div class="card">
             <div class="card-body login-card-body">
                 @RenderBody()
@@ -32,7 +33,7 @@
     <script src="~/lib/admin-lte/js/adminlte.min.js"></script>
     <script src="~/lib/jquery-validate/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/js/van.account.js" asp-append-version="true"></script>
+    <script src="~/js/talent.account.js" asp-append-version="true"></script>
     @RenderSection("Scripts", false)
 </body>
 </html>

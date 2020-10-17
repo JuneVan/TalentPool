@@ -28,7 +28,7 @@
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/lib/admin-lte/css/adminlte.min.css" rel="stylesheet" asp-append-version="true" />
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> 
-    <link href="~/css/van.admin.css" rel="stylesheet" />
+    <link href="~/css/talent.admin.css" rel="stylesheet" />
     @RenderSection("styles", false)
 
 </head>
@@ -97,7 +97,7 @@
                         <img src="@avatar" class="img-rounded" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">@currentUser.UserName</a>
+                        <a href="javascript:void(0)" class="d-block">@currentUser.Surname @currentUser.Name</a>
                     </div>
                 </div>
                 <nav class="mt-2">
@@ -150,7 +150,7 @@
     <script src="~/lib/admin-lte/js/adminlte.min.js" asp-append-version="true"></script>
     <script src="~/lib/jquery-validate/jquery.validate.min.js" asp-append-version="true"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
-    <script src="~/js/van.admin.js" asp-append-version="true"></script>
+    <script src="~/js/talent.admin.js" asp-append-version="true"></script>
     @RenderSection("scripts", false)
 </body>
 </html>
