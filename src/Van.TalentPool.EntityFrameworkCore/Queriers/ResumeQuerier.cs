@@ -147,7 +147,8 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                             CreationTime = a.CreationTime,
                             CreatorUserName = b.FullName,
                             AuditStatus = a.AuditStatus,
-                            CreatorUserPhoto = b.Photo
+                            CreatorUserPhoto = b.Photo,
+                            Enable = a.Enable
                         };
             if (auditStatus.HasValue)
                 query = query.Where(w => w.AuditStatus == auditStatus);
@@ -169,6 +170,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Queriers
                             PlatformName = a.PlatformName,
                             PlatformId = a.PlatformId,
                             Name = a.Name,
+                            JobId = a.JobId,
                             JobName = c.Title,
                             PhoneNumber = a.PhoneNumber,
                             CreationTime = a.CreationTime,

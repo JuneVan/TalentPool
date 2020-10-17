@@ -10,10 +10,8 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="btn-group btn-group-sm">
-            <a href="/Resume/List" class="btn btn-primary">
-                <i class="fa fa-plus"></i>  新增面试预约
-            </a>
+        <div class="btn-group btn-group-sm"> 
+            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("新增面试预约", "/Resume/List" , Pages.Interview_CreateOrEditOrDelete, "btn btn-sm btn-primary", "fa fa-plus"))
         </div>
     </div>
 </div>
@@ -24,7 +22,7 @@
     </div>
     <div class="card-body table-responsive">
 
-        <form action="/Interview/List" method="get">
+        <form asp-action="List" method="get">
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
@@ -106,13 +104,13 @@
                                         <button id="group-dropdown" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-cog"></i> 操作菜单
                                         </button>
-                                        <div class="dropdown-menu" aria-labelledby="group-dropdown">
-                                            <a href="/Interview/View/@item.Id" class="dropdown-item">查看</a>
+                                        <div class="dropdown-menu" aria-labelledby="group-dropdown"> 
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Interview/View/" + item.Id, Pages.Interview, "dropdown-item")) 
                                             @if (item.Status == InterviewStatus.None)
                                             {
-                                                <a href="/Interview/Edit/@item.Id" class="dropdown-item">编辑</a>
-                                                <a href="/Interview/Change/@item.Id" class="dropdown-item">履约/爽约</a>
-                                                <a href="/Interview/Cancel/@item.Id" class="dropdown-item">取消预约</a>
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Interview/Edit/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("履约/爽约", "/Interview/Change/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("履约/爽约", "/Interview/Cancel/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
                                             }
                                         </div>
                                     </div>

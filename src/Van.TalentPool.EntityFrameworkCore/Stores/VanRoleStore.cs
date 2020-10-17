@@ -23,7 +23,7 @@ namespace Van.TalentPool.EntityFrameworkCore.Stores
             if (role == null)
                 throw new ArgumentNullException(nameof(role));
             return await Context.RoleClaims
-                .Where(w => w.ClaimType == AppConstansts.ClaimTypes.Permission)
+                .Where(w => w.ClaimType == AppConstansts.ClaimTypes.Permission && w.RoleId == role.Id)
                 .Select(s => s.ClaimValue)
                 .ToListAsync(cancellationToken);
         }

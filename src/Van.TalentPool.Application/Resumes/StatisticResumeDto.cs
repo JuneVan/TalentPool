@@ -11,5 +11,6 @@ namespace Van.TalentPool.Application.Resumes
         public DateTime CreationTime { get; set; }
         public Guid OwnerUserId { get; set; } 
         public AuditStatus AuditStatus { get; set; }
+        public bool Enable { get; set; }
     }
 }

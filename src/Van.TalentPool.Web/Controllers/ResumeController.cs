@@ -68,7 +68,7 @@ namespace Van.TalentPool.Web.Controllers
 
         #region CURD
         public async Task<IActionResult> List(QueryResumeInput input)
-        {
+        { 
             var output = await _resumeQuerier.GetListAsync(input);
 
             var model = new QueryResumeViewModel();
@@ -109,12 +109,19 @@ namespace Van.TalentPool.Web.Controllers
             if (ModelState.IsValid)
             {
 
-                var resume = Mapper.Map<Resume>(model);
-                resume.OwnerUserId = UserIdentifier.UserId.Value;
-                resume.Enable = true;
-                await _resumeManager.CreateAsync(resume);
-                Notifier.Success("你已成功创建了一条简历记录。");
-                return RedirectToAction(nameof(Edit), new { resume.Id });
+                try
+                {
+                    var resume = Mapper.Map<Resume>(model);
+                    resume.OwnerUserId = UserIdentifier.UserId.Value;
+                    resume.Enable = true;
+                    await _resumeManager.CreateAsync(resume);
+                    Notifier.Success("你已成功创建了一条简历记录。");
+                    return RedirectToAction(nameof(Edit), new { resume.Id });
+                }
+                catch (Exception ex)
+                {
+                    Notifier.Warning(ex.Message);
+                }
             }
             return await BuildCreateOrEditDisplayAsync(model);
         }
@@ -138,25 +145,33 @@ namespace Van.TalentPool.Web.Controllers
                 return NotFound(model.Id);
             if (ModelState.IsValid)
             {
-                _ = Mapper.Map(model, resume);
-
-                resume.KeyMaps = new List<ResumeKeywordMap>();
-                if (!string.IsNullOrEmpty(model.Keywords))
+                try
                 {
-                    var keywords = model.Keywords.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                    foreach (var keyword in keywords)
+                    _ = Mapper.Map(model, resume);
+
+                    resume.KeyMaps = new List<ResumeKeywordMap>();
+                    if (!string.IsNullOrEmpty(model.Keywords))
                     {
-                        resume.KeyMaps.Add(new ResumeKeywordMap()
+                        var keywords = model.Keywords.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                        foreach (var keyword in keywords)
                         {
-                            Keyword = keyword,
-                            OriginData = model.Keywords,
-                            Name = model.Name
-                        });
+                            resume.KeyMaps.Add(new ResumeKeywordMap()
+                            {
+                                Keyword = keyword,
+                                OriginData = model.Keywords,
+                                Name = model.Name
+                            });
+                        }
                     }
+                    await _resumeManager.UpdateAsync(resume);
+                    Notifier.Success("你已成功编辑了一条简历记录。");
+                    return RedirectToAction(nameof(List));
                 }
-                await _resumeManager.UpdateAsync(resume);
-                Notifier.Success("你已成功编辑了一条简历记录。");
-                return RedirectToAction(nameof(List));
+                catch (Exception ex)
+                {
+                    Notifier.Warning(ex.Message);
+                }
+                
             }
             return await BuildCreateOrEditDisplayAsync(model);
         }

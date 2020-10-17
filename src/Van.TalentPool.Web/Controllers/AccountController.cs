@@ -604,7 +604,7 @@ namespace Van.TalentPool.Web.Controllers
                 try
                 {
                     var webRootPath = _environment.WebRootPath;
-                    var imageDirPath = $"{webRootPath}/upload/user-photo";
+                    var imageDirPath = $"{webRootPath}/upload/user-photos";
                     if (!Directory.Exists(imageDirPath))
                         Directory.CreateDirectory(imageDirPath);
 
@@ -621,10 +621,10 @@ namespace Van.TalentPool.Web.Controllers
                     }
 
                     //删除旧的图片
-                    var oldHeadImagePath = $"{webRootPath}/upload/user-photo/{user.Photo}";
+                    var oldHeadImagePath = $"{webRootPath}/upload/user-photos/{user.Photo}";
                     if (IOFile.Exists(oldHeadImagePath))
                         IOFile.Delete(oldHeadImagePath);
-                    user.Photo = $"/upload/user-photo/{fileName}";//图片文件相对路径
+                    user.Photo = $"/upload/user-photos/{fileName}";//图片文件相对路径
 
                 }
                 catch
