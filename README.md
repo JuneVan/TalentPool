@@ -1,6 +1,6 @@
-# Une.TalentPool 
+# TalentPool 
 
-企业人才库招聘解决方案
+企业招聘及人才库建设解决方案
 
 ## 类库
 
