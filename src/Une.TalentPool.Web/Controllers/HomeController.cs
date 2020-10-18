@@ -115,7 +115,7 @@ namespace Une.TalentPool.Web.Controllers
             model.TodayInvestigationData = todayInvestigationData;
 
             // 预约
-            var monthlyInterviews = await _interviewQuerier.GetStatisticInterviewsAsync(startTime, endTime);
+            var monthlyInterviews = await _interviewQuerier.GetStatisticInterviewsAsync(thisMonthStartTime, thisMonthEndTime);
 
             monthlyIncreaseData.NewInterviewCount = monthlyInterviews.Count(w => w.CreatorUserId == userId);
             monthlyIncreaseData.NewInterviewTotalCount = monthlyInterviews.Count;
