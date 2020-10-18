@@ -33,7 +33,7 @@ namespace Une.TalentPool.Resumes
             return await ResumeStore.CreateAsync(resume, CancellationToken);
         }
 
-        public async Task<Resume> UpdateAsync(Resume resume)
+        public async Task<Resume> UpdateAsync(Resume resume, bool ignoreDuplicated)
         {
             if (resume == null)
                 throw new ArgumentNullException(nameof(resume));
@@ -41,6 +41,8 @@ namespace Une.TalentPool.Resumes
             await ValidateAsync(resume);
             //获取相似简历
             await CompareAsync(resume);
+            if (!ignoreDuplicated & resume.ResumeCompares != null && resume.ResumeCompares.Count > 0)
+                throw new InvalidOperationException("检测存在相似简历，如忽略请勾选忽略重复选项。");
             return await ResumeStore.UpdateAsync(resume, CancellationToken);
         }
 
@@ -58,7 +60,7 @@ namespace Une.TalentPool.Resumes
         {
             if (ResumeComparer != null)
             {
-                resume.ResumeCompares = await ResumeComparer.CompareAsync(this, resume);
+                await ResumeComparer.CompareAsync(this, resume);
             }
         }
         public async Task DeleteAsync(Resume resume)
@@ -165,13 +167,18 @@ namespace Une.TalentPool.Resumes
 
         }
 
-        //internal async Task<List<ResumeKeywordMap>> GetResumeKeyMapsAsync(string keyword)
-        //{
-        //    if (string.IsNullOrEmpty(keyword))
-        //        throw new ArgumentNullException(nameof(keyword));
-        //    return await ResumeStore.GetResumeKeyMapsAsync(keyword, CancellationToken);
-        //}
-
+        internal async Task<List<ResumeKeywordMap>> GetResumeKeyMapsAsync(string keyword)
+        {
+            if (string.IsNullOrEmpty(keyword))
+                throw new ArgumentNullException(nameof(keyword));
+            return await ResumeStore.GetResumeKeyMapsAsync(keyword, CancellationToken);
+        }
+        internal async Task<List<ResumeKeywordMap>> GetResumeKeyMapsAsync(Guid resumeId)
+        {
+            if (resumeId == null)
+                throw new ArgumentNullException(nameof(resumeId));
+            return await ResumeStore.GetResumeKeyMapsAsync(resumeId, CancellationToken);
+        }
         public void Dispose()
         {
             Dispose(true);

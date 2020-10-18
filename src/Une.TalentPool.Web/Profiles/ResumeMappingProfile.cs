@@ -30,6 +30,7 @@ namespace Une.TalentPool.Web.Profiles
             CreateMap<ResumeAuditRecordDto, AuditRecordModel>(); 
             CreateMap<Resume, TrashResumeViewModel>();
             CreateMap<Resume, SendEmailViewModel>();
+            CreateMap<ResumeCompare, ResumeCompareDto>();
         }
     }
 }

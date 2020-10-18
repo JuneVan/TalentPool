@@ -1,28 +1,24 @@
 ﻿@model Une.TalentPool.Application.Resumes.ResumeDetailDto
 @inject Une.TalentPool.Jobs.JobManager JobManager
 
-@{
-    ViewData["PageHeader"] = "简历库管理";
+@{ ViewData["PageHeader"] = "简历库管理";
     ViewData["Title"] = $"查看简历 - {Model.JobName} - { Model.Name}";
-    var job = await JobManager.FindByIdAsync(Model.JobId);
-}
+    var job = await JobManager.FindByIdAsync(Model.JobId); }
 <div class="card card-default">
     <div class="card-header">
         <h3 class="card-title">@ViewData["Title"]</h3>
-        <div class="card-tools">
-            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
-                <i class="fas fa-question-circle"></i>岗位说明
-            </button>
-        </div>
+
     </div>
     <div class="card-body">
+        @if (Model.ActiveDelivery)
+        {
+<div class="ribbon-wrapper ribbon-lg">
+    <div class="ribbon bg-success text-lg">
+        主动投递
+    </div>
+</div>}
+
         <div class="row">
-            <div class="form-group col-md-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" asp-for="ActiveDelivery" disabled>
-                    <label asp-for="ActiveDelivery">主动投递</label>
-                </div>
-            </div>
             <div class="form-group col-md-6">
                 <label>姓名</label>
                 <input type="text" class="form-control" asp-for="Name" readonly>
@@ -37,8 +33,15 @@
             </div>
             <div class="form-group col-md-6">
                 <label>职位</label>
-                <input type="text" class="form-control" asp-for="JobName" readonly>
-            </div> 
+                <div class="input-group">
+                    <input type="text" class="form-control" asp-for="JobName" readonly>
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#modal-default" title="岗位说明">
+                            <i class="fas fa-question-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div class="form-group col-md-6">
                 <label>求职意向城市</label>
                 <input type="text" class="form-control" placeholder="请输入求职意向城市" asp-for="City" readonly>
@@ -46,7 +49,21 @@
             <div class="form-group col-md-12">
                 <label>相似度结果</label>
                 <br />
-
+                @if (Model.ResumeCompares != null)
+                {
+    <div class="btn-group">
+        @foreach (var item in Model.ResumeCompares)
+        {
+<a target="_blank" href="/Resume/View/@item.RelationResumeId" class="btn btn-dark btn-sm" style="background:rgb(255,0,0,@item.Similarity)!important">
+    @if (string.IsNullOrEmpty(item.RelationResumeName))
+    {
+<text>未知姓名</text> }
+else
+{
+@item.RelationResumeName}
+    @(item.Similarity*100) %
+</a>}
+    </div>}
             </div>
             <div class="form-group col-md-12">
                 <label>简历内容</label>
@@ -85,11 +102,9 @@
                 <label>有效性</label>
                 @if (Model.Enable)
                 {
-                    <input type="text" class="form-control text-success" value="有效" readonly>
-                }
-                else
-                {<input type="text" class="form-control text-danger" value="无效，@Model.EnableReason" readonly>
-                }
+    <input type="text" class="form-control text-success" value="有效" readonly> }
+else
+{<input type="text" class="form-control text-danger" value="无效，@Model.EnableReason" readonly>}
             </div>
             <div class="form-group col-md-12">
                 <label>审核记录</label>
@@ -106,23 +121,19 @@
                         {
                             foreach (var auditRecord in Model.ResumeAuditRecords)
                             {
-                                <tr>
-                                    <td>@auditRecord.CreatorUserName</td>
-                                    <td>
-                                        @if (auditRecord.Passed)
-                                        {
-                                            <span class="text-success">通过</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="text-danger">未通过</span>
-                                            <text>@auditRecord.Remark</text>
-                                        }
-                                    </td>
-                                    <td>@auditRecord.CreationTime</td>
-                                </tr>
-
-                            }
+            <tr>
+                <td>@auditRecord.CreatorUserName</td>
+                <td>
+                    @if (auditRecord.Passed)
+                    {
+<span class="text-success">通过</span> }
+else
+{
+<span class="text-danger">未通过</span>
+                        <text>@auditRecord.Remark</text>}
+                </td>
+                <td>@auditRecord.CreationTime</td>
+            </tr>}
                         }
                     </tbody>
                 </table>
@@ -136,7 +147,7 @@
     </div>
 </div>
 
-@await Html.PartialAsync("Partials/_JobPartial",job)
+@await Html.PartialAsync("Partials/_JobPartial", job)
 
 
 @section styles {
