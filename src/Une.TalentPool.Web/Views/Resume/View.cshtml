@@ -158,7 +158,7 @@ else
     <script>
         $(function () {
             // 检测技术点
-            var keywords = "@job.Keywords".split(' ');
+            var keywords = "@Html.Raw(job.Keywords)".split('、');
             var content = "@Model.Description";
               content = content.replace(/<[^>]*?>/g, " ");
             if (keywords) {

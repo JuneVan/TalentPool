@@ -1,9 +1,9 @@
 ﻿@using Une.TalentPool.Investigations
 @model Une.TalentPool.Web.Models.InvestigationViewModels.EditInvestigationViewModel
-@{
-    ViewData["PageHeader"] = "意向调查管理";
+@inject Une.TalentPool.Jobs.JobManager JobManager
+@{ ViewData["PageHeader"] = "意向调查管理";
     ViewData["Title"] = "编辑一条意向调查记录 - " + Model.Name;
-}
+    var job = await JobManager.FindByIdAsync(Model.JobId);}
 
 
 <div class="card card-default">
@@ -15,13 +15,13 @@
         <div class="card-body">
             @if (Model.ActiveDelivery)
             {
-        <div class="ribbon-wrapper ribbon-lg">
-            <div class="ribbon bg-success text-lg">
-                主动投递
-            </div>
-        </div>}
+<div class="ribbon-wrapper ribbon-lg">
+    <div class="ribbon bg-success text-lg">
+        主动投递
+    </div>
+</div>}
             <input type="hidden" asp-for="Id">
-            <div class="row"> 
+            <div class="row">
                 <div class="form-group col-md-6">
                     <label>姓名</label>
                     <input type="text" class="form-control" readonly asp-for="Name">
@@ -32,11 +32,23 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label>邮箱地址</label>
-                    <input type="email" class="form-control" readonly asp-for="Email">
+                    <div class="input-group">
+                        <input type="text" class="form-control" asp-for="Email" readonly>
+                        <div class="input-group-append">
+                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("", "/Resume/SendEmail/" + Model.ResumeId, Pages.Resume_SendEmail, "btn btn-sm btn-default", "fas fa-envelope", blank: true))
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group col-md-6">
                     <label>职位</label>
-                    <input type="text" class="form-control" readonly asp-for="JobName">
+                    <div class="input-group">
+                        <input type="text" class="form-control" asp-for="JobName" readonly>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#modal-default" title="岗位说明">
+                                <i class="fas fa-question-circle"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group col-md-12">
                     <label>调查时间<small>（日报告统计的日期）</small></label>
@@ -157,6 +169,9 @@
         </div>
     </form>
 </div>
+@await Html.PartialAsync("Partials/_JobPartial", job)
+
+
 @section styles {
     <link href="~/lib/summernote/summernote-bs4.min.css" rel="stylesheet" />
     <link href="~/lib/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" />
