@@ -17,7 +17,8 @@ namespace Une.TalentPool.Web.Profiles
             });
             CreateMap<CreateInvestigationViewModel, Investigation>();
             CreateMap<Investigation, EditInvestigationViewModel>();
-            CreateMap<ResumeDetailDto, EditInvestigationViewModel>();
+            CreateMap<ResumeDetailDto, EditInvestigationViewModel>()
+                .ForMember(m => m.Id, opt => opt.Ignore());
             CreateMap<EditInvestigationViewModel, Investigation>();
             CreateMap<Investigation, FinshOrRestoreModel>();
             CreateMap<Investigation, AuditInvestigationViewModel>();

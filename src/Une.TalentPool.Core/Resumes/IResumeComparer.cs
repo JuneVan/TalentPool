@@ -5,6 +5,6 @@ namespace Une.TalentPool.Resumes
 {
     public interface IResumeComparer
     {
-        Task<List<ResumeCompare>> CompareAsync(ResumeManager manager, Resume resume);
+        Task  CompareAsync(ResumeManager manager, Resume resume);
     }
 }

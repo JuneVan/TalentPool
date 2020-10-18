@@ -68,7 +68,7 @@ namespace Une.TalentPool.Web.Controllers
 
         #region CURD
         public async Task<IActionResult> List(QueryResumeInput input)
-        { 
+        {
             var output = await _resumeQuerier.GetListAsync(input);
 
             var model = new QueryResumeViewModel();
@@ -157,21 +157,27 @@ namespace Une.TalentPool.Web.Controllers
                         {
                             resume.KeyMaps.Add(new ResumeKeywordMap()
                             {
-                                Keyword = keyword,
-                                OriginData = model.Keywords,
+                                Keyword = keyword, 
                                 Name = model.Name
                             });
                         }
                     }
-                    await _resumeManager.UpdateAsync(resume);
+                    resume = await _resumeManager.UpdateAsync(resume, model.IgnoreSimilarity);
                     Notifier.Success("你已成功编辑了一条简历记录。");
                     return RedirectToAction(nameof(List));
                 }
                 catch (Exception ex)
                 {
                     Notifier.Warning(ex.Message);
+                    model.ResumeCompares = resume.ResumeCompares
+                        .Select(s => new ResumeCompareDto()
+                        {
+                            Similarity = s.Similarity,
+                            RelationResumeName = s.RelationResumeName,
+                            RelationResumeId = s.RelationResumeId
+                        }).ToList();
                 }
-                
+
             }
             return await BuildCreateOrEditDisplayAsync(model);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,6 +17,7 @@ namespace Une.TalentPool.Resumes
         Task<ResumeAuditRecord> AddAuditRecordAsync(Resume resume, ResumeAuditRecord auditRecord, CancellationToken cancellationToken);
         Task<ResumeAuditRecord> RemoveAuditRecordAsync(Resume resume, ResumeAuditRecord auditRecord, CancellationToken cancellationToken);
 
-        //Task<List<ResumeKeywordMap>> GetResumeKeyMapsAsync(string keyword, CancellationToken cancellationToken);
+        Task<List<ResumeKeywordMap>> GetResumeKeyMapsAsync(string keyword, CancellationToken cancellationToken);
+        Task<List<ResumeKeywordMap>> GetResumeKeyMapsAsync(Guid resumeId, CancellationToken cancellationToken);
     }
 }

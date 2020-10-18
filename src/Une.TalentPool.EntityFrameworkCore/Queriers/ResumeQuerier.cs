@@ -110,6 +110,13 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
 
             var resume = await query.FirstOrDefaultAsync();
             resume.ResumeAuditRecords = await GetResumeAuditRecordsAsync(id);
+            resume.ResumeCompares = await _context.ResumeCompares.Select(s => new ResumeCompareDto()
+            {
+                RelationResumeId = s.RelationResumeId,
+                RelationResumeName = s.RelationResumeName,
+                Similarity = s.Similarity
+            }).ToListAsync();
+
             return resume;
 
         }
@@ -225,6 +232,6 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
                 query = query.Where(w => w.AuditStatus == (AuditStatus)input.AuditStatus.Value);
 
             return await query.ToListAsync();
-        }
+        } 
     }
 }

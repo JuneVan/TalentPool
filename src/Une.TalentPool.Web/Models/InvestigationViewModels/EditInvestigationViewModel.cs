@@ -10,6 +10,8 @@ namespace Une.TalentPool.Web.Models.InvestigationViewModels
         public string Name { get; set; } 
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
+        public Guid ResumeId { get; set; }
+        public Guid JobId { get; set; }
         public string JobName { get; set; }
         public bool ActiveDelivery { get; set; }
         //调查时间

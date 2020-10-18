@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Une.TalentPool.Resumes;
@@ -136,6 +137,24 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
                 throw new ArgumentNullException(nameof(auditRecord));
             Context.ResumeAuditRecords.Remove(auditRecord);
             return await Task.FromResult(auditRecord);
+        }
+
+        public async Task<List<ResumeKeywordMap>> GetResumeKeyMapsAsync(string keyword, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (keyword == null)
+                throw new ArgumentNullException(nameof(keyword));
+            return await Context.ResumeKeyMaps.Where(w => w.Keyword == keyword).ToListAsync(cancellationToken);
+        }
+
+        public async Task<List<ResumeKeywordMap>> GetResumeKeyMapsAsync(Guid resumeId, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (resumeId == null)
+                throw new ArgumentNullException(nameof(resumeId));
+            return await Context.ResumeKeyMaps.Where(w => w.ResumeId == resumeId).ToListAsync(cancellationToken);
         }
     }
 }

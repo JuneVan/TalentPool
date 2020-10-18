@@ -302,7 +302,7 @@
         $(function () {
 
             //调查日期
-            var startDate = $("input[name='StartedTime']").val(), endDate = $("input[name='EndedTime']").val();
+            var startDate = $("input[name='StartTime']").val(), endDate = $("input[name='EndTime']").val();
             $("#createdDaterangepicker").daterangepicker({
                 timePicker: true,
                 ranges: {
@@ -324,8 +324,8 @@
                 startDate: startDate,
                 endDate: endDate
             }, function (start, end, label) {
-                $("input[name='StartedTime']").val(start.format('YYYY/MM/DD HH:mm'));
-                $("input[name='EndedTime']").val(end.format('YYYY/MM/DD HH:mm'));
+                    $("input[name='StartTime']").val(start.format('YYYY/MM/DD HH:mm'));
+                    $("input[name='EndTime']").val(end.format('YYYY/MM/DD HH:mm'));
 
             });
 
