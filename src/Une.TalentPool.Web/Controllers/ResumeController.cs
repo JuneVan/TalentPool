@@ -15,6 +15,7 @@ using Une.TalentPool.Application.Dictionaries;
 using Une.TalentPool.Application.Jobs;
 using Une.TalentPool.Application.Resumes;
 using Une.TalentPool.Application.Users;
+using Une.TalentPool.Configurations;
 using Une.TalentPool.Infrastructure.Extensions;
 using Une.TalentPool.Infrastructure.Message.Email;
 using Une.TalentPool.Infrastructure.Notify;
@@ -23,7 +24,6 @@ using Une.TalentPool.Permissions;
 using Une.TalentPool.Resumes;
 using Une.TalentPool.Web.Auth;
 using Une.TalentPool.Web.Models.CommonModels;
-using Une.TalentPool.Web.Models.JobViewModels;
 using Une.TalentPool.Web.Models.ResumeViewModels;
 
 namespace Une.TalentPool.Web.Controllers
@@ -40,7 +40,7 @@ namespace Une.TalentPool.Web.Controllers
         private readonly ResumeAuditSettingManager _resumeAuditSettingManager;
         private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailSender _emailSender; 
         public ResumeController(IResumeQuerier resumeQuerier,
             IJobQuerier jobQuerier,
             IDictionaryQuerier dictionaryQuerier,
@@ -50,7 +50,7 @@ namespace Une.TalentPool.Web.Controllers
             ResumeAuditSettingManager resumeAuditSettingManager,
             IWebHostEnvironment environment,
             IConfiguration configuration,
-            IEmailSender emailSender,
+            IEmailSender emailSender, 
             IServiceProvider serviceProvider)
             : base(serviceProvider)
         {
@@ -63,12 +63,15 @@ namespace Une.TalentPool.Web.Controllers
             _userQuerier = userQuerier;
             _emailSender = emailSender;
             _environment = environment;
-            _configuration = configuration;
+            _configuration = configuration; 
         }
 
         #region CURD
         public async Task<IActionResult> List(QueryResumeInput input)
         {
+            if (CustomSetting.DefaultOnlySeeMyselfData&& !input.CreatorUserId.HasValue)
+                input.CreatorUserId = UserIdentifier.UserId;
+
             var output = await _resumeQuerier.GetListAsync(input);
 
             var model = new QueryResumeViewModel();

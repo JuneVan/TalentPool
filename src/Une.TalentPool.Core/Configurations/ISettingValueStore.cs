@@ -5,11 +5,12 @@ using System.Threading.Tasks;
 namespace Une.TalentPool.Configurations
 {
     public interface ISettingValueStore : IDisposable
-    {
-        Task<SettingValue> CreateAsync(SettingValue setting, CancellationToken cancellationToken);
-        Task<SettingValue> UpdateAsync(SettingValue setting, CancellationToken cancellationToken);
-        Task<SettingValue> DeleteAsync(SettingValue setting, CancellationToken cancellationToken);
-        Task<SettingValue> FindByIdAsync(Guid settingId, CancellationToken cancellationToken);
+    { 
         Task<SettingValue> FindByNameAsync(string settingName, CancellationToken cancellationToken);
+        Task<SettingValue> FindByOwnerUserIdAsync(Guid ownerUserId, string settingName, CancellationToken cancellationToken);
+
+        Task AddSettingValueAsync(SettingValue settingValue, CancellationToken cancellationToken);
+        Task ChangeSettingValueAsync(SettingValue settingValue, CancellationToken cancellationToken);
+        Task CommitAsync(CancellationToken cancellationToken);
     }
 }

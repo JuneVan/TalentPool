@@ -1,4 +1,5 @@
 ﻿@using Une.TalentPool.Resumes
+
 @inject IUserIdentifier UserIdentifier
 @model Une.TalentPool.Web.Models.ResumeViewModels.QueryResumeViewModel
 @{
@@ -48,16 +49,16 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>负责人</label>
-                        @if (Model.Output.Parameter.OwnerUserId!=null)
+                        @if (Model.Output.Parameter.OwnerUserId != null)
                         {
                             <input type="hidden" value="@Model.Output.Parameter.OwnerUserId" name="OwnerUserId">
                         }
                         else
                         {
-                            <input type="hidden" value="@UserIdentifier.UserId.Value" name="OwnerUserId">
-                        } 
+                            <input type="hidden" value="@Guid.Empty" name="OwnerUserId">
+                        }
                         <select class="form-control" id="ownerUserIdBySelect" asp-items="@Model.Users">
-                            <option value="">=请选择负责人=</option>
+                            <option value="@Guid.Empty">=请选择负责人=</option>
                         </select>
                     </div>
                 </div>

@@ -43,6 +43,9 @@ namespace Une.TalentPool.Web.Controllers
         // 列表
         public async Task<IActionResult> List(QueryInterviewInput input)
         {
+            if (CustomSetting.DefaultOnlySeeMyselfData && !input.CreatorUserId.HasValue)
+                input.CreatorUserId = UserIdentifier.UserId;
+
             var output = await _interviewQuerier.GetListAsync(input);
             var model = new QueryInterviewViewModel()
             {

@@ -79,7 +79,7 @@ namespace Une.TalentPool.Web.Controllers
             }
             return View(model);
         }
-        
+
         // 用户配置
         [PermissionCheck(Pages.Configuration_UserSetting)]
         public async Task<IActionResult> UserSetting()
@@ -101,7 +101,7 @@ namespace Une.TalentPool.Web.Controllers
             }
             return View(model);
         }
-        
+
         // 邮件配置
         [PermissionCheck(Pages.Configuration_EmailSetting)]
         public async Task<IActionResult> EmailSetting()
@@ -120,6 +120,26 @@ namespace Une.TalentPool.Web.Controllers
                 await _configurationManager.SaveSettingAsync(settings);
                 Notifier.Success("你已成功保存了邮件配置。");
                 return RedirectToAction(nameof(EmailSetting));
+            }
+            return View(model);
+        }
+
+        // 用户自定义设置 
+        public async Task<IActionResult> UserCustomSetting()
+        {
+            var settings = await _configurationManager.GetSettingAsync<UserCustomSetting>(UserIdentifier.UserId);
+            return View(Mapper.Map<UserCustomSettingViewModel>(settings));
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserCustomSetting(UserCustomSettingViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var settings = Mapper.Map<UserCustomSetting>(model);
+                await _configurationManager.SaveSettingAsync(settings, UserIdentifier.UserId);
+                Notifier.Success("你已成功保存了个人配置。");
+                return RedirectToAction(nameof(UserCustomSetting));
             }
             return View(model);
         }

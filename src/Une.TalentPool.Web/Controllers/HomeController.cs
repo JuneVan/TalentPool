@@ -30,10 +30,10 @@ namespace Une.TalentPool.Web.Controllers
         }
 
         [ResponseCache(Duration = 60)]
-        public async Task<IActionResult> Index(bool onlyMyself = true)
+        public async Task<IActionResult> Index()
         {
 
-            var model = new IndexViewModel() { OnlyMyself = onlyMyself };
+            var model = new IndexViewModel() ;
             //当前用户 
             var userId = UserIdentifier.UserId;
             //用于过滤导入数据的时间界限
@@ -67,7 +67,7 @@ namespace Une.TalentPool.Web.Controllers
             monthlyIncreaseData.NewResumeTotalCount = mothlyResumes.Count;
 
             // 简历审核情况统计
-            if (onlyMyself)
+            if (CustomSetting.DefaultOnlySeeMyselfData)
             {
                 var todayResumes = mothlyResumes.Where(w => w.CreatorUserId == userId && w.CreationTime >= startTime && w.CreationTime <= endTime).ToList();
                 todayResumeData.PassedCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.Complete && w.Enable);
@@ -92,7 +92,7 @@ namespace Une.TalentPool.Web.Controllers
             monthlyIncreaseData.NewInvestigationTotalCount = monthlyInvestigations.Count;
 
             // 调查情况统计
-            if (onlyMyself)
+            if (CustomSetting.DefaultOnlySeeMyselfData)
             {
                 var todayInvestigations = monthlyInvestigations.Where(w => w.OwnerUserId == userId && w.CreationTime >= startTime && w.CreationTime <= endTime).ToList();
                 todayInvestigationData.AcceptCount = todayInvestigations.Count(w => w.AcceptTravelStatus == AcceptTravelStatus.Accept);
@@ -282,7 +282,7 @@ namespace Une.TalentPool.Web.Controllers
             #endregion
 
             #region 待处理任务
-            if (onlyMyself)
+            if (CustomSetting.DefaultOnlySeeMyselfData)
             {
                 var todoTasks = await _resumeQuerier.GetUncompleteResumesAsync(userId);
                 model.TodoTasks = todoTasks;
@@ -295,7 +295,7 @@ namespace Une.TalentPool.Web.Controllers
             #endregion
 
             #region 预约中
-            if (onlyMyself)
+            if (CustomSetting.DefaultOnlySeeMyselfData)
             {
                 var todoTasks = await _interviewQuerier.GetUnfinshInterviewsAsync(userId);
                 model.InterviewTasks = todoTasks;

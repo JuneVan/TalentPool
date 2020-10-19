@@ -10,6 +10,14 @@
             </div>
             <div class="modal-body">
                 <div class="group">
+                    <label>薪资待遇：</label>
+                    @Html.Raw(Model.SalaryRange)
+                </div>
+                <div class="group">
+                    <label>年龄要求：</label>
+                    @Html.Raw(Model.AgeRange)
+                </div>
+                <div class="group">
                     <label>任职要求：</label>
                     @Html.Raw(Model.Requirements)
                 </div>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Une.TalentPool.Configurations
@@ -14,17 +15,21 @@ namespace Une.TalentPool.Configurations
             _settingValueManager = settingValueManager;
             _memoryCache = memoryCache;
         }
-        public async Task<TSettingDefinition> GetSettingAsync<TSettingDefinition>()
+        public async Task<TSettingDefinition> GetSettingAsync<TSettingDefinition>(Guid? ownerUserId = null)
             where TSettingDefinition : ISettingDefinition
         {
-            var settingTypeName = typeof(TSettingDefinition).FullName;
+            var settingTypeName = GetSettingTypeName<TSettingDefinition>(ownerUserId);
             return await _memoryCache.GetOrCreateAsync(settingTypeName, async factory =>
             {
                 var settings = Activator.CreateInstance<TSettingDefinition>();
                 foreach (var propertyInfo in typeof(TSettingDefinition).GetProperties())
                 {
-                    var settingName = GetSettingName(settingTypeName, propertyInfo.Name);
-                    var settingValue = await _settingValueManager.FindByNameAsync(settingName);
+                    var settingName = GetSettingName<TSettingDefinition>(propertyInfo.Name);
+                    SettingValue settingValue;
+                    if (ownerUserId.HasValue)
+                        settingValue = await _settingValueManager.FindByOwnerUserIdAsync(ownerUserId.Value, settingName);
+                    else
+                        settingValue = await _settingValueManager.FindByNameAsync(settingName);
                     if (settingValue != null)
                     {
                         object propertyValue;
@@ -46,45 +51,70 @@ namespace Une.TalentPool.Configurations
             });
         }
 
-        public async Task SaveSettingAsync<TSettingDefinition>(TSettingDefinition settings)
+
+        public async Task SaveSettingAsync<TSettingDefinition>(TSettingDefinition settings, Guid? ownerUserId = null)
              where TSettingDefinition : ISettingDefinition
         {
-            var settingTypeName = typeof(TSettingDefinition).FullName;
+            var settingTypeName = GetSettingTypeName<TSettingDefinition>(ownerUserId);
+
+            var settingValues = new List<SettingValue>();
             foreach (var propertyInfo in typeof(TSettingDefinition).GetProperties())
             {
-                var settingName = GetSettingName(settingTypeName, propertyInfo.Name);
+                if (propertyInfo.Name == "OwnerUserId")
+                    continue;
+                var settingName = GetSettingName<TSettingDefinition>(propertyInfo.Name);
                 var propertyValue = propertyInfo.GetValue(settings);
-                var settingValue = await _settingValueManager.FindByNameAsync(settingName);
+                SettingValue settingValue;
+                if (ownerUserId.HasValue)
+                    settingValue = await _settingValueManager.FindByOwnerUserIdAsync(ownerUserId.Value, settingName);
+                else
+                    settingValue = await _settingValueManager.FindByNameAsync(settingName);
+
                 if (settingValue == null)
                 {
-                    await _settingValueManager.CreateAsync(new SettingValue()
+                    settingValues.Add(new SettingValue()
                     {
                         Name = settingName,
-                        Value = Convert.ToString(propertyValue)
+                        Value = Convert.ToString(propertyValue),
+                        OwnerUserId = ownerUserId
                     });
                 }
                 else
                 {
                     settingValue.Value = Convert.ToString(propertyValue);
-                    await _settingValueManager.UpdateAsync(settingValue);
+                    settingValues.Add(settingValue);
                 }
             }
+            await _settingValueManager.BulkAsync(settingValues);
             _memoryCache.Remove(settingTypeName);
         }
 
-        public async Task<TSettingPropertyType> GetSettingValueAsync<TSettingDefinition, TSettingPropertyType>(string propertyName, TSettingPropertyType defaultValue)
+        public async Task<TSettingPropertyType> GetSettingValueAsync<TSettingDefinition, TSettingPropertyType>(string propertyName, TSettingPropertyType defaultValue, Guid? ownerUserId = null)
              where TSettingDefinition : ISettingDefinition
         {
-            var settingTypeName = typeof(TSettingDefinition).FullName;
-            var settingName = GetSettingName(settingTypeName, propertyName);
-            var settingValue = await _settingValueManager.FindByNameAsync(settingName);
+            var settingTypeName = GetSettingTypeName<TSettingDefinition>(ownerUserId);
+            var settingName = GetSettingName<TSettingDefinition>(propertyName);
+            SettingValue settingValue;
+            if (ownerUserId.HasValue)
+                settingValue = await _settingValueManager.FindByOwnerUserIdAsync(ownerUserId.Value, settingName);
+            else
+                settingValue = await _settingValueManager.FindByNameAsync(settingName);
             if (settingValue != null)
                 return (TSettingPropertyType)Convert.ChangeType(settingValue.Value, typeof(TSettingPropertyType));
             return defaultValue;
         }
-        private string GetSettingName(string settingTypeName, string propertyName)
+
+        private string GetSettingName<TSettingDefinition>(string propertyName)
+             where TSettingDefinition : ISettingDefinition
         {
-            return $"{settingTypeName}.{propertyName}";
+            return $"{typeof(TSettingDefinition).FullName}.{propertyName}";
+        }
+        private string GetSettingTypeName<TSettingDefinition>(Guid? ownerUserId)
+             where TSettingDefinition : ISettingDefinition
+        {
+            if (ownerUserId.HasValue)
+                return $"{typeof(TSettingDefinition).FullName}.{ownerUserId.Value}";
+            return typeof(TSettingDefinition).FullName;
         }
     }
 }

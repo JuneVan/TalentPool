@@ -8,14 +8,8 @@
 
 }
 
- 
+
 <div class="row">
-    <div class="col-md-12 mb-2">
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" asp-for="OnlyMyself">
-            <label class="form-check-label" asp-for="OnlyMyself"><a asp-action="Index" asp-route-OnlyMyself="@(!Model.OnlyMyself)">仅看我的预约和调查</a></label>
-        </div>
-    </div>
     <div class="col-12  col-md-4">
         <div class="info-box mb-3">
             <span class="info-box-icon bg-primary"><i class="fas fa-id-card"></i></span>
@@ -46,7 +40,7 @@
                 <span class="info-box-text">我新增的预约数量/本月总共预约的数量</span>
                 <span class="info-box-number">
                     @Model.MonthlyIncreaseData.NewInterviewCount / @Model.MonthlyIncreaseData.NewInterviewTotalCount
-                </span> 
+                </span>
             </div>
         </div>
     </div>
@@ -175,45 +169,51 @@
                     <tbody>
                         @if (Model.InterviewTasks != null && Model.InterviewTasks.Count > 0)
                         {
-            @foreach (var item in Model.InterviewTasks)
-            {
-    <tr>
-        <td>
-            @item.Name
-            @if (item.AppointmentTime < DateTime.Now)
-            {
-    <span class="badge badge-danger">已过期</span>}
-        </td>
-        <td>@item.JobName</td>
-        <td>@item.PhoneNumber</td>
-        <td>
-            @item.AppointmentTime
+                            @foreach (var item in Model.InterviewTasks)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.Name
+                                        @if (item.AppointmentTime < DateTime.Now)
+                                        {
+                                            <span class="badge badge-danger">已过期</span>}
+                                    </td>
+                                    <td>@item.JobName</td>
+                                    <td>@item.PhoneNumber</td>
+                                    <td>
+                                        @item.AppointmentTime
 
-        </td>
-        <td>
-            @item.CreatorUserName
-        </td>
-        <td>
-            <div class="btn-group  btn-group-sm" role="group">
-                <button id="group-dropdown" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-cog"></i> 操作菜单
-                </button>
-                <div class="dropdown-menu" aria-labelledby="group-dropdown">
-                    <a href="/Interview/Edit/@item.Id" class="dropdown-item">编辑</a>
-                    <a href="/Interview/ChangeState/@item.Id" class="dropdown-item">履约/爽约</a>
-                    <a href="/Interview/Cancel/@item.Id" class="dropdown-item">取消预约</a>
-                </div>
-            </div>
-        </td>
-    </tr>} }
+                                    </td>
+                                    <td>
+                                        @item.CreatorUserName
+                                    </td>
+                                    <td>
+                                        <div class="btn-group  btn-group-sm" role="group">
+                                            <button id="group-dropdown" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-cog"></i> 操作菜单
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="group-dropdown"> 
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Interview/View/" + item.Id, Pages.Interview, "dropdown-item"))
+                                                @if (item.CreatorUserId == UserIdentifier.UserId)
+                                                {
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Interview/Edit/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("履约/爽约", "/Interview/Change/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("履约/爽约", "/Interview/Cancel/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
+                                                }
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            } }
                         else
                         {
 
-            <tr>
-                <td colspan="6" class="text-md-center">
-                    无预约记录
-                </td>
-            </tr>}
+                            <tr>
+                                <td colspan="6" class="text-md-center">
+                                    无预约记录
+                                </td>
+                            </tr>
+                        }
 
                     </tbody>
                 </table>
@@ -245,70 +245,72 @@
                     <tbody>
                         @if (Model.TodoTasks != null && Model.TodoTasks.Count > 0)
                         {
-            @foreach (var item in Model.TodoTasks)
-            {
-    <tr>
-        <td>
-            @item.Name
-            @if (item.CreationTime < DateTime.Now.Date)
-            {
-    <span class="badge badge-danger" title="往期未完成任务，请及时跟进。">待跟进</span> }
-                        else if (item.CreationTime > DateTime.Now.Date && !item.Status.HasValue)
-                        {
-    <small class="badge badge-success" title="今日新增简历，未安排调查">新增</small>}
-        </td>
-        <td>@item.JobName</td>
-        <td>@item.PlatformName</td>
-        <td onclick="onCopy(this)" title="单击本区域，可复制平台ID" data-toggle="tooltip" data-placement="top">@item.PlatformId</td>
-        <td>@item.PhoneNumber</td>
-        <td>@item.InvestigationDate?.Date.ToShortDateString()</td>
-        <td>
-            @if (!item.Status.HasValue)
-            {
-    <span class="badge badge-secondary">未开始</span> }
-                        else if (item.Status.HasValue && item.Status != InvestigationStatus.Complete)
-                        {
-    <span class="badge badge-info">进行中</span>}
-        </td>
-        <td>
-            @item.OwnerUserName
-        </td>
-        <td>
-            <div class="btn-group  btn-group-sm" role="group">
-                <button id="group-dropdown" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-cog"></i> 操作菜单
-                </button>
-                <div class="dropdown-menu" aria-labelledby="group-dropdown">
-                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Resume/View/" + item.Id, Pages.Resume, "dropdown-item", blank: true))
-                    @if (item.OwnerUserId == UserIdentifier.UserId)
-                    {
-    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Resume/Edit/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item")) if (string.IsNullOrEmpty(item.Name))
+                            @foreach (var item in Model.TodoTasks)
                             {
-    <a href="javascript:void(0)" class="dropdown-item bg-warning">调查前请先补充简历信息</a> }
-                            else
-                            {
-                                if (!item.InvestigationId.HasValue)
-                                {
-    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("开始调查", "/Investigation/Create/" + item.Id, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item")) }
-                                else
-                                {
-    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("继续调查", "/Investigation/Edit/" + item.InvestigationId.Value, Pages.Investigation_CreateOrEditOrDelete, "dropdown - item"))
-                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("技术评测", "/Evaluation/SelectEvaluation?InvestigationId=" + item.Id + "&JobId=" + item.JobId, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
-                                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("结束调查", "/Investigation/Finsh/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))}
-                                                                                            }
-                                                                                        }
+                                <tr>
+                                    <td>
+                                        @item.Name
+                                        @if (item.CreationTime < DateTime.Now.Date)
+                                        {
+                                            <span class="badge badge-danger" title="往期未完成任务，请及时跟进。">待跟进</span> }
+                                        else if (item.CreationTime > DateTime.Now.Date && !item.Status.HasValue)
+                                        {
+                                            <small class="badge badge-success" title="今日新增简历，未安排调查">新增</small>}
+                                    </td>
+                                    <td>@item.JobName</td>
+                                    <td>@item.PlatformName</td>
+                                    <td onclick="onCopy(this)" title="单击本区域，可复制平台ID" data-toggle="tooltip" data-placement="top">@item.PlatformId</td>
+                                    <td>@item.PhoneNumber</td>
+                                    <td>@item.InvestigationDate?.Date.ToShortDateString()</td>
+                                    <td>
+                                        @if (!item.Status.HasValue)
+                                        {
+                                            <span class="badge badge-secondary">未开始</span> }
+                                        else if (item.Status.HasValue && item.Status != InvestigationStatus.Complete)
+                                        {
+                                            <span class="badge badge-info">进行中</span>}
+                                    </td>
+                                    <td>
+                                        @item.OwnerUserName
+                                    </td>
+                                    <td>
+                                        <div class="btn-group  btn-group-sm" role="group">
+                                            <button id="group-dropdown" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-cog"></i> 操作菜单
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="group-dropdown">
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Resume/View/" + item.Id, Pages.Resume, "dropdown-item", blank: true))
+                                                @if (item.OwnerUserId == UserIdentifier.UserId)
+                                                {
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Resume/Edit/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item")) if (string.IsNullOrEmpty(item.Name))
+                                                    {
+                                                        <a href="javascript:void(0)" class="dropdown-item bg-warning">调查前请先补充简历信息</a> }
+                                                    else
+                                                    {
+                                                        if (!item.InvestigationId.HasValue)
+                                                        {
+                                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("开始调查", "/Investigation/Create/" + item.Id, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item")) }
+                                                        else
+                                                        {
+                                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("继续调查", "/Investigation/Edit/" + item.InvestigationId.Value, Pages.Investigation_CreateOrEditOrDelete, "dropdown - item"))
+                                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("技术评测", "/Evaluation/SelectEvaluation?InvestigationId=" + item.Id + "&JobId=" + item.JobId, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
+                                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("结束调查", "/Investigation/Finsh/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))}
+                                                    }
+                                                }
 
-                </div>
-            </div>
-        </td>
-    </tr>} }
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            } }
                         else
                         {
-            <tr>
-                <td colspan="9" class="text-md-center">
-                    无任务记录
-                </td>
-            </tr>}
+                            <tr>
+                                <td colspan="9" class="text-md-center">
+                                    无任务记录
+                                </td>
+                            </tr>
+                        }
 
                     </tbody>
                 </table>

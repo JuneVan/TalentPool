@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Une.TalentPool.Application.Resumes;
+using Une.TalentPool.Resumes;
 
 namespace Une.TalentPool.Web.Models.ResumeViewModels
 {
@@ -35,5 +36,9 @@ namespace Une.TalentPool.Web.Models.ResumeViewModels
         public string Keywords { get; set; }
         public bool IgnoreSimilarity { get; set; }
         public List<ResumeCompareDto> ResumeCompares { get; set; }
+
+        public bool Enable { get; set; } = true;
+        public AuditStatus AuditStatus { get; set; }
+        public Guid OwnerUserId { get; set; }
     }
 }

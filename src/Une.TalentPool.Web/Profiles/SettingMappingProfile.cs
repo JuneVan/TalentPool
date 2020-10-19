@@ -14,6 +14,8 @@ namespace Une.TalentPool.Web.Profiles
             CreateMap<UserSettingViewModel, UserSetting>();
             CreateMap<EmailSetting, EmailSettingViewModel>();
             CreateMap<EmailSettingViewModel, EmailSetting>();
+            CreateMap<UserCustomSetting, UserCustomSettingViewModel>();
+            CreateMap<UserCustomSettingViewModel, UserCustomSetting>();
         }
     }
 }

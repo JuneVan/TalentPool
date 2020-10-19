@@ -46,6 +46,9 @@ namespace Une.TalentPool.Web.Controllers
         #region CURD
         public async Task<IActionResult> List(QueryInvestigaionInput input)
         {
+            if (CustomSetting.DefaultOnlySeeMyselfData && !input.OwnerUserId.HasValue)
+                input.OwnerUserId = UserIdentifier.UserId;
+
             var output = await _investigationQuerier.GetListAsync(input);
             var model = new QueryInvestigationViewModel()
             {
