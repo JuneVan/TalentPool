@@ -23,7 +23,7 @@ namespace Une.TalentPool.Web.Controllers
         protected INotifier Notifier { get; }
         protected IMapper Mapper { get; }
         protected IUserIdentifier UserIdentifier { get; }
-        protected UserCustomSetting CustomSetting { get; private set; }
+        protected UserCustomSetting CustomSetting { get; private set; } = new UserCustomSetting();
 
         private async void InitUserCustomSetting()
         {

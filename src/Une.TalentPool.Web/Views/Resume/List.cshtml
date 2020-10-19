@@ -40,6 +40,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>创建人</label>
+
                         <input type="hidden" value="@Model.Output.Parameter.CreatorUserId" name="CreatorUserId">
                         <select class="form-control" id="creatorUserIdBySelect" asp-items="@Model.Users">
                             <option value="">=请选择创建人=</option>
@@ -49,14 +50,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>负责人</label>
-                        @if (Model.Output.Parameter.OwnerUserId != null)
-                        {
-                            <input type="hidden" value="@Model.Output.Parameter.OwnerUserId" name="OwnerUserId">
-                        }
-                        else
-                        {
-                            <input type="hidden" value="@Guid.Empty" name="OwnerUserId">
-                        }
+                        <input type="hidden" value="@Model.Output.Parameter.OwnerUserId" name="OwnerUserId">
                         <select class="form-control" id="ownerUserIdBySelect" asp-items="@Model.Users">
                             <option value="@Guid.Empty">=请选择负责人=</option>
                         </select>

@@ -120,6 +120,7 @@ namespace Une.TalentPool.Web
             // web - automapper
             services.AddMappingProfiles();
 
+           
 
             return services;
         }

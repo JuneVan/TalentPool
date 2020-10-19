@@ -1,10 +1,10 @@
-﻿@using Une.TalentPool.Investigations 
-@inject IUserIdentifier UserIdentifier 
+﻿@using Une.TalentPool.Investigations
+@inject IUserIdentifier UserIdentifier
 
 @model Une.TalentPool.Web.Models.InvestigationViewModels.QueryInvestigationViewModel
 @{
     ViewData["PageHeader"] = "意向调查管理";
-    ViewData["Title"] = "意向调查列表"; 
+    ViewData["Title"] = "意向调查列表";
 }
 <div class="row">
     <div class="col-12">
@@ -38,14 +38,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>负责人</label>
-                        @if (Model.Output.Parameter.OwnerUserId != null)
-                        {
-                            <input type="hidden" value="@Model.Output.Parameter.OwnerUserId" name="OwnerUserId">
-                        }
-                        else
-                        {
-                            <input type="hidden" value="@Guid.Empty" name="OwnerUserId">
-                        }
+                        <input type="hidden" value="@Guid.Empty" name="OwnerUserId">
                         <select class="form-control" id="ownerUserIdSelect" asp-items="@Model.Users">
                             <option value="@Guid.Empty">=请选择负责人=</option>
                         </select>
@@ -209,26 +202,19 @@
                                             {
                                                 @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("标记不合适", "/Investigation/Audit/" + item.Id, Pages.Investigation_Audit, "dropdown-item"))
                                             }
-                                            @if (item.Status != InvestigationStatus.Complete)
+
+                                            @if (item.OwnerUserId == UserIdentifier.UserId)
                                             {
-                                                if (item.OwnerUserId == UserIdentifier.UserId)
+                                                @if (item.Status != InvestigationStatus.Complete)
                                                 {
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("调查", "/Investigation/Edit/" + item.Id, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("技术评测", "/Evaluation/SelectEvaluation?InvestigationId=" + item.Id + "&JobId=" + item.JobId, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("结束调查", "/Investigation/Finsh/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))
-                                                }
-
-                                            }
-                                            else if (item.Status == InvestigationStatus.Complete)
-                                            {
-                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("恢复调查", "/Investigation/Restore/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))
-                                            }
-
-                                            @if (item.Status != InvestigationStatus.Complete)
-                                            {
-                                                if (item.OwnerUserId == UserIdentifier.UserId)
-                                                {
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("删除", "/Investigation/Delete/" + item.Id, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
+                                                }
+                                                else
+                                                {
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("恢复调查", "/Investigation/Restore/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))
                                                 }
                                             }
                                         </div>

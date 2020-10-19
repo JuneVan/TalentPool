@@ -40,7 +40,7 @@ namespace Une.TalentPool.Web.Controllers
         private readonly ResumeAuditSettingManager _resumeAuditSettingManager;
         private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
-        private readonly IEmailSender _emailSender; 
+        private readonly IEmailSender _emailSender;
         public ResumeController(IResumeQuerier resumeQuerier,
             IJobQuerier jobQuerier,
             IDictionaryQuerier dictionaryQuerier,
@@ -50,7 +50,7 @@ namespace Une.TalentPool.Web.Controllers
             ResumeAuditSettingManager resumeAuditSettingManager,
             IWebHostEnvironment environment,
             IConfiguration configuration,
-            IEmailSender emailSender, 
+            IEmailSender emailSender,
             IServiceProvider serviceProvider)
             : base(serviceProvider)
         {
@@ -63,14 +63,24 @@ namespace Une.TalentPool.Web.Controllers
             _userQuerier = userQuerier;
             _emailSender = emailSender;
             _environment = environment;
-            _configuration = configuration; 
+            _configuration = configuration;
         }
 
         #region CURD
         public async Task<IActionResult> List(QueryResumeInput input)
         {
-            if (CustomSetting.DefaultOnlySeeMyselfData&& !input.CreatorUserId.HasValue)
-                input.CreatorUserId = UserIdentifier.UserId;
+            if (!input.OwnerUserId.HasValue)
+            {
+                if (CustomSetting.DefaultOnlySeeMyselfData)
+                {
+                    input.OwnerUserId = UserIdentifier.UserId;
+                }
+                else
+                {
+                    input.OwnerUserId = Guid.Empty;
+                }
+            }
+
 
             var output = await _resumeQuerier.GetListAsync(input);
 
@@ -160,7 +170,7 @@ namespace Une.TalentPool.Web.Controllers
                         {
                             resume.KeyMaps.Add(new ResumeKeywordMap()
                             {
-                                Keyword = keyword, 
+                                Keyword = keyword,
                                 Name = model.Name
                             });
                         }
