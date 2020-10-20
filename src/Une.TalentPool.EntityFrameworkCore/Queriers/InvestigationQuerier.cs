@@ -158,7 +158,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
                             UnconnectedRemark = a.UnconnectedRemark,
                             OwnerUserName = d.FullName,
                             Status = a.Status,
-                            Information = a.Information
+                            Information = a.Information,
+                            Evaluation = a.Evaluation
                         };
 
             return await query.ToListAsync();

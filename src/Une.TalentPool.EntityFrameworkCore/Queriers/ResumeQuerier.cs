@@ -81,7 +81,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
                         join d in _context.Users on a.CreatorUserId equals d.Id
                         join e in _context.Users on a.OwnerUserId equals e.Id
                         join f in _context.Users on a.LastModifierUserId equals f.Id into ff
-                        from fff in ff.DefaultIfEmpty() 
+                        from fff in ff.DefaultIfEmpty()
                         where a.Id == id
                         select new ResumeDetailDto
                         {
@@ -147,10 +147,11 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
             return await query.ToListAsync();
         }
 
-        public async Task<List<StatisticResumeDto>> GetStatisticResumesAsync(DateTime startTime, DateTime endTime, AuditStatus? auditStatus)
+        public async Task<List<StatisticResumeDto>> GetStatisticResumesAsync(DateTime startTime, DateTime endTime, AuditStatus? auditStatus, bool? enable)
         {
             var query = from a in _context.Resumes
                         join b in _context.Users on a.CreatorUserId equals b.Id
+                        join c in _context.Jobs on a.JobId equals c.Id
                         where a.CreationTime >= startTime && a.CreationTime <= endTime
                         select new StatisticResumeDto()
                         {
@@ -160,10 +161,14 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
                             CreatorUserName = b.FullName,
                             AuditStatus = a.AuditStatus,
                             CreatorUserPhoto = b.Photo,
-                            Enable = a.Enable
+                            Enable = a.Enable,
+                            JobName = c.Title,
+                            ActiveDelivery = a.ActiveDelivery
                         };
             if (auditStatus.HasValue)
                 query = query.Where(w => w.AuditStatus == auditStatus);
+            if (enable.HasValue)
+                query = query.Where(w => w.Enable == enable);
             return await query.ToListAsync();
         }
 

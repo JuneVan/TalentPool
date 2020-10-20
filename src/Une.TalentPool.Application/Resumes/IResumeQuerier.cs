@@ -13,8 +13,9 @@ namespace Une.TalentPool.Application.Resumes
         Task<ResumeDetailDto> GetResumeAsync(Guid id);
         Task<List<ResumeAuditRecordDto>> GetResumeAuditRecordsAsync(Guid resumeId);
         // 指定时间的简历统计
-        Task<List<StatisticResumeDto>> GetStatisticResumesAsync(DateTime startTime, DateTime endTime, AuditStatus? auditStatus);
+        Task<List<StatisticResumeDto>> GetStatisticResumesAsync(DateTime startTime, DateTime endTime, AuditStatus? auditStatus, bool? enable);
         Task<List<UncompleteResumeDto>> GetUncompleteResumesAsync(Guid? ownerUserId);
+
         // 导出数据
         Task<List<ResumeExportDto>> GetExportResumesAsync(QueryExportResumeInput input);
     }

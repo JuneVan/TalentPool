@@ -16,6 +16,8 @@ namespace Une.TalentPool.Web.Models.ReportViewModels
         public List<InvestigationStatisticModel> InvestigationStatisticInfo { get; set; }
         //今日调查列表 
         public List<ReportInvestigationDto> Investigations { get; set; }
+        // 职位统计
+        public JobStatisticTotalModel JobStatisticTotalInfo { get; set; }
 
     }
     //简历城市分布统计
@@ -39,5 +41,17 @@ namespace Une.TalentPool.Web.Models.ReportViewModels
         //未接人数
         public int MissedCount { get; set; }
     }
-    
+    public class JobStatisticTotalModel
+    {
+        //搜索
+        public int SearchCount { get; set; }
+        //投递
+        public int DeliveryCount { get; set; }
+        public List<JobStatisticModel> JobStatisticInfo { get; set; }
+    }
+    public class JobStatisticModel
+    {
+        public string JobName { get; set; }
+        public int Count { get; set; }
+    }
 }

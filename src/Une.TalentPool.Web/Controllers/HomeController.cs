@@ -33,7 +33,7 @@ namespace Une.TalentPool.Web.Controllers
         public async Task<IActionResult> Index()
         {
 
-            var model = new IndexViewModel() ;
+            var model = new IndexViewModel();
             //当前用户 
             var userId = UserIdentifier.UserId;
             //用于过滤导入数据的时间界限
@@ -61,7 +61,7 @@ namespace Une.TalentPool.Web.Controllers
             var todayInvestigationData = new TodayInvestigationData();
 
             // 简历
-            var mothlyResumes = await _resumeQuerier.GetStatisticResumesAsync(thisMonthStartTime, thisMonthEndTime, null);
+            var mothlyResumes = await _resumeQuerier.GetStatisticResumesAsync(thisMonthStartTime, thisMonthEndTime, null, null);
             // 
             monthlyIncreaseData.NewResumeCount = mothlyResumes.Count(w => w.CreatorUserId == userId);
             monthlyIncreaseData.NewResumeTotalCount = mothlyResumes.Count;
@@ -76,12 +76,12 @@ namespace Une.TalentPool.Web.Controllers
             }
             else
             {
-                var todayResumes = mothlyResumes.Where(w =>w.CreationTime >= startTime && w.CreationTime <= endTime).ToList();
+                var todayResumes = mothlyResumes.Where(w => w.CreationTime >= startTime && w.CreationTime <= endTime).ToList();
                 todayResumeData.PassedCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.Complete && w.Enable);
                 todayResumeData.UnpassedCount = todayResumes.Count - todayResumeData.PassedCount;
                 todayResumeData.UnhandledCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.NoStart || w.AuditStatus == AuditStatus.Ongoing);
             }
-           
+
 
 
 
@@ -102,13 +102,13 @@ namespace Une.TalentPool.Web.Controllers
             }
             else
             {
-                var todayInvestigations = monthlyInvestigations.Where(w =>  w.CreationTime >= startTime && w.CreationTime <= endTime).ToList();
+                var todayInvestigations = monthlyInvestigations.Where(w => w.CreationTime >= startTime && w.CreationTime <= endTime).ToList();
                 todayInvestigationData.AcceptCount = todayInvestigations.Count(w => w.AcceptTravelStatus == AcceptTravelStatus.Accept);
                 todayInvestigationData.RefuseCount = todayInvestigations.Count(w => w.AcceptTravelStatus == AcceptTravelStatus.Refuse);
                 todayInvestigationData.ConsiderCount = todayInvestigations.Count(w => w.AcceptTravelStatus == AcceptTravelStatus.Consider);
                 todayInvestigationData.MissedCount = todayInvestigations.Count(w => w.IsConnected == false);
             }
-           
+
 
             model.MonthlyIncreaseData = monthlyIncreaseData;
             model.TodayResumeData = todayResumeData;

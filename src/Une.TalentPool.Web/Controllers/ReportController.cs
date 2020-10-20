@@ -57,21 +57,37 @@ namespace Une.TalentPool.Web.Controllers
             }
 
             //今日新增简历
-            var newResumes = await _resumeQuerier.GetStatisticResumesAsync(startTime, endTime, AuditStatus.Complete);
+            var newResumes = await _resumeQuerier.GetStatisticResumesAsync(startTime, endTime, AuditStatus.Complete, enable: true);
             //简历创建统计
             var perPersonResumes = newResumes.GroupBy(g => g.CreatorUserName)
                .ToList();
-            var resumeStatisticInfo = new List<ResumeStatisticModel>();
+            model.ResumeStatisticInfo = new List<ResumeStatisticModel>();
             foreach (var perPersonResume in perPersonResumes)
             {
-                var resumeStatisticModel = new ResumeStatisticModel()
+                model.ResumeStatisticInfo.Add(new ResumeStatisticModel()
                 {
                     CreatorUserName = perPersonResume.Key,
                     Count = perPersonResume.Count()
-                };
-                resumeStatisticInfo.Add(resumeStatisticModel);
+                });
             }
-            model.ResumeStatisticInfo = resumeStatisticInfo;
+
+            // 职位统计
+            var perJobResumes = newResumes.GroupBy(o => o.JobName);
+            var deliveryCount = newResumes.Count(c => c.ActiveDelivery);
+            model.JobStatisticTotalInfo = new JobStatisticTotalModel()
+            {
+                JobStatisticInfo = new List<JobStatisticModel>(),
+                DeliveryCount = deliveryCount,
+                SearchCount = newResumes.Count - deliveryCount
+            };
+            foreach (var item in perJobResumes)
+            {
+                model.JobStatisticTotalInfo.JobStatisticInfo.Add(new JobStatisticModel()
+                {
+                    JobName = item.Key,
+                    Count = item.Count()
+                });
+            }
 
 
             //调查情况统计
@@ -112,7 +128,7 @@ namespace Une.TalentPool.Web.Controllers
             {
 
                 //今日调查人数(今日有更新的调查记录数)  
-                var investigations = await _investigationQuerier.GetReportInvestigationsAsync(date); 
+                var investigations = await _investigationQuerier.GetReportInvestigationsAsync(date);
 
                 //02
                 var worksheet01 = package.Workbook.Worksheets.Add("意向调查表");
