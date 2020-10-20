@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.Serialization;
 using Une.TalentPool.Application.DailyStatistics;
 using Une.TalentPool.Application.Dictionaries;
 using Une.TalentPool.Application.Evaluations;
@@ -90,10 +91,12 @@ namespace Une.TalentPool.Web
             services.AddTransient<DailyStatisticManager>();
 
             // infrastructure
+            services.AddHttpContextAccessor();
             services.AddScoped<INotifier, Notifier>();
             services.AddTransient<INotifySerializer, NotifySerializer>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ISmsSender, SmsSender>();
+            services.AddTransient<ICancellationTokenProvider, HttpContextCancellationTokenProvider>();
             services.AddMemoryCache();
 
             // entityframework 

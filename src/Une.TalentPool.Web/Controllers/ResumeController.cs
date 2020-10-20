@@ -38,6 +38,7 @@ namespace Une.TalentPool.Web.Controllers
         private readonly JobManager _jobManager;
         private readonly ResumeManager _resumeManager;
         private readonly ResumeAuditSettingManager _resumeAuditSettingManager;
+        private readonly ConfigurationManager _configurationManager;
         private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
         private readonly IEmailSender _emailSender;
@@ -48,6 +49,7 @@ namespace Une.TalentPool.Web.Controllers
             JobManager jobManager,
             ResumeManager resumeManager,
             ResumeAuditSettingManager resumeAuditSettingManager,
+            ConfigurationManager configurationManager,
             IWebHostEnvironment environment,
             IConfiguration configuration,
             IEmailSender emailSender,
@@ -60,10 +62,20 @@ namespace Une.TalentPool.Web.Controllers
             _jobManager = jobManager;
             _resumeManager = resumeManager;
             _resumeAuditSettingManager = resumeAuditSettingManager;
+            _configurationManager = configurationManager;
             _userQuerier = userQuerier;
             _emailSender = emailSender;
             _environment = environment;
-            _configuration = configuration;
+            _configuration = configuration; 
+            InitResumeSetting();
+
+
+        }
+        //初始化简历配置
+        private async void InitResumeSetting()
+        {
+            var resumeSetting = await _configurationManager.GetSettingAsync<ResumeSetting>();
+            _resumeManager.Options.MinSimilarityValue = resumeSetting.MinSimilarityValue;
         }
 
         #region CURD

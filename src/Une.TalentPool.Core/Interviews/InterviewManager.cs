@@ -7,14 +7,16 @@ namespace Une.TalentPool.Interviews
     public class InterviewManager:IDisposable
     {
         private bool _disposed;
-      
+        private readonly ICancellationTokenProvider _tokenProvider;
         public InterviewManager(
-            IInterviewStore interviewStore)
+            IInterviewStore interviewStore,
+            ICancellationTokenProvider  tokenProvider)
         {
-            InterviewStore = interviewStore; 
+            InterviewStore = interviewStore;
+            _tokenProvider = tokenProvider;
         }
         protected   IInterviewStore InterviewStore;
-        protected virtual CancellationToken CancellationToken => CancellationToken.None;
+        protected virtual CancellationToken CancellationToken => _tokenProvider.Token;
         public async Task<Interview> CreateAsync(Interview interview)
         {
             if (interview == null)

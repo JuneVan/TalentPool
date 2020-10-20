@@ -21,6 +21,7 @@ namespace Une.TalentPool.Web.Auth
         public const string Configuration_SiteSetting = "Pages.Configuration.SiteSetting";
         public const string Configuration_UserSetting = "Pages.Configuration.UserSetting";
         public const string Configuration_EmailSetting = "Pages.Configuration.EmailSetting";
+        public const string Configuration_ResumeSetting = "Pages.Configuration.ResumeSetting";
         public const string Configuration_Dictionary = "Pages.Configuration.Dictionary";
         public const string Configuration_Dictionary_CreateOrEditOrDelete = "Pages.Configuration.Dictionary.CreateOrEditOrDelete";
 
@@ -69,6 +70,7 @@ namespace Une.TalentPool.Web.Auth
             configuration.AddChild(Pages.Configuration_SiteSetting, "站点配置");
             configuration.AddChild(Pages.Configuration_UserSetting, "账户配置");
             configuration.AddChild(Pages.Configuration_EmailSetting, "邮件配置");
+            configuration.AddChild(Pages.Configuration_ResumeSetting, "简历配置");
 
             var dictionary = configuration.AddChild(Pages.Configuration_Dictionary, "数据字典");
             dictionary.AddChild(Pages.Configuration_Dictionary_CreateOrEditOrDelete, "创建、编辑、删除数据字典");
@@ -121,6 +123,7 @@ namespace Une.TalentPool.Web.Auth
             configuration.AddChild("邮件配置", "/Setting/EmailSetting", "fas fa-envelope", Pages.Configuration_EmailSetting);
             configuration.AddChild("数据字典", "/Dictionary/List", "fas fa-book", Pages.Configuration_Dictionary);
             configuration.AddChild("简历审核", "/Resume/AuditSetting", "fas fa-id-card", Pages.Resume_AuditSetting);
+            configuration.AddChild("简历配置", "/Setting/ResumeSetting", "fas fa-id-card", Pages.Configuration_ResumeSetting);
 
             var authorization = new NavigationDefinition("授权管理", string.Empty, "fas fa-shield-alt", Pages.Authorization);
             authorization.AddChild("角色管理", "/Role/List", "fas fa-user-secret", Pages.Authorization_Role);

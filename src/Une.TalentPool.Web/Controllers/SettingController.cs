@@ -143,5 +143,27 @@ namespace Une.TalentPool.Web.Controllers
             }
             return View(model);
         }
+
+        // 简历配置
+        [PermissionCheck(Pages.Configuration_ResumeSetting)]
+        public async Task<IActionResult> ResumeSetting()
+        {
+            var settings = await _configurationManager.GetSettingAsync<ResumeSetting>();
+            return View(Mapper.Map<ResumeSettingViewModel>(settings));
+        }
+        [PermissionCheck(Pages.Configuration_ResumeSetting)]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResumeSetting(ResumeSettingViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var settings = Mapper.Map<ResumeSetting>(model);
+                await _configurationManager.SaveSettingAsync(settings);
+                Notifier.Success("你已成功保存了简历配置。");
+                return RedirectToAction(nameof(ResumeSetting));
+            }
+            return View(model);
+        }
     }
 }

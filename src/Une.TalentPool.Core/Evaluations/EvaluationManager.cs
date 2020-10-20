@@ -7,12 +7,15 @@ namespace Une.TalentPool.Evaluations
     public class EvaluationManager : IDisposable
     {
         private bool _disposed;
-        public EvaluationManager(IEvaluationStore evaluationStore)
+        private readonly ICancellationTokenProvider _tokenProvider;
+        public EvaluationManager(IEvaluationStore evaluationStore,
+            ICancellationTokenProvider tokenProvider)
         {
             EvaluationStore = evaluationStore;
+            _tokenProvider = tokenProvider;
         }
         protected IEvaluationStore EvaluationStore { get; }
-        protected virtual CancellationToken CancellationToken => CancellationToken.None;
+        protected virtual CancellationToken CancellationToken => _tokenProvider.Token;
         public async Task<Evaluation> CreateAsync(Evaluation evaluation)
         {
             if (evaluation == null)
@@ -41,7 +44,7 @@ namespace Une.TalentPool.Evaluations
                 throw new ArgumentNullException(nameof(evaluationId));
 
             return await EvaluationStore.FindByIdAsync(evaluationId, CancellationToken);
-        } 
+        }
         #region Subject
         public async Task<EvaluationSubject> CreateSubjectAsync(EvaluationSubject subject)
         {

@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Une.TalentPool.Application"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Une.TalentPool.Core", "src\Une.TalentPool.Core\Une.TalentPool.Core.csproj", "{DD3CB51D-9198-4978-B4B2-6B23987C374E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Une.TalentPool.SignalR", "src\Une.TalentPool.SignalR\Une.TalentPool.SignalR.csproj", "{A4719E9C-D96E-47E6-85FD-FF3B23DE2B12}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Une.TalentPool.Dapper", "src\Une.TalentPool.Dapper\Une.TalentPool.Dapper.csproj", "{0CF991A5-A456-4B4C-9F05-A84BAE6C6B1B}"
 EndProject
 Global

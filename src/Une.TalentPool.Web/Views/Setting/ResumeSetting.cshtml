@@ -1,0 +1,21 @@
+﻿@model Une.TalentPool.Web.Models.SettingViewModels.ResumeSettingViewModel
+@{
+    ViewData["PageHeader"] = "系统配置";
+    ViewData["Title"] = "简历配置";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"]</h3>
+    </div>
+    <div class="card-body">
+        <form method="post" asp-controller="Setting" asp-action="ResumeSetting">
+            <div class="form-group">
+                <label>简历匹配最小相似度</label>
+                <input type="text" class="form-control" asp-for="MinSimilarityValue" min="0" max="100">
+                <span asp-validation-for="MinSimilarityValue" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">保存</button>
+        </form>
+    </div>
+</div>

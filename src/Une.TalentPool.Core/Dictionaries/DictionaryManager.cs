@@ -10,10 +10,13 @@ namespace Une.TalentPool.Dictionaries
     public class DictionaryManager : IDisposable
     {
         private bool _disposed;
+        private readonly ICancellationTokenProvider _tokenProvider;
         public DictionaryManager(IDictionaryStore dictionaryStore,
-            IOptions<DictionaryOptions> options)
+            IOptions<DictionaryOptions> options,
+            ICancellationTokenProvider  tokenProvider)
         {
             DictionaryStore = dictionaryStore;
+            _tokenProvider = tokenProvider;
             if (options.Value.Injects != null)
             {
                 InjectDictionaries = options.Value.Injects.ToList();
@@ -22,7 +25,7 @@ namespace Une.TalentPool.Dictionaries
         }
         public IReadOnlyList<Dictionary> InjectDictionaries { get; }
         protected IDictionaryStore DictionaryStore { get; }
-        protected virtual CancellationToken CancellationToken => CancellationToken.None;
+        protected virtual CancellationToken CancellationToken => _tokenProvider.Token;
 
         public async Task<Dictionary> CreateAsync(Dictionary dictionary)
         {

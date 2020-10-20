@@ -26,9 +26,7 @@ namespace Une.TalentPool.Users
         /// <summary>
         /// 受保护状态（不可删除）
         /// </summary>
-        public virtual bool Protected { get; set; }
-
-        public virtual string ConnectionId { get; set; }
+        public virtual bool Protected { get; set; } 
 
         public virtual bool Confirmed { get; set; }
 

@@ -8,15 +8,18 @@ namespace Une.TalentPool.Investigations
     public class InvestigationManager:IDisposable
     {
         private bool _disposed;
+        private readonly ICancellationTokenProvider _tokenProvider;
         public InvestigationManager(IInvestigationStore investigaionStore,
-            IEnumerable<IInvestigaionValidator> investigaionValidators)
+            IEnumerable<IInvestigaionValidator> investigaionValidators,
+            ICancellationTokenProvider  tokenProvider)
         {
             InvestigaionStore = investigaionStore;
             InvestigaionValidators = investigaionValidators;
+            _tokenProvider = tokenProvider;
         }
 
         protected IInvestigationStore InvestigaionStore { get; }
-        protected CancellationToken CancellationToken => CancellationToken.None;
+        protected CancellationToken CancellationToken => _tokenProvider.Token;
         protected IEnumerable<IInvestigaionValidator> InvestigaionValidators { get; }
 
         public async Task<Investigation> CreateAsync(Investigation investigation)

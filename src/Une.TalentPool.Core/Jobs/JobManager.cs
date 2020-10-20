@@ -7,14 +7,16 @@ namespace Une.TalentPool.Jobs
     public class JobManager : IDisposable
     {
         private bool _disposed;
-
-        public JobManager(IJobStore jobStore)
+        private readonly ICancellationTokenProvider _tokenProvider;
+        public JobManager(IJobStore jobStore,
+            ICancellationTokenProvider tokenProvider)
         {
             JobStore = jobStore;
+            _tokenProvider = tokenProvider;
         }
 
         protected IJobStore JobStore { get; }
-        protected virtual CancellationToken CancellationToken => CancellationToken.None;
+        protected virtual CancellationToken CancellationToken => _tokenProvider.Token;
 
         public async Task<Job> CreateAsync(Job job)
         {

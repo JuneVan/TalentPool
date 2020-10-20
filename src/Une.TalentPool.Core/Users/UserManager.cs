@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Une.TalentPool.Users
@@ -10,6 +11,7 @@ namespace Une.TalentPool.Users
     public class UserManager : UserManager<User>
     {
         private readonly IUserStore _userStore;
+        private readonly ICancellationTokenProvider _tokenProvider;
         public UserManager(IUserStore store,
             IOptions<IdentityOptions> optionsAccessor,
             IPasswordHasher<User> passwordHasher,
@@ -18,7 +20,8 @@ namespace Une.TalentPool.Users
             ILookupNormalizer keyNormalizer,
             IdentityErrorDescriber errors,
             IServiceProvider services,
-            ILogger<UserManager<User>> logger)
+            ILogger<UserManager<User>> logger,
+            ICancellationTokenProvider tokenProvider)
             : base(store,
             optionsAccessor,
             passwordHasher,
@@ -30,7 +33,9 @@ namespace Une.TalentPool.Users
             logger)
         {
             _userStore = store;
+            _tokenProvider = tokenProvider;
         }
+        protected override CancellationToken CancellationToken => _tokenProvider.Token;
 
         public async Task<IdentityResult> UpdateRolesAsync(User user, List<string> roles)
         {
@@ -54,16 +59,6 @@ namespace Une.TalentPool.Users
             }
             return await UpdateUserAsync(user);
 
-        }
-
-        public async Task<IdentityResult> ChangeOnlineAsync(User user,string connectionId)
-        {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
-            if (connectionId == null)
-                throw new ArgumentNullException(nameof(connectionId));
-            user.ConnectionId = connectionId;
-            return await UpdateUserAsync(user); 
-        }
+        } 
     }
 }

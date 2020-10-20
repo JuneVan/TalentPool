@@ -8,11 +8,14 @@ namespace Une.TalentPool.Configurations
     public class SettingValueManager : IDisposable
     {
         private bool _disposed;
-        public SettingValueManager(ISettingValueStore settingValueStore)
+        private readonly ICancellationTokenProvider _tokenProvider;
+        public SettingValueManager(ISettingValueStore settingValueStore,
+            ICancellationTokenProvider  tokenProvider)
         {
             SettingValueStore = settingValueStore;
+            _tokenProvider = tokenProvider;
         }
-        protected CancellationToken CancellationToken => CancellationToken.None;
+        protected CancellationToken CancellationToken => _tokenProvider.Token;
         protected ISettingValueStore SettingValueStore;
 
         public async Task<SettingValue> FindByNameAsync(string settingName)

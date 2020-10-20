@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -9,21 +10,27 @@ namespace Une.TalentPool.Resumes
     public class ResumeManager : IDisposable
     {
         private bool _disposed;
+        private readonly ICancellationTokenProvider _tokenProvider;
         public ResumeManager(IResumeStore resumeStore,
             IResumeAuditSettingStore resumeAuditSettingStore,
             IEnumerable<IResumeValidator> resumeValidators,
-            IResumeComparer resumeComparer)
+            IResumeComparer resumeComparer,
+            IOptions<ResumeOptions> options,
+            ICancellationTokenProvider  tokenProvider)
         {
             ResumeStore = resumeStore;
             ResumeValidators = resumeValidators;
             ResumeComparer = resumeComparer;
             ResumeAuditSettingStore = resumeAuditSettingStore;
+            Options = options?.Value;
+            _tokenProvider = tokenProvider;
         }
+        public ResumeOptions Options { get; }
         protected IResumeStore ResumeStore { get; }
         protected IResumeAuditSettingStore ResumeAuditSettingStore { get; }
         protected IEnumerable<IResumeValidator> ResumeValidators { get; }
         protected IResumeComparer ResumeComparer { get; }
-        protected virtual CancellationToken CancellationToken => CancellationToken.None;
+        protected virtual CancellationToken CancellationToken => _tokenProvider.Token;
 
         public async Task<Resume> CreateAsync(Resume resume)
         {
@@ -60,7 +67,7 @@ namespace Une.TalentPool.Resumes
         {
             if (ResumeComparer != null)
             {
-                await ResumeComparer.CompareAsync(this, resume);
+                await ResumeComparer.CompareAsync(this, resume, Options.MinSimilarityValue);
             }
         }
         public async Task DeleteAsync(Resume resume)
