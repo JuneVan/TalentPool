@@ -28,6 +28,8 @@ namespace Une.TalentPool.Users
         /// </summary>
         public virtual bool Protected { get; set; }
 
+        public virtual string ConnectionId { get; set; }
+
         public virtual bool Confirmed { get; set; }
 
         public virtual Guid CreatorUserId { get; set; }

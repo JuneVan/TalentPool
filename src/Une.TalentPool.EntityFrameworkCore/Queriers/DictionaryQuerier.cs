@@ -10,8 +10,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
 {
     public class DictionaryQuerier : IDictionaryQuerier
     {
-        private readonly VanDbContext _context;
-        public DictionaryQuerier(VanDbContext context)
+        private readonly TalentDbContext _context;
+        public DictionaryQuerier(TalentDbContext context)
         {
             _context = context;
         }

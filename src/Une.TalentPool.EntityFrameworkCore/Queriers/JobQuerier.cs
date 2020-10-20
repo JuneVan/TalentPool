@@ -10,8 +10,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
 {
     public class JobQuerier : IJobQuerier
     {
-        private readonly VanDbContext _context;
-        public JobQuerier(VanDbContext context)
+        private readonly TalentDbContext _context;
+        public JobQuerier(TalentDbContext context)
         {
             _context = context;
         }

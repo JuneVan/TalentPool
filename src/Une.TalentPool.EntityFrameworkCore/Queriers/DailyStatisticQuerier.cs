@@ -10,8 +10,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
 {
     public class DailyStatisticQuerier : IDailyStatisticQuerier
     {
-        private readonly VanDbContext _context;
-        public DailyStatisticQuerier(VanDbContext context)
+        private readonly TalentDbContext _context;
+        public DailyStatisticQuerier(TalentDbContext context)
         {
             _context = context;
         }

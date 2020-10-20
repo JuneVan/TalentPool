@@ -1,4 +1,5 @@
 ﻿@using Une.TalentPool.Resumes
+
 @inject IUserIdentifier UserIdentifier
 @model Une.TalentPool.Web.Models.ResumeViewModels.QueryResumeViewModel
 @{
@@ -39,6 +40,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>创建人</label>
+
                         <input type="hidden" value="@Model.Output.Parameter.CreatorUserId" name="CreatorUserId">
                         <select class="form-control" id="creatorUserIdBySelect" asp-items="@Model.Users">
                             <option value="">=请选择创建人=</option>
@@ -48,16 +50,9 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>负责人</label>
-                        @if (Model.Output.Parameter.OwnerUserId!=null)
-                        {
-                            <input type="hidden" value="@Model.Output.Parameter.OwnerUserId" name="OwnerUserId">
-                        }
-                        else
-                        {
-                            <input type="hidden" value="@UserIdentifier.UserId.Value" name="OwnerUserId">
-                        } 
+                        <input type="hidden" value="@Model.Output.Parameter.OwnerUserId" name="OwnerUserId">
                         <select class="form-control" id="ownerUserIdBySelect" asp-items="@Model.Users">
-                            <option value="">=请选择负责人=</option>
+                            <option value="@Guid.Empty">=请选择负责人=</option>
                         </select>
                     </div>
                 </div>
@@ -201,8 +196,11 @@
                                                 }
                                                 else
                                                 {
-                                                    //无调查记录的情况下，才可以将简历设置无效
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("设置无效", "/Resume/Trash/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
+                                                    if (item.OwnerUserId == UserIdentifier.UserId)
+                                                    {
+                                                        //无调查记录的情况下，才可以将简历设置无效
+                                                        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("设置无效", "/Resume/Trash/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
+                                                    } 
                                                 }
                                             }
                                         </div>

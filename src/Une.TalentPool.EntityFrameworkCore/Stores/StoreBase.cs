@@ -7,11 +7,11 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
     public class StoreBase
     {
         private bool _disposed;
-        public StoreBase(VanDbContext context)
+        public StoreBase(TalentDbContext context)
         {
             Context = context;
         }
-        protected VanDbContext Context { get; }
+        protected TalentDbContext Context { get; }
         public bool AutoSaveChanges { get; set; } = true;
         protected Task SaveChanges(CancellationToken cancellationToken)
         {

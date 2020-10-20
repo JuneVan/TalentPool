@@ -10,8 +10,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
 {
     public class RoleQuerier : IRoleQuerier
     {
-        private readonly VanDbContext _context;
-        public RoleQuerier(VanDbContext context)
+        private readonly TalentDbContext _context;
+        public RoleQuerier(TalentDbContext context)
         {
             _context = context;
         }

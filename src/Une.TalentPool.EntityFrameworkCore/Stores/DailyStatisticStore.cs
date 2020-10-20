@@ -11,7 +11,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
 {
     public class DailyStatisticStore : StoreBase, IDailyStatisticStore
     {
-        public DailyStatisticStore(VanDbContext context)
+        public DailyStatisticStore(TalentDbContext context)
               : base(context)
         {
         }

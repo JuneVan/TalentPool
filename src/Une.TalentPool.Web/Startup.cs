@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Une.TalentPool.EntityFrameworkCore;
 using Une.TalentPool.EntityFrameworkCore.Seeds;
 
 namespace Une.TalentPool.Web
@@ -22,11 +20,8 @@ namespace Une.TalentPool.Web
         {
             services.AddControllersWithViews();
 
-            services.AddDbContext<VanDbContext>(optionsAction =>
-            {
-                optionsAction.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
-            });
-            services.AddTalentPoolWeb();
+           
+            services.AddTalentPoolWeb(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

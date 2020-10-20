@@ -1,17 +1,17 @@
-﻿@using Une.TalentPool.Interviews
+﻿@using Une.TalentPool.Interviews 
+
 @inject IUserIdentifier UserIdentifier
-@model Une.TalentPool.Web.Models.InterviewViewModels.QueryInterviewViewModel
+@model Une.TalentPool.Web.Models.InterviewViewModels.QueryInterviewViewModel 
 
 @{
     ViewData["PageHeader"] = "面试预约管理";
-    ViewData["Title"] = "面试预约列表";
-
+    ViewData["Title"] = "面试预约列表"; 
 }
 
 <div class="row">
     <div class="col-md-12">
-        <div class="btn-group btn-group-sm"> 
-            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("新增面试预约", "/Resume/List" , Pages.Interview_CreateOrEditOrDelete, "btn btn-sm btn-primary", "fa fa-plus"))
+        <div class="btn-group btn-group-sm">
+            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("新增面试预约", "/Resume/List", Pages.Interview_CreateOrEditOrDelete, "btn btn-sm btn-primary", "fa fa-plus"))
         </div>
     </div>
 </div>
@@ -34,8 +34,15 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>创建人</label>
-                        <input type="hidden" class="form-control" value="@Model.Output.Parameter.CreatorUserId" readonly name="CreatorUserId">
-                        <select class="form-control" id="createdBySelect" asp-items="Model.Users">
+                        @if (Model.Output.Parameter.CreatorUserId != null)
+                        {
+                            <input type="hidden" value="@Model.Output.Parameter.CreatorUserId" name="CreatorUserId">
+                        }
+                        else
+                        {
+                            <input type="hidden" value="@Guid.Empty" name="CreatorUserId">
+                        }
+                        <select class="form-control" id="creatorUserIdSelect" asp-items="@Model.Users">
                             <option value="@Guid.Empty">=请选择创建人=</option>
                         </select>
                     </div>
@@ -104,8 +111,8 @@
                                         <button id="group-dropdown" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-cog"></i> 操作菜单
                                         </button>
-                                        <div class="dropdown-menu" aria-labelledby="group-dropdown"> 
-                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Interview/View/" + item.Id, Pages.Interview, "dropdown-item")) 
+                                        <div class="dropdown-menu" aria-labelledby="group-dropdown">
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Interview/View/" + item.Id, Pages.Interview, "dropdown-item"))
                                             @if (item.Status == InterviewStatus.None)
                                             {
                                                 @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Interview/Edit/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
@@ -167,9 +174,9 @@
 
 
             //负责人
-            $("#createdBySelect").val($("input[name='CreatedBy']").val());
-            $("#createdBySelect").change(function () {
-                $("input[name='CreatedBy']").val($("#createdBySelect").val());
+            $("#creatorUserIdSelect").val($("input[name='CreatorUserId']").val());
+            $("#creatorUserIdSelect").change(function () {
+                $("input[name='CreatorUserId']").val($("#creatorUserIdSelect").val());
             })
 
             //预约状态

@@ -30,7 +30,7 @@
                     <div class="form-group">
                         <label>职位</label>
                         <input type="hidden" value="@Model.Output.Parameter.JobId" name="JobId">
-                        <select class="form-control" id="selectJobId" asp-items="@Model.Jobs">
+                        <select class="form-control" id="jobIdSelect" asp-items="@Model.Jobs">
                             <option value="">==请选择职位==</option>
                         </select>
                     </div>
@@ -38,9 +38,9 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>负责人</label>
-                        <input type="hidden" class="form-control" value="" readonly name="HandledBy">
-                        <select class="form-control" id="handledBySelect" asp-items="@Model.Users">
-                            <option value="@Guid.Empty">=请选择创建人=</option>
+                        <input type="hidden" value="@Model.Output.Parameter.OwnerUserId" name="OwnerUserId">
+                        <select class="form-control" id="ownerUserIdSelect" asp-items="@Model.Users">
+                            <option value="@Guid.Empty">=请选择负责人=</option>
                         </select>
                     </div>
                 </div>
@@ -202,30 +202,19 @@
                                             {
                                                 @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("标记不合适", "/Investigation/Audit/" + item.Id, Pages.Investigation_Audit, "dropdown-item"))
                                             }
-                                            @if (item.Status != InvestigationStatus.Complete)
+
+                                            @if (item.OwnerUserId == UserIdentifier.UserId)
                                             {
-                                                if (item.OwnerUserId == UserIdentifier.UserId)
+                                                @if (item.Status != InvestigationStatus.Complete)
                                                 {
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("调查", "/Investigation/Edit/" + item.Id, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("技术评测", "/Evaluation/SelectEvaluation?InvestigationId=" + item.Id + "&JobId=" + item.JobId, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("结束调查", "/Investigation/Finsh/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))
-                                                }
-
-                                            }
-                                            else if (item.Status == InvestigationStatus.Complete)
-                                            {
-                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("结束调查", "/Investigation/Restore/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))
-                                            }
-                                            else if (item.Status == InvestigationStatus.Complete)
-                                            {
-                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("恢复调查", "/Investigation/Restore/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))
-                                            }
-
-                                            @if (item.Status != InvestigationStatus.Complete)
-                                            {
-                                                if (item.OwnerUserId == UserIdentifier.UserId)
-                                                {
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("删除", "/Investigation/Delete/" + item.Id, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
+                                                }
+                                                else
+                                                {
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("恢复调查", "/Investigation/Restore/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))
                                                 }
                                             }
                                         </div>
@@ -324,16 +313,16 @@
                 startDate: startDate,
                 endDate: endDate
             }, function (start, end, label) {
-                    $("input[name='StartTime']").val(start.format('YYYY/MM/DD HH:mm'));
-                    $("input[name='EndTime']").val(end.format('YYYY/MM/DD HH:mm'));
+                $("input[name='StartTime']").val(start.format('YYYY/MM/DD HH:mm'));
+                $("input[name='EndTime']").val(end.format('YYYY/MM/DD HH:mm'));
 
             });
 
 
             //职位
-            $("#positionSelect").val($("input[name='Position']").val());
-            $("#positionSelect").change(function () {
-                $("input[name='Position']").val($("#positionSelect").val());
+            $("#jobIdSelect").val($("input[name='JobId']").val());
+            $("#jobIdSelect").change(function () {
+                $("input[name='JobId']").val($("#jobIdSelect").val());
             })
 
             //调查状态
@@ -343,9 +332,9 @@
             })
 
             //负责人
-            $("#handledBySelect").val($("input[name='HandledBy']").val());
-            $("#handledBySelect").change(function () {
-                $("input[name='HandledBy']").val($("#handledBySelect").val());
+            $("#ownerUserIdSelect").val($("input[name='OwnerUserId']").val());
+            $("#ownerUserIdSelect").change(function () {
+                $("input[name='OwnerUserId']").val($("#ownerUserIdSelect").val());
             })
         })
 

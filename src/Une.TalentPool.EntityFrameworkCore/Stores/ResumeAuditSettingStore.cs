@@ -9,7 +9,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
 {
     public class ResumeAuditSettingStore : StoreBase, IResumeAuditSettingStore
     {
-        public ResumeAuditSettingStore(VanDbContext context) : base(context)
+        public ResumeAuditSettingStore(TalentDbContext context) : base(context)
         {
 
         }

@@ -7,6 +7,7 @@ namespace Une.TalentPool.Configurations
     {
         public string Name { get; set; }
         public string Value { get; set; }
+        public Guid? OwnerUserId { get; set; }
         public Guid CreatorUserId { get; set; }
         public DateTime CreationTime { get; set; }
         public Guid? LastModifierUserId { get; set; }

@@ -9,9 +9,9 @@ using Une.TalentPool.Roles;
 
 namespace Une.TalentPool.EntityFrameworkCore.Stores
 {
-    public class VanRoleStore : RoleStore<Role, VanDbContext, Guid>, IRoleStore
+    public class VanRoleStore : RoleStore<Role, TalentDbContext, Guid>, IRoleStore
     {
-        public VanRoleStore(VanDbContext context) : base(context)
+        public VanRoleStore(TalentDbContext context) : base(context)
         {
 
         }

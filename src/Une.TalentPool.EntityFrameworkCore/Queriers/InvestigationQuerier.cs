@@ -11,8 +11,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
 {
     public class InvestigationQuerier : IInvestigationQuerier
     {
-        private readonly VanDbContext _context;
-        public InvestigationQuerier(VanDbContext context)
+        private readonly TalentDbContext _context;
+        public InvestigationQuerier(TalentDbContext context)
         {
             _context = context;
         }
@@ -158,7 +158,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
                             UnconnectedRemark = a.UnconnectedRemark,
                             OwnerUserName = d.FullName,
                             Status = a.Status,
-                            Information = a.Information
+                            Information = a.Information,
+                            Evaluation = a.Evaluation
                         };
 
             return await query.ToListAsync();

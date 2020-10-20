@@ -17,6 +17,8 @@ namespace Une.TalentPool.Web.Profiles
             CreateMap<CreateOrEditSubjectViewModel, EvaluationSubject>();
             CreateMap<EvaluationQuestion, CreateOrEditQuestionViewModel>();
             CreateMap<CreateOrEditQuestionViewModel, EvaluationQuestion>();
+            CreateMap<EvaluationSubject, DeleteSubjectViewModel>();
+            CreateMap<EvaluationQuestion, DeleteQuestionViewModel>();
         }
     }
 }

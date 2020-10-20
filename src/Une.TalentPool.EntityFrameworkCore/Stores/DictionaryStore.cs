@@ -9,7 +9,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
 {
     public class DictionaryStore : StoreBase, IDictionaryStore
     {
-        public DictionaryStore(VanDbContext context)
+        public DictionaryStore(TalentDbContext context)
             : base(context)
         {
         } 

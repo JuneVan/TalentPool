@@ -5,9 +5,7 @@ using Une.TalentPool.Application.Resumes;
 namespace Une.TalentPool.Web.Models.IndexViewModels
 {
     public class IndexViewModel
-    {
-        public bool OnlyMyself { get; set; } = false;
-
+    { 
         // 月新增数据
         public MonthlyIncreaseData MonthlyIncreaseData { get; set; }
         // 月简历数统计   

@@ -55,5 +55,15 @@ namespace Une.TalentPool.Users
             return await UpdateUserAsync(user);
 
         }
+
+        public async Task<IdentityResult> ChangeOnlineAsync(User user,string connectionId)
+        {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+            if (connectionId == null)
+                throw new ArgumentNullException(nameof(connectionId));
+            user.ConnectionId = connectionId;
+            return await UpdateUserAsync(user); 
+        }
     }
 }

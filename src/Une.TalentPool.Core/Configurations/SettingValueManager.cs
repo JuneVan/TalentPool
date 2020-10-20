@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,42 +14,36 @@ namespace Une.TalentPool.Configurations
         }
         protected CancellationToken CancellationToken => CancellationToken.None;
         protected ISettingValueStore SettingValueStore;
-        public async Task<SettingValue> CreateAsync(SettingValue settingValue)
-        {
-            if (settingValue == null)
-                throw new ArgumentNullException(nameof(settingValue));
 
-            return await SettingValueStore.CreateAsync(settingValue, CancellationToken);
-        }
-
-        public async Task<SettingValue> UpdateAsync(SettingValue settingValue)
-        {
-            if (settingValue == null)
-                throw new ArgumentNullException(nameof(settingValue));
-
-            return await SettingValueStore.UpdateAsync(settingValue, CancellationToken);
-        }
-
-        public async Task<SettingValue> DeleteAsync(SettingValue settingValue)
-        {
-            if (settingValue == null)
-                throw new ArgumentNullException(nameof(settingValue));
-
-            return await SettingValueStore.DeleteAsync(settingValue, CancellationToken);
-        }
-        public async Task<SettingValue> FindByIdAsync(Guid settingValueId)
-        {
-            if (settingValueId == null)
-                throw new ArgumentNullException(nameof(settingValueId));
-
-            return await SettingValueStore.FindByIdAsync(settingValueId, CancellationToken);
-        }
         public async Task<SettingValue> FindByNameAsync(string settingName)
         {
             if (settingName == null)
                 throw new ArgumentNullException(nameof(settingName));
 
             return await SettingValueStore.FindByNameAsync(settingName, CancellationToken);
+        }
+        public async Task<SettingValue> FindByOwnerUserIdAsync(Guid userId, string settingName)
+        {
+            if (userId == null)
+                throw new ArgumentNullException(nameof(userId));
+
+            if (settingName == null)
+                throw new ArgumentNullException(nameof(settingName));
+
+            return await SettingValueStore.FindByOwnerUserIdAsync(userId, settingName, CancellationToken);
+        }
+        public async Task BulkAsync(List<SettingValue> settingValues)
+        {
+            if (settingValues == null)
+                throw new ArgumentNullException(nameof(settingValues));
+            foreach (var settingValue in settingValues)
+            {
+                if (settingValue.Id == Guid.Empty)
+                    await SettingValueStore.AddSettingValueAsync(settingValue, CancellationToken);
+                else
+                    await SettingValueStore.ChangeSettingValueAsync(settingValue, CancellationToken);
+            }
+            await SettingValueStore.CommitAsync(CancellationToken);
         }
         public void Dispose()
         {

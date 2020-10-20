@@ -20,7 +20,10 @@ namespace Une.TalentPool.Web.Profiles
                     }
 
                 });
-            CreateMap<CreateOrEditResumeViewModel, Resume>();
+            CreateMap<CreateOrEditResumeViewModel, Resume>()
+                .ForMember(m => m.AuditStatus, cfg => cfg.Ignore())
+               .ForMember(m => m.OwnerUserId, cfg => cfg.Ignore())
+               .ForMember(m => m.Enable, cfg => cfg.Ignore());
             CreateMap<Resume, DeleteResumeModel>();
             CreateMap<Resume, AssignUserViewModel>();
             CreateMap<UserSelectItemDto, AudtiSettingUserModel>();

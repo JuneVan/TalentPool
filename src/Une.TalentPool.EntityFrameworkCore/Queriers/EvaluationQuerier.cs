@@ -10,8 +10,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
 {
     public class EvaluationQuerier : IEvaluationQuerier
     {
-        private VanDbContext _context;
-        public EvaluationQuerier(VanDbContext context)
+        private TalentDbContext _context;
+        public EvaluationQuerier(TalentDbContext context)
         {
             _context = context;
         }

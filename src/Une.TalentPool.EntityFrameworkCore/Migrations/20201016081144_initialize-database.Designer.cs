@@ -8,7 +8,7 @@ using Une.TalentPool.EntityFrameworkCore;
 
 namespace Une.TalentPool.EntityFrameworkCore.Migrations
 {
-    [DbContext(typeof(VanDbContext))]
+    [DbContext(typeof(TalentDbContext))]
     [Migration("20201016081144_initialize-database")]
     partial class initializedatabase
     {

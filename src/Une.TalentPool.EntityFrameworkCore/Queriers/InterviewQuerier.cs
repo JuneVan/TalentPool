@@ -11,8 +11,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
 {
     public class InterviewQuerier : IInterviewQuerier
     {
-        private readonly VanDbContext _context;
-        public InterviewQuerier(VanDbContext context)
+        private readonly TalentDbContext _context;
+        public InterviewQuerier(TalentDbContext context)
         {
             _context = context;
         }

@@ -69,7 +69,7 @@
                                         <div class="dropdown-menu" aria-labelledby="group-dropdown"> 
                                             @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Role/Edit/" + item.Id, Pages.Authorization_User_CreateOrEditOrDelete, "dropdown-item"))
                                             @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("分配权限", "/Role/AssignPermission/" + item.Id, Pages.Authorization_Role_AssignPermission, "dropdown-item"))
-                                            @if (item.Protected)
+                                            @if (!item.Protected)
                                             {
                                                 @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("删除", "/Role/Delete/" + item.Id, Pages.Authorization_User_CreateOrEditOrDelete, "dropdown-item"))
                                             }

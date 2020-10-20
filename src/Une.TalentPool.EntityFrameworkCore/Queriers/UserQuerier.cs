@@ -10,8 +10,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
 {
     public class UserQuerier : IUserQuerier
     {
-        private readonly VanDbContext _context;
-        public UserQuerier(VanDbContext context)
+        private readonly TalentDbContext _context;
+        public UserQuerier(TalentDbContext context)
         {
             _context = context;
         }
@@ -30,7 +30,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
                             PhoneNumberConfirmed = a.PhoneNumberConfirmed,
                             Photo = a.Photo,
                             Active = a.Confirmed,
-                            CreationTime = a.CreationTime
+                            CreationTime = a.CreationTime,
+                            Protected = a.Protected
                         };
             if (!string.IsNullOrEmpty(input.Keyword))
                 query = query.Where(w => w.Name.Contains(input.Keyword) || w.Surname.Contains(input.Keyword) || w.UserName.Contains(input.Keyword));

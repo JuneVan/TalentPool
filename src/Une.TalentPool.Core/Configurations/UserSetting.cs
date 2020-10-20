@@ -9,7 +9,6 @@ namespace Une.TalentPool.Configurations
         /// </summary>
         public bool AllowedForNewUsers { get; set; }
        
-
         /// <summary>
         /// 必须已验证邮箱
         /// </summary>

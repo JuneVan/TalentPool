@@ -9,13 +9,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="x-ua-compatible" content="ie=edge"> 
-    <title>日报告 - @Model.Date</title> 
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>日报告 - @Model.Date</title>
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
     <link href="~/lib/admin-lte/css/adminlte.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-    <link href="~/css/van.admin.css" rel="stylesheet" />
-
+    <link href="~/css/talent.admin.css" rel="stylesheet" />
+    <style>
+        dt{
+            font-size:18px;
+        }
+    </style>
 </head>
 <body class="hold-transition layout-top-nav">
     <div class="wrapper">
@@ -73,14 +77,28 @@
                                 {
                                     <dd class="text-col">无记录</dd>
                                 }
-
+                                <dt>职位筛选情况</dt>
+                                <dd><u>投递数量</u>：@Model.JobStatisticTotalInfo.DeliveryCount 份 / <u>搜索数量</u>：@Model.JobStatisticTotalInfo.SearchCount 份</dd>
+                                @if (Model.JobStatisticTotalInfo != null && Model.JobStatisticTotalInfo.JobStatisticInfo.Count > 0)
+                                {
+                                    foreach (var jobStatisticModel in Model.JobStatisticTotalInfo.JobStatisticInfo)
+                                    {
+                                        <dd>
+                                            @jobStatisticModel.JobName ：共 @jobStatisticModel.Count 份
+                                        </dd>
+                                    }
+                                }
+                                else
+                                {
+                                    <dd>无可统计数据</dd>
+                                }
                                 <dt>简历筛选情况</dt>
                                 @if (Model.ResumeStatisticInfo != null && Model.ResumeStatisticInfo.Count > 0)
                                 {
                                     foreach (var resumeStatisticModel in Model.ResumeStatisticInfo)
                                     {
                                         <dd>
-                                            @resumeStatisticModel.CreatorUserName 共 @resumeStatisticModel.Count 份
+                                            @resumeStatisticModel.CreatorUserName ：共 @resumeStatisticModel.Count 份
                                         </dd>
                                     }
                                 }
@@ -93,7 +111,7 @@
                                 {
                                     foreach (var item in Model.InvestigationStatisticInfo)
                                     {
-                                        <dd>@item.Name 共调查人数 @item.TotalCount 人 (其中 @item.AcceptCount 人愿意 ， @item.RefuseCount 人拒绝 ， @item.ConsiderCount 人考虑 ， @item.MissedCount 人未接)</dd>
+                                        <dd>@item.Name ：共调查人数 @item.TotalCount 人 (其中 @item.AcceptCount 人愿意 ， @item.RefuseCount 人拒绝 ， @item.ConsiderCount 人考虑 ， @item.MissedCount 人未接)</dd>
                                     }
                                 }
                                 else
@@ -359,7 +377,7 @@
         </footer>
     </div>
     <script src="~/lib/jquery/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> 
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/admin-lte/js/adminlte.min.js"></script>
 </body>
 </html>
