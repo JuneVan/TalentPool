@@ -11,7 +11,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
 {
     public class ResumeStore : StoreBase, IResumeStore
     {
-        public ResumeStore(VanDbContext context) : base(context)
+        public ResumeStore(TalentDbContext context) : base(context)
         {
 
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Une.TalentPool.Application;
 using Une.TalentPool.Application.Roles;
 
-namespace Une.TalentPool.EntityFrameworkCore.Queriers
+namespace Une.TalentPool.Dapper.Queriers
 {
     public class RoleQuerier : IRoleQuerier
     {

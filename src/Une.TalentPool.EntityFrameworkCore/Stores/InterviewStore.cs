@@ -8,7 +8,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
 {
     public class InterviewStore : StoreBase, IInterviewStore
     {
-        public InterviewStore(VanDbContext context) : base(context)
+        public InterviewStore(TalentDbContext context) : base(context)
         {
 
         }

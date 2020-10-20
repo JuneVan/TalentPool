@@ -113,7 +113,7 @@ namespace Une.TalentPool.Web.Auth
     {
         public IEnumerable<NavigationDefinition> Definitions()
         {
-            var dashboard = new NavigationDefinition("工作台", "/", "fas fa-tachometer-alt");
+            var dashboard = new NavigationDefinition("工作台", "/", "fas fa-home");
 
             var configuration = new NavigationDefinition("系统配置", string.Empty, "fas fa-cogs", Pages.Configuration);
             configuration.AddChild("站点配置", "/Setting/SiteSetting", "fas fa-book", Pages.Configuration_SiteSetting);

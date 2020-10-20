@@ -14,6 +14,7 @@ namespace Une.TalentPool.Application.Users
         public string Surname { get; set; }
         public string Photo { get; set; }  
         public bool Active { get; set; }
+        public bool Protected { get; set; }
         public DateTime CreationTime { get; set; }
     }
 }

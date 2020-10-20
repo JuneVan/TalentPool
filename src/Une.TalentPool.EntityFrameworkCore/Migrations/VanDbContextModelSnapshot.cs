@@ -7,7 +7,7 @@ using Une.TalentPool.EntityFrameworkCore;
 
 namespace Une.TalentPool.EntityFrameworkCore.Migrations
 {
-    [DbContext(typeof(VanDbContext))]
+    [DbContext(typeof(TalentDbContext))]
     partial class VanDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

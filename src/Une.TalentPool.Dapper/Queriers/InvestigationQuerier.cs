@@ -7,7 +7,7 @@ using Une.TalentPool.Application;
 using Une.TalentPool.Application.Investigations;
 using Une.TalentPool.Investigations;
 
-namespace Une.TalentPool.EntityFrameworkCore.Queriers
+namespace Une.TalentPool.Dapper.Queriers
 {
     public class InvestigationQuerier : IInvestigationQuerier
     {

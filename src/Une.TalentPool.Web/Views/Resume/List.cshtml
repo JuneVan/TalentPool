@@ -196,8 +196,11 @@
                                                 }
                                                 else
                                                 {
-                                                    //无调查记录的情况下，才可以将简历设置无效
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("设置无效", "/Resume/Trash/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
+                                                    if (item.OwnerUserId == UserIdentifier.UserId)
+                                                    {
+                                                        //无调查记录的情况下，才可以将简历设置无效
+                                                        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("设置无效", "/Resume/Trash/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
+                                                    } 
                                                 }
                                             }
                                         </div>

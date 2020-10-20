@@ -38,7 +38,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>负责人</label>
-                        <input type="hidden" value="@Guid.Empty" name="OwnerUserId">
+                        <input type="hidden" value="@Model.Output.Parameter.OwnerUserId" name="OwnerUserId">
                         <select class="form-control" id="ownerUserIdSelect" asp-items="@Model.Users">
                             <option value="@Guid.Empty">=请选择负责人=</option>
                         </select>

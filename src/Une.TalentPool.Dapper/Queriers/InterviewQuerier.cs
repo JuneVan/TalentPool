@@ -7,7 +7,7 @@ using Une.TalentPool.Application;
 using Une.TalentPool.Application.Interviews;
 using Une.TalentPool.Interviews;
 
-namespace Une.TalentPool.EntityFrameworkCore.Queriers
+namespace Une.TalentPool.Dapper.Queriers
 {
     public class InterviewQuerier : IInterviewQuerier
     {

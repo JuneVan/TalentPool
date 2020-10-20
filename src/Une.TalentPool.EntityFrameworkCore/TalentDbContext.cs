@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Debug;
 using System;
 using System.Linq;
 using System.Threading;
@@ -20,14 +22,14 @@ using Une.TalentPool.Users;
 
 namespace Une.TalentPool.EntityFrameworkCore
 {
-    public class VanDbContext : IdentityDbContext<User, Role, Guid>
+    public class TalentDbContext : IdentityDbContext<User, Role, Guid>
     {
 
-        public VanDbContext(DbContextOptions options, IServiceProvider serviceProvider) : base(options)
+        public TalentDbContext(DbContextOptions options, IServiceProvider serviceProvider) : base(options)
         {
             UserIdentifier = serviceProvider.GetService<IUserIdentifier>();
         }
-        public VanDbContext(IServiceProvider serviceProvider)
+        public TalentDbContext(IServiceProvider serviceProvider)
         {
             UserIdentifier = serviceProvider.GetService<IUserIdentifier>();
         }
@@ -54,7 +56,7 @@ namespace Une.TalentPool.EntityFrameworkCore
 
         public DbSet<DailyStatistic> DailyStatistics { get; set; }
         public DbSet<DailyStatisticItem> DailyStatisticItems { get; set; }
-         
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -143,6 +145,14 @@ namespace Une.TalentPool.EntityFrameworkCore
 
 
             return base.SaveChangesAsync(cancellationToken);
+        }
+
+        LoggerFactory _loggerFactory = new LoggerFactory(new[] {
+            new DebugLoggerProvider()
+        });
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLoggerFactory(_loggerFactory);
         }
     }
 }

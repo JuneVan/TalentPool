@@ -12,8 +12,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
 {
     public class ResumeQuerier : IResumeQuerier
     {
-        private readonly VanDbContext _context;
-        public ResumeQuerier(VanDbContext context)
+        private readonly TalentDbContext _context;
+        public ResumeQuerier(TalentDbContext context)
         {
             _context = context;
         }
@@ -73,8 +73,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
 
 
         public async Task<ResumeDetailDto> GetResumeAsync(Guid id)
-        {
-            var query = from a in _context.Resumes
+        { 
+             var query = from a in _context.Resumes
                         join b in _context.Investigations on a.Id equals b.ResumeId into bb
                         from bbb in bb.DefaultIfEmpty()
                         join c in _context.Jobs on a.JobId equals c.Id
@@ -107,8 +107,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
                             LastModificationTime = a.LastModificationTime,
                             LastModifierUserName = fff == null ? string.Empty : fff.FullName,
                             ActiveDelivery = a.ActiveDelivery
-                        };
-
+                        }; 
             var resume = await query.FirstOrDefaultAsync();
             if (resume != null)
             {

@@ -1,34 +1,29 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Une.TalentPool.Application;
 using Une.TalentPool.Application.DailyStatistics;
+using Dapper;
 
-namespace Une.TalentPool.EntityFrameworkCore.Queriers
+namespace Une.TalentPool.Dapper.Queriers
 {
     public class DailyStatisticQuerier : IDailyStatisticQuerier
     {
-        private readonly TalentDbContext _context;
-        public DailyStatisticQuerier(TalentDbContext context)
+        private readonly IConnectionProvider _connectionProvider;
+        public DailyStatisticQuerier(IConnectionProvider connectionProvider)
         {
-            _context = context;
+            _connectionProvider = connectionProvider;
         }
 
         public async Task<List<DailyStatisticDto>> GetDailyStatisticsAsync(DateTime date)
         {
-            return await _context.DailyStatistics
-                .Where(w => w.Date == date)
-                .Select(s => new DailyStatisticDto()
-                {
-                    Id = s.Id,
-                    CreationTime = s.CreationTime,
-                    Date = s.Date,
-                    Platform = s.Platform,
-                    Description = s.Description
-                })
-                .ToListAsync();
+            using (var connection = await _connectionProvider.GetDbConnectionAsync())
+            {
+                var dtos = await connection.QueryAsync<DailyStatisticDto>("select Id,CreationTime,Date,Platform,Description from DailyStatistics where Date=@Date", new { Date = date });
+                return dtos.ToList();
+            }
         }
 
         public async Task<PaginationOutput<DailyStatisticDto>> GetListAsync(PaginationInput input)

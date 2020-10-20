@@ -8,7 +8,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
 {
     public class SettingValueStore : StoreBase, ISettingValueStore
     {
-        public SettingValueStore(VanDbContext context) : base(context)
+        public SettingValueStore(TalentDbContext context) : base(context)
         {
 
         }

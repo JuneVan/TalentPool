@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Une.TalentPool.Application.DailyStatistics;
 using Une.TalentPool.Application.Dictionaries;
@@ -13,6 +15,7 @@ using Une.TalentPool.Application.Users;
 using Une.TalentPool.Configurations;
 using Une.TalentPool.DailyStatistics;
 using Une.TalentPool.Dictionaries;
+using Une.TalentPool.EntityFrameworkCore;
 using Une.TalentPool.EntityFrameworkCore.Queriers;
 using Une.TalentPool.EntityFrameworkCore.Stores;
 using Une.TalentPool.Evaluations;
@@ -36,7 +39,7 @@ namespace Une.TalentPool.Web
 {
     public static  class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddTalentPoolWeb(this IServiceCollection services)
+        public static IServiceCollection AddTalentPoolWeb(this IServiceCollection services,IConfiguration configuration)
         {
           
             services.Configure<MvcOptions>(cfg =>
@@ -94,6 +97,10 @@ namespace Une.TalentPool.Web
             services.AddMemoryCache();
 
             // entityframework 
+            services.AddDbContext<TalentDbContext>(optionsAction =>
+            {
+                optionsAction.UseMySql(configuration.GetConnectionString("DefaultConnection"));
+            });
             services.AddTransient<IUserStore, VanUserStore>();
             services.AddTransient<IRoleStore, VanRoleStore>();
             services.AddTransient<ISettingValueStore, SettingValueStore>();
@@ -120,7 +127,14 @@ namespace Une.TalentPool.Web
             // web - automapper
             services.AddMappingProfiles();
 
-           
+            ////dapper
+            //services.AddTransient<IConnectionProvider, MysqlConnectionProvider>();
+            //services.AddTransient<IResumeQuerier, ResumeQuerier>();
+            //services.Configure<DapperOptions>(cfg =>
+            //{
+            //    cfg.ConnectionString = configuration.GetConnectionString("DefaultConnection");
+            //});
+
 
             return services;
         }

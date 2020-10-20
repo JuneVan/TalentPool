@@ -5,9 +5,9 @@ using Une.TalentPool.Users;
 
 namespace Une.TalentPool.EntityFrameworkCore.Stores
 {
-    public class VanUserStore : UserStore<User, Role, VanDbContext, Guid>, IUserStore
+    public class VanUserStore : UserStore<User, Role, TalentDbContext, Guid>, IUserStore
     {
-        public VanUserStore(VanDbContext context) : base(context)
+        public VanUserStore(TalentDbContext context) : base(context)
         {
 
         }

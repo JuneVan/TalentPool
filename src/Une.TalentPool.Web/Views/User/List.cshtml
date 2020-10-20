@@ -69,7 +69,7 @@
                                     }
                                     else
                                     {
-                                        <span class="badge badge-danger"  title="未验证邮箱"><i class="fas fa-times"></i></span>
+                                        <span class="badge badge-danger" title="未验证邮箱"><i class="fas fa-times"></i></span>
                                     }
                                 </td>
                                 <td>
@@ -80,7 +80,7 @@
                                     }
                                     else
                                     {
-                                        <span class="badge badge-danger"  title="未验证手机号"><i class="fas fa-times"></i></span>
+                                        <span class="badge badge-danger" title="未验证手机号"><i class="fas fa-times"></i></span>
                                     }
                                 </td>
                                 <td>
@@ -102,9 +102,12 @@
                                             @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/User/View/" + item.Id, Pages.Authorization_User, "dropdown-item"))
                                             @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/User/Edit/" + item.Id, Pages.Authorization_User_CreateOrEditOrDelete, "dropdown-item"))
                                             @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("分配角色", "/User/AssignRole/" + item.Id, Pages.Authorization_User_AssignRole, "dropdown-item"))
-                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("删除", "/User/Delete/" + item.Id, Pages.Authorization_User_CreateOrEditOrDelete, "dropdown-item"))
+                                            @if (!item.Protected)
+                                            {
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("删除", "/User/Delete/" + item.Id, Pages.Authorization_User_CreateOrEditOrDelete, "dropdown-item"))
+                                            }
                                         </div>
-                                    </div> 
+                                    </div>
                                 </td>
                             </tr>
 
