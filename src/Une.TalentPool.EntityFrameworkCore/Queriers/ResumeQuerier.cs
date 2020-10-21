@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Une.TalentPool.Application;
 using Une.TalentPool.Application.Resumes;
@@ -13,14 +14,20 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
     public class ResumeQuerier : IResumeQuerier
     {
         private readonly TalentDbContext _context;
-        public ResumeQuerier(TalentDbContext context)
+        private ICancellationTokenProvider _tokenProvider;
+        public ResumeQuerier(TalentDbContext context, ICancellationTokenProvider tokenProvider)
         {
             _context = context;
+            _tokenProvider = tokenProvider;
         }
-
+        protected CancellationToken CancellationToken => _tokenProvider.Token;
 
         public async Task<PaginationOutput<ResumeDto>> GetListAsync(QueryResumeInput input)
         {
+            CancellationToken.ThrowIfCancellationRequested();
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
             var query = from a in _context.Resumes
                         join b in _context.Investigations on a.Id equals b.ResumeId into bb
                         from bbb in bb.DefaultIfEmpty()
@@ -62,19 +69,23 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
             if (input.AuditStatus.HasValue)
                 query = query.Where(w => w.AuditStatus == (AuditStatus)input.AuditStatus.Value);
 
-            var totalCount = await query.CountAsync();
+            var totalCount = await query.CountAsync(CancellationToken);
             var totalSize = (int)Math.Ceiling(totalCount / (decimal)input.PageSize);
             var resumes = await query.OrderByDescending(o => o.CreationTime)
                  .Skip((input.PageIndex - 1) * input.PageSize)
                 .Take(input.PageSize)
-                 .ToListAsync();
+                 .ToListAsync(CancellationToken);
             return new PaginationOutput<ResumeDto>(totalSize, resumes);
         }
 
 
         public async Task<ResumeDetailDto> GetResumeAsync(Guid id)
-        { 
-             var query = from a in _context.Resumes
+        {
+            CancellationToken.ThrowIfCancellationRequested();
+            if (id == null)
+                throw new ArgumentNullException(nameof(id));
+
+            var query = from a in _context.Resumes
                         join b in _context.Investigations on a.Id equals b.ResumeId into bb
                         from bbb in bb.DefaultIfEmpty()
                         join c in _context.Jobs on a.JobId equals c.Id
@@ -107,8 +118,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
                             LastModificationTime = a.LastModificationTime,
                             LastModifierUserName = fff == null ? string.Empty : fff.FullName,
                             ActiveDelivery = a.ActiveDelivery
-                        }; 
-            var resume = await query.FirstOrDefaultAsync();
+                        };
+            var resume = await query.FirstOrDefaultAsync(CancellationToken);
             if (resume != null)
             {
                 resume.ResumeAuditRecords = await GetResumeAuditRecordsAsync(id);
@@ -119,7 +130,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
                         RelationResumeId = s.RelationResumeId,
                         RelationResumeName = s.RelationResumeName,
                         Similarity = s.Similarity
-                    }).ToListAsync();
+                    }).ToListAsync(CancellationToken);
             }
             return resume;
 
@@ -127,6 +138,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
 
         public async Task<List<ResumeAuditRecordDto>> GetResumeAuditRecordsAsync(Guid resumeId)
         {
+            CancellationToken.ThrowIfCancellationRequested();
             if (resumeId == null)
                 throw new ArgumentNullException(nameof(resumeId));
             var query = from a in _context.ResumeAuditRecords
@@ -143,11 +155,16 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
                             Remark = a.Remark
                         };
 
-            return await query.ToListAsync();
+            return await query.ToListAsync(CancellationToken);
         }
 
         public async Task<List<StatisticResumeDto>> GetStatisticResumesAsync(DateTime startTime, DateTime endTime, AuditStatus? auditStatus, bool? enable)
         {
+            CancellationToken.ThrowIfCancellationRequested();
+            if (startTime == null)
+                throw new ArgumentNullException(nameof(startTime));
+            if (endTime == null)
+                throw new ArgumentNullException(nameof(endTime));
             var query = from a in _context.Resumes
                         join b in _context.Users on a.CreatorUserId equals b.Id
                         join c in _context.Jobs on a.JobId equals c.Id
@@ -168,11 +185,13 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
                 query = query.Where(w => w.AuditStatus == auditStatus);
             if (enable.HasValue)
                 query = query.Where(w => w.Enable == enable);
-            return await query.ToListAsync();
+            return await query.ToListAsync(CancellationToken);
         }
 
         public async Task<List<UncompleteResumeDto>> GetUncompleteResumesAsync(Guid? ownerUserId)
         {
+            CancellationToken.ThrowIfCancellationRequested();
+
             var query = from a in _context.Resumes
                         join b in _context.Investigations on a.Id equals b.ResumeId into bb
                         from bbb in bb.DefaultIfEmpty()
@@ -198,12 +217,16 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
                         };
             if (ownerUserId.HasValue)
                 query = query.Where(w => w.OwnerUserId == ownerUserId);
-            return await query.ToListAsync();
+            return await query.ToListAsync(CancellationToken);
         }
 
 
         public async Task<List<ResumeExportDto>> GetExportResumesAsync(QueryExportResumeInput input)
         {
+            CancellationToken.ThrowIfCancellationRequested();
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
             var query = from a in _context.Resumes
                         join c in _context.Jobs on a.JobId equals c.Id
                         join d in _context.Users on a.CreatorUserId equals d.Id
@@ -240,7 +263,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
             if (input.AuditStatus.HasValue)
                 query = query.Where(w => w.AuditStatus == (AuditStatus)input.AuditStatus.Value);
 
-            return await query.ToListAsync();
+            return await query.ToListAsync(CancellationToken);
         }
     }
 }

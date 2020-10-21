@@ -56,7 +56,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
             ThrowIfDisposed();
             if (dailyStatisticId == null)
                 throw new ArgumentNullException(nameof(dailyStatisticId));
-            return await Context.DailyStatistics.Include(i => i.Items).FirstOrDefaultAsync(f => f.Id == dailyStatisticId);
+            return await Context.DailyStatistics.Include(i => i.Items).FirstOrDefaultAsync(f => f.Id == dailyStatisticId, cancellationToken);
         }
 
         public async Task<DailyStatistic> UpdateAsync(DailyStatistic dailyStatistic, CancellationToken cancellationToken)
@@ -67,7 +67,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
                 throw new ArgumentNullException(nameof(dailyStatistic));
 
             // 清除子实体集合防止更新异常
-            var dailyStatisticDetails = await Context.DailyStatisticItems.Where(w => w.DailyStatisticId == dailyStatistic.Id).ToListAsync();
+            var dailyStatisticDetails = await Context.DailyStatisticItems.Where(w => w.DailyStatisticId == dailyStatistic.Id).ToListAsync(cancellationToken);
             if (dailyStatisticDetails != null)
             {
                 foreach (var dailyStatisticDetail in dailyStatisticDetails)

@@ -38,11 +38,11 @@ using Une.TalentPool.Web.Profiles;
 
 namespace Une.TalentPool.Web
 {
-    public static  class ServiceCollectionExtensions
+    public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddTalentPoolWeb(this IServiceCollection services,IConfiguration configuration)
+        public static IServiceCollection AddTalentPoolWeb(this IServiceCollection services, IConfiguration configuration)
         {
-          
+
             services.Configure<MvcOptions>(cfg =>
             {
                 cfg.Filters.Add<NotifyFilter>();
@@ -103,7 +103,7 @@ namespace Une.TalentPool.Web
             services.AddDbContext<TalentDbContext>(optionsAction =>
             {
                 optionsAction.UseMySql(configuration.GetConnectionString("DefaultConnection"));
-            });
+            }, optionsLifetime: ServiceLifetime.Transient);
             services.AddTransient<IUserStore, VanUserStore>();
             services.AddTransient<IRoleStore, VanRoleStore>();
             services.AddTransient<ISettingValueStore, SettingValueStore>();
