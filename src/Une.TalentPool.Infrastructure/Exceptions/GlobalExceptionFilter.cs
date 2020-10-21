@@ -54,11 +54,15 @@ namespace Une.TalentPool.Infrastructure.Exceptions
             if (!context.ExceptionHandled)
             {
                 context.ExceptionHandled = true;
+                if(context.Exception is OperationCanceledException) // 取消异常不处理
+                {
+                    return;
+                }
                 if (context.Exception is ArgumentException || context.Exception is ArgumentNullException || context.Exception is InvalidOperationException)
                 {
                     _notifier.Warning(context.Exception.Message);
                     _logger.LogWarning(context.Exception, context.Exception.Message);
-                }
+                } 
                 else
                 {
                     _notifier.Error(context.Exception.Message);
