@@ -201,7 +201,7 @@
                                                 {
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Interview/Edit/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("履约/爽约", "/Interview/Change/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("履约/爽约", "/Interview/Cancel/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("取消", "/Interview/Cancel/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
                                                 }
                                             </div>
                                         </div>
