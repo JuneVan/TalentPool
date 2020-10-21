@@ -1,5 +1,6 @@
 ﻿@model Une.TalentPool.Application.Resumes.ResumeDetailDto
 @inject Une.TalentPool.Jobs.JobManager JobManager
+@inject IUserIdentifier UserIdentifier
 
 @{ ViewData["PageHeader"] = "简历库管理";
     ViewData["Title"] = $"查看简历 - {Model.JobName} - { Model.Name}";
@@ -12,11 +13,11 @@
     <div class="card-body">
         @if (Model.ActiveDelivery)
         {
-<div class="ribbon-wrapper ribbon-lg">
-    <div class="ribbon bg-success text-lg">
-        主动投递
-    </div>
-</div>}
+            <div class="ribbon-wrapper ribbon-lg">
+                <div class="ribbon bg-success text-lg">
+                    主动投递
+                </div>
+            </div>}
 
         <div class="row">
             <div class="form-group col-md-6">
@@ -51,19 +52,19 @@
                 <br />
                 @if (Model.ResumeCompares != null)
                 {
-    <div class="btn-group">
-        @foreach (var item in Model.ResumeCompares)
-        {
-<a target="_blank" href="/Resume/View/@item.RelationResumeId" class="btn btn-dark btn-sm" style="background:rgb(255,0,0,@item.Similarity)!important">
-    @if (string.IsNullOrEmpty(item.RelationResumeName))
-    {
-<text>未知姓名</text> }
-else
-{
-@item.RelationResumeName}
-    @(item.Similarity*100) %
-</a>}
-    </div>}
+                    <div class="btn-group">
+                        @foreach (var item in Model.ResumeCompares)
+                        {
+                            <a target="_blank" href="/Resume/View/@item.RelationResumeId" class="btn btn-dark btn-sm" style="background:rgb(255,0,0,@item.Similarity)!important">
+                                @if (string.IsNullOrEmpty(item.RelationResumeName))
+                                {
+                                    <text>未知姓名</text> }
+                                else
+                                {
+                                    @item.RelationResumeName}
+                                @(item.Similarity*100) %
+                            </a>}
+                    </div>}
             </div>
             <div class="form-group col-md-12">
                 <label>简历内容</label>
@@ -80,7 +81,14 @@ else
             </div>
             <div class="form-group col-md-6">
                 <label>所属招聘平台ID</label>
-                <input type="text" class="form-control" asp-for="PlatformId" placeholder="请输入ID">
+                <div class="input-group">
+                    <input type="text" class="form-control" asp-for="PlatformId" readonly>
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-default" title="复制平台ID" data-toggle="tooltip" data-placement="top" onclick="onCopy(this,'@Model.PlatformId')">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
             <div class="form-group col-md-6">
                 <label>创建时间</label>
@@ -102,9 +110,9 @@ else
                 <label>有效性</label>
                 @if (Model.Enable)
                 {
-    <input type="text" class="form-control text-success" value="有效" readonly> }
-else
-{<input type="text" class="form-control text-danger" value="无效，@Model.EnableReason" readonly>}
+                    <input type="text" class="form-control text-success" value="有效" readonly> }
+                else
+                {<input type="text" class="form-control text-danger" value="无效，@Model.EnableReason" readonly>}
             </div>
             <div class="form-group col-md-12">
                 <label>审核记录</label>
@@ -121,19 +129,20 @@ else
                         {
                             foreach (var auditRecord in Model.ResumeAuditRecords)
                             {
-            <tr>
-                <td>@auditRecord.CreatorUserName</td>
-                <td>
-                    @if (auditRecord.Passed)
-                    {
-<span class="text-success">通过</span> }
-else
-{
-<span class="text-danger">未通过</span>
-                        <text>@auditRecord.Remark</text>}
-                </td>
-                <td>@auditRecord.CreationTime</td>
-            </tr>}
+                                <tr>
+                                    <td>@auditRecord.CreatorUserName</td>
+                                    <td>
+                                        @if (auditRecord.Passed)
+                                        {
+                                            <span class="text-success">通过</span> }
+                                        else
+                                        {
+                                            <span class="text-danger">未通过</span>
+                                            <text>@auditRecord.Remark</text>}
+                                    </td>
+                                    <td>@auditRecord.CreationTime</td>
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>
@@ -141,8 +150,14 @@ else
         </div>
     </div>
     <div class="card-footer">
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">编辑</a>
-        <a asp-action="Audit" asp-route-id="@Model.Id" class="btn btn-info">审批</a>
+        @if (Model.OwnerUserId == UserIdentifier.UserId)
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">编辑</a>
+        }
+        @if (Model.Enable)
+        {
+            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("审核", "/Resume/Audit/" + Model.Id, Pages.Resume_Audit, "btn btn-secondary"))
+        } 
         <a asp-action="List" class="btn btn-default">返回列表</a>
     </div>
 </div>

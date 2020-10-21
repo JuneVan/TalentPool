@@ -33,7 +33,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
             if (resume == null)
                 throw new ArgumentNullException(nameof(resume));
 
-            // 清除子实体集合防止更新异常
+            /*// 清除子实体集合防止更新异常  
             var keyMaps = await Context.ResumeKeyMaps.Where(w => w.ResumeId == resume.Id).ToListAsync();
             if (keyMaps != null)
             {
@@ -50,7 +50,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
                     Context.ResumeCompares.Remove(compare);
                 }
             }
-
+            */
             Context.Resumes.Attach(resume);
             resume.ConcurrencyStamp = Guid.NewGuid().ToString();
             Context.Resumes.Update(resume);

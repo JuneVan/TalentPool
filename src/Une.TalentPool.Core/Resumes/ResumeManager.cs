@@ -49,7 +49,7 @@ namespace Une.TalentPool.Resumes
             //获取相似简历
             await CompareAsync(resume);
             if (!ignoreDuplicated & resume.ResumeCompares != null && resume.ResumeCompares.Count > 0)
-                throw new InvalidOperationException("检测存在相似简历，如忽略请勾选忽略重复选项。");
+                throw new InvalidOperationException("检测存在相似简历，如忽略请勾选忽略重复选项。"); 
             return await ResumeStore.UpdateAsync(resume, CancellationToken);
         }
 

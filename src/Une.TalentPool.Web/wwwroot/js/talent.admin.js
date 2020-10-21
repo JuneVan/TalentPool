@@ -1,13 +1,12 @@
-﻿$(function () { 
-    $('[data-toggle="tooltip"]').tooltip(); 
+﻿$(function () {
+    $('[data-toggle="tooltip"]').tooltip();
 })
 
 
-function onCopy(element) {
-    var innerText = element.innerText;
+function onCopy(element, value) { 
     var input = document.createElement('input');
     input.setAttribute('type', 'hide');
-    input.setAttribute('value', innerText);
+    input.setAttribute('value', value);
     document.body.appendChild(input);
     input.select();
     input.setSelectionRange(0, 9999);
@@ -17,7 +16,7 @@ function onCopy(element) {
             class: 'bg-success',
             autohide: true,
             delay: 3000,
-            body: innerText,
+            body: value,
             title: "复制成功"
         };
         $(document).Toasts('create', arg);
