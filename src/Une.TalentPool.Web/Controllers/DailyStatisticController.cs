@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Une.TalentPool.Application;
@@ -80,7 +81,7 @@ namespace Une.TalentPool.Web.Controllers
                 if (dailyStatistic == null)
                     return NotFound(model.Id.Value);
 
-                _ = Mapper.Map(model, dailyStatistic); 
+                _ = Mapper.Map(model, dailyStatistic);
                 await _dailyStatisticManager.UpdateAsync(dailyStatistic);
                 Notifier.Success($"你已成功编辑了“{model.Date}”的统计记录！");
                 return RedirectToAction(nameof(List));
@@ -107,8 +108,8 @@ namespace Une.TalentPool.Web.Controllers
                 if (dailyStatistic == null)
                     return NotFound(model.Id);
 
-                await _dailyStatisticManager.DeleteAsync(dailyStatistic); 
-                Notifier.Information($"你已成功删除了“{dailyStatistic.Date}”的统计记录！"); 
+                await _dailyStatisticManager.DeleteAsync(dailyStatistic);
+                Notifier.Information($"你已成功删除了“{dailyStatistic.Date}”的统计记录！");
                 return RedirectToAction(nameof(List));
             }
             return View(model);
@@ -138,6 +139,85 @@ namespace Une.TalentPool.Web.Controllers
                 }).ToList();
             }
             return View(model);
+        }
+
+
+        public IActionResult Chart()
+        {
+            return View();
+        }
+
+        public async Task<ActionResult<DailyStatisticChartViewModel>> GetChartData(DateTime startDate, DateTime endDate, string groupbyKey = "Platform")
+        {
+            var dayCount = (endDate - startDate).TotalDays;
+            var model = new DailyStatisticChartViewModel
+            { 
+                //日期标签
+                Labels = new List<string>()
+            };
+            for (int i = 0; i < dayCount; i++)
+            {
+                model.Labels.Add(startDate.AddDays(i).ToString("yyyy-MM-dd"));
+            }
+
+            var items = await _dailyStatisticQuerier.GetChartStatisticsAsync(startDate, endDate);
+            if (groupbyKey == "Platform")
+            {
+                List<ChartItemModel> func(Func<DailyStatisticChartDto, string> groupBySelector, Func<DailyStatisticChartDto, int> sumSelector)
+                {
+                    var chartItems = items
+                           .GroupBy(groupBySelector)
+                           .Select(s => new ChartItemModel()
+                           {
+                               Label = s.Key
+                           }).ToList();
+                    foreach (var chartItem in chartItems)
+                    {
+                        var distributions = items.Where(w => w.Platform == chartItem.Label);
+                        var values = new List<int>();
+                        for (int i = 0; i < dayCount; i++)
+                        {
+                            DateTime s = startDate.AddDays(i), e = startDate.AddDays(i + 1);
+                            var count = distributions.Where(w => w.Date >= s && w.Date < e).Sum(sumSelector);
+                            values.Add(count);
+                        }
+                        chartItem.Values = values;
+                    }
+
+                    return chartItems;
+                }
+                model.UpdateData = func(f => f.Platform, s => s.UpdateCount);
+                model.DownloadData = func(f => f.Platform, s => s.DownloadCount);
+            }
+            else
+            {
+                List<ChartItemModel> func(Func<DailyStatisticChartDto, string> groupBySelector, Func<DailyStatisticChartDto, int> sumSelector)
+                {
+                    var chartItems = items
+                           .GroupBy(groupBySelector)
+                           .Select(s => new ChartItemModel()
+                           {
+                               Label = s.Key
+                           }).ToList();
+                    foreach (var chartItem in chartItems)
+                    {
+                        var distributions = items.Where(w => w.JobName == chartItem.Label);
+                        var values = new List<int>();
+                        for (int i = 0; i < dayCount; i++)
+                        {
+                            DateTime s = startDate.AddDays(i), e = startDate.AddDays(i + 1);
+                            var count = distributions.Where(w => w.Date >= s && w.Date < e).Sum(sumSelector);
+                            values.Add(count);
+                        }
+                        chartItem.Values = values;
+                    }
+
+                    return chartItems;
+                }
+                model.UpdateData = func(f => f.JobName, s => s.UpdateCount);
+                model.DownloadData = func(f => f.JobName, s => s.DownloadCount);
+            }
+            return model;
         }
 
         private IActionResult NotFound(Guid id)

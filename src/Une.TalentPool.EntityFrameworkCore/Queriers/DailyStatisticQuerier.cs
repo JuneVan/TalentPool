@@ -16,6 +16,21 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
             _context = context;
         }
 
+        public async Task<List<DailyStatisticChartDto>> GetChartStatisticsAsync(DateTime startTime, DateTime endTime)
+        {
+            var query = from a in _context.DailyStatistics
+                        join b in _context.DailyStatisticItems on a.Id equals b.DailyStatisticId
+                        select new DailyStatisticChartDto()
+                        {
+                            Date = a.Date,
+                            Platform = a.Platform,
+                            JobName = b.JobName,
+                            UpdateCount = b.UpdateCount,
+                            DownloadCount = b.DownloadCount
+                        };
+            return await query.ToListAsync();
+        }
+
         public async Task<List<DailyStatisticDto>> GetDailyStatisticsAsync(DateTime date)
         {
             return await _context.DailyStatistics

@@ -45,7 +45,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
                         join b in _context.Resumes on a.ResumeId equals b.Id
                         join c in _context.Jobs on b.JobId equals c.Id
                         join d in _context.Users on a.CreatorUserId equals d.Id
-                        join e in _context.Users on a.LastModifierUserId equals e.Id
+                        join e in _context.Users on a.LastModifierUserId equals e.Id into ee
+                        from eee in ee.DefaultIfEmpty()
                         where a.Id == id
                         select new InterviewDetailDto()
                         {
@@ -55,7 +56,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
                             CreatorUserName = d.FullName,
                             JobName = c.Title,
                             LastModificationTime = a.LastModificationTime,
-                            LastModifierUserName = e.FullName,
+                            LastModifierUserName = eee == null ? string.Empty : eee.FullName,
                             Remark = a.Remark,
                             Status = a.Status,
                             VisitedTime = a.VisitedTime
