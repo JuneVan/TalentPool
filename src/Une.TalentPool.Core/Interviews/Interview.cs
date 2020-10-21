@@ -12,10 +12,7 @@ namespace Une.TalentPool.Interviews
         /// <summary>
         /// 备注
         /// </summary>
-        public virtual string Remark { get; set; } 
-        /// <summary>
-        /// 姓名
-        /// </summary>
+        public virtual string Remark { get; set; }  
         public virtual string Name { get; set; }
         /// <summary>
         /// 预约时间

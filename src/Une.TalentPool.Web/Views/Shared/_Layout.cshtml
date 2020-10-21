@@ -47,6 +47,11 @@
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="/Report/SelectDate" class="nav-link" target="_blank">历史报告统计</a>
                 </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/Interview/Calendar" class="nav-link" target="_blank">
+                    <i class="fas fa-calendar-alt"></i>
+                    面试安排</a>
+                </li>
             </ul>
             <form class="form-inline ml-3" method="get" action="/Resume/List">
                 <input type="hidden" value="@DateTime.Now.Date.AddDays(-30)" name="StartTime">

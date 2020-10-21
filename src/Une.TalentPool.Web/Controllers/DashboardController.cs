@@ -7,6 +7,7 @@ namespace Une.TalentPool.Web.Controllers
         public IActionResult Index()
         {
             return View();
-        } 
+        }
+        
     }
 }

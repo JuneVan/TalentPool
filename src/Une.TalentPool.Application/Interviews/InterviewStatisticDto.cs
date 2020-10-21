@@ -2,7 +2,7 @@
 
 namespace Une.TalentPool.Application.Interviews
 {
-    public class StatisticInterviewDto
+    public class InterviewStatisticDto
     {
         public Guid CreatorUserId { get; set; }
     }
