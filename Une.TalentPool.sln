@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Une.TalentPool.Core", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Une.TalentPool.Dapper", "src\Une.TalentPool.Dapper\Une.TalentPool.Dapper.csproj", "{0CF991A5-A456-4B4C-9F05-A84BAE6C6B1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Une.TalentPool.KeywordmapGenerator", "src\Une.TalentPool.KeywordmapGenerator\Une.TalentPool.KeywordmapGenerator.csproj", "{C1C6A84E-B76C-4781-ADF2-43F5D6570FC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Une.TalentPool.KeywordmapGenerator", "src\Une.TalentPool.KeywordmapGenerator\Une.TalentPool.KeywordmapGenerator.csproj", "{C1C6A84E-B76C-4781-ADF2-43F5D6570FC2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{FD0E1413-6C61-4CDE-82B1-D43E3273CCC3}"
 EndProject

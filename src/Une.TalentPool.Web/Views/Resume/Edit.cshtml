@@ -123,7 +123,7 @@
 @section scripts {
     <script src="~/lib/summernote/summernote-bs4.min.js"></script>
     <script src="~/lib/summernote/lang/summernote-zh-CN.min.js"></script>
-    <script> 
+    <script>
         $("textarea[name='Description']").summernote({
             lang: 'zh-CN',
             fontsize: '16',
@@ -142,7 +142,7 @@
             callbacks: {
                 onChange: function (content, $editable) {
                     // 查找公司
-                    content = content.replace(/<[^>]*?>/g, " "); 
+                    content = content.replace(/<[^>]*?>/g, " ");
                     var regex = new RegExp(/(?<=(&nbsp;|公司名称：|\s))([a-zA-Z\u4e00-\u9fa5（）\(\)]{4,}公司{1}|[a-zA-Z0-9\u4e00-\u9fa5（）\(\)]{2,}集团{1})([a-zA-Z0-9\u4e00-\u9fa5（）\(\)]*)(?=\s|&nbsp;)/, 'g');
                     var matches = content.match(regex);
                     if (matches) {
@@ -156,6 +156,21 @@
                     } else {
                         console.info("未提取到公司。");
                     }
+
+
+                    content = content.replace("&nbsp;", "\t");
+                     // 姓名
+                    var name = /(?<= 姓(.*)名(:|：)?)\s*[\u4e00-\u9fa5]*\s/.exec(content);
+                    if (name)
+                        $("input[name='Name']").val(name[0].trim(' '));
+                    // 手机号码
+                    var phoneNumber = /1\d{10}/.exec(content);
+                    if (phoneNumber)
+                        $("input[name='PhoneNumber']").val(phoneNumber[0].trim(' '));
+                    // 邮箱
+                    var email = /\w+([-+.]\w+)*@@\w+([-.]\w+)*\.\w+([-.]\w+)*/.exec(content);
+                    if (email)
+                        $("input[name='Email']").val(email[0].trim(' '));
                 }
 
             }
