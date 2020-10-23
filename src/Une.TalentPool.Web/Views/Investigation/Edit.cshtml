@@ -157,6 +157,10 @@
                     <textarea asp-for="Information"></textarea>
                 </div>
                 <div class="form-group col-md-12">
+                    <label>预约评测时间</label>  
+                    <input type="text" class="form-control" placeholder="请输入预约评测时间" asp-for="EvaluationTime" value="@(Model.EvaluationTime?.ToString("yyyy/MM/dd"))">
+                </div>
+                <div class="form-group col-md-12">
                     <label>技术评测</label>
                     <textarea asp-for="Evaluation"></textarea>
                 </div>
@@ -195,7 +199,19 @@
                 firstDay: 1
             }
         });
-
+        $("input[name='EvaluationTime']").daterangepicker({
+            singleDatePicker: true,
+            timePicker: true,
+            locale: {
+                format: 'YYYY/MM/DD HH:mm:ss',
+                applyLabel: '确定',
+                cancelLabel: '取消',
+                daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                    '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                firstDay: 1
+            }
+        });
         $(function () {
             $("#btn-remarks button").click(function () {
                 $("input[name='UnconnectedRemark']").val($(this).data("remark"));

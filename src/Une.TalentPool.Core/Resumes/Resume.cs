@@ -4,6 +4,9 @@ using Une.TalentPool.Entities;
 
 namespace Une.TalentPool.Resumes
 {
+    /// <summary>
+    /// 简历
+    /// </summary>
     public class Resume : Entity, ICreationAudited, IModificationAudited, IDeletionAudited
     {
         /// <summary>

@@ -28,6 +28,8 @@ namespace Une.TalentPool.Web.Models.ResumeViewModels
         public string Name { get; set; }
 
         public string City { get; set; }
+
+        [RegularExpression(@"1[\d]{10}",ErrorMessage ="请输入正确的手机号码")]
         public string PhoneNumber { get; set; }
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }

@@ -256,12 +256,22 @@
                                 <tr>
                                     <td>
                                         @item.Name
-                                        @if (item.CreationTime < DateTime.Now.Date)
+
+                                        @if (item.EvaluationTime.HasValue && item.EvaluationTime.Value > DateTime.Now)
                                         {
-                                            <span class="badge badge-danger" title="往期未完成任务，请及时跟进。">待跟进</span> }
-                                        else if (item.CreationTime > DateTime.Now.Date && !item.Status.HasValue)
+                                            <small class="badge badge-danger" title="预约评测时间-@item.EvaluationTime"  data-toggle="tooltip" data-placement="top">待评测</small>
+                                        }
+                                        else
                                         {
-                                            <small class="badge badge-success" title="今日新增简历，未安排调查">新增</small>}
+                                            if (item.CreationTime < DateTime.Now.Date)
+                                            {
+                                                <span class="badge badge-primary" title="往期未完成任务，请及时跟进。" data-toggle="tooltip" data-placement="top">待跟进</span>
+                                            }
+                                            else if (item.CreationTime > DateTime.Now.Date && !item.Status.HasValue)
+                                            {
+                                                <small class="badge badge-success" title="今日新增简历，未安排调查"  data-toggle="tooltip" data-placement="top">新增</small>
+                                            }
+                                        }
                                     </td>
                                     <td>@item.JobName</td>
                                     <td>@item.PlatformName</td>
@@ -299,7 +309,7 @@
                                                             @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("开始调查", "/Investigation/Create/" + item.Id, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item")) }
                                                         else
                                                         {
-                                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("继续调查", "/Investigation/Edit/" + item.InvestigationId.Value, Pages.Investigation_CreateOrEditOrDelete, "dropdown - item"))
+                                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("继续调查", "/Investigation/Edit/" + item.InvestigationId.Value, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
                                                             @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("技术评测", "/Evaluation/SelectEvaluation?InvestigationId=" + item.Id + "&JobId=" + item.JobId, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
                                                             @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("结束调查", "/Investigation/Finsh/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))}
                                                     }

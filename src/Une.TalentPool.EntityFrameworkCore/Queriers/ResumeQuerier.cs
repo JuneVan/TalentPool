@@ -214,6 +214,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
                             InvestigationId = bbb == null ? (Guid?)null : bbb.Id,
                             Status = bbb == null ? (InvestigationStatus?)null : bbb.Status,
                             InvestigationDate = bbb == null ? (DateTime?)null : bbb.InvestigateDate,
+                            EvaluationTime = bbb == null ? (DateTime?)null : bbb.EvaluationTime,
                         };
             if (ownerUserId.HasValue)
                 query = query.Where(w => w.OwnerUserId == ownerUserId);
