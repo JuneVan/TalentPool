@@ -23,8 +23,7 @@ namespace Une.TalentPool.Web
            
             services.AddTalentPoolWeb(Configuration);
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //entityframework
@@ -37,12 +36,6 @@ namespace Une.TalentPool.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseRouting();

@@ -27,7 +27,7 @@
     <title>@ViewData["Title"] - @(siteSettings.SiteName) </title>
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/lib/admin-lte/css/adminlte.min.css" rel="stylesheet" asp-append-version="true" />
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     <link href="~/css/talent.admin.css" rel="stylesheet" />
     @RenderSection("styles", false)
 
@@ -42,10 +42,22 @@
                     </a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="/Report/Output?Date=@DateTime.Now.Date.ToString("yyyy/MM/dd")" class="nav-link" target="_blank">今日报告统计</a>
+                    <a href="/Report/Output?Date=@DateTime.Now.Date.ToString("yyyy/MM/dd")" class="nav-link" target="_blank">
+                        <i class="fas fa-calendar-day"></i>
+                        今日报告统计
+                    </a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="/Report/SelectDate" class="nav-link" target="_blank">历史报告统计</a>
+                    <a href="/Report/SelectDate" class="nav-link" target="_blank">
+                        <i class="fas fa-history"></i>
+                        历史报告统计
+                    </a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/Interview/Calendar" class="nav-link" target="_blank">
+                        <i class="fas fa-calendar-alt"></i>
+                        面试安排
+                    </a>
                 </li>
             </ul>
             <form class="form-inline ml-3" method="get" action="/Resume/List">
@@ -92,7 +104,7 @@
             </ul>
         </nav>
         <aside class="main-sidebar sidebar-light-blue shadow sidebar-collapse">
-            <a href="/Admin" class="brand-link bg-blue text-white">
+            <a href="/" class="brand-link bg-blue text-white">
                 @if (string.IsNullOrEmpty(siteSettings.Logo))
                 {
                     <img src="~/img/Logo.png" alt="Logo" class="brand-image img-rounded">

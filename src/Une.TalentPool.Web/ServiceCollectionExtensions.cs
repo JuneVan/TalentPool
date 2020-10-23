@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.Serialization;
 using Une.TalentPool.Application.DailyStatistics;
 using Une.TalentPool.Application.Dictionaries;
 using Une.TalentPool.Application.Evaluations;
@@ -37,11 +38,11 @@ using Une.TalentPool.Web.Profiles;
 
 namespace Une.TalentPool.Web
 {
-    public static  class ServiceCollectionExtensions
+    public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddTalentPoolWeb(this IServiceCollection services,IConfiguration configuration)
+        public static IServiceCollection AddTalentPoolWeb(this IServiceCollection services, IConfiguration configuration)
         {
-          
+
             services.Configure<MvcOptions>(cfg =>
             {
                 cfg.Filters.Add<NotifyFilter>();
@@ -90,17 +91,19 @@ namespace Une.TalentPool.Web
             services.AddTransient<DailyStatisticManager>();
 
             // infrastructure
+            services.AddHttpContextAccessor();
             services.AddScoped<INotifier, Notifier>();
             services.AddTransient<INotifySerializer, NotifySerializer>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ISmsSender, SmsSender>();
+            services.AddTransient<ICancellationTokenProvider, HttpContextCancellationTokenProvider>();
             services.AddMemoryCache();
 
             // entityframework 
             services.AddDbContext<TalentDbContext>(optionsAction =>
             {
                 optionsAction.UseMySql(configuration.GetConnectionString("DefaultConnection"));
-            });
+            }, optionsLifetime: ServiceLifetime.Transient);
             services.AddTransient<IUserStore, VanUserStore>();
             services.AddTransient<IRoleStore, VanRoleStore>();
             services.AddTransient<ISettingValueStore, SettingValueStore>();

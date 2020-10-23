@@ -114,7 +114,7 @@
                                 <td>@item.Name</td>
                                 <td>@item.JobName</td>
                                 <td>@item.PlatformName</td>
-                                <td onclick="onCopy(this)" title="单击本区域，可复制平台ID" data-toggle="tooltip" data-placement="top">
+                                <td onclick="onCopy(this,'@item.PlatformId')" title="单击本区域，可复制平台ID" data-toggle="tooltip" data-placement="top">
                                     @item.PlatformId
                                 </td>
                                 <td>@item.CreationTime</td>
@@ -163,6 +163,10 @@
                                         <div class="dropdown-menu" aria-labelledby="group-dropdown">
 
                                             @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Resume/View/" + item.Id, Pages.Resume, "dropdown-item", blank: true))
+                                            @if (item.OwnerUserId == UserIdentifier.UserId)
+                                            {
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Resume/Edit/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
+                                            }
                                             @if (item.Enable)
                                             {
                                                 @if (item.AuditStatus == AuditStatus.Complete)
@@ -186,10 +190,7 @@
                                                 // 审核是可以回撤的，所以任何审核状态都可以审核
                                                 @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("审核", "/Resume/Audit/" + item.Id, Pages.Resume_Audit, "dropdown-item"))
 
-                                                if (item.OwnerUserId == UserIdentifier.UserId)
-                                                {
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Resume/Edit/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
-                                                }
+
                                                 @if (item.InvestigationId.HasValue)
                                                 {
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看调查记录", "/Investigation/View/" + item.InvestigationId, Pages.Investigation, "dropdown-item"))
@@ -200,7 +201,7 @@
                                                     {
                                                         //无调查记录的情况下，才可以将简历设置无效
                                                         @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("设置无效", "/Resume/Trash/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
-                                                    } 
+                                                    }
                                                 }
                                             }
                                         </div>
@@ -226,6 +227,7 @@
         <li>审批通过的简历必须先编辑才能进行调查、预约面试、发送面试邀请；</li>
         <li>未审核的简历，才可以由处理人删除；</li>
         <li>无调查记录的简历才可以被设置成无效状态；</li>
+        <li>无效简历可以查看或编辑，但不能删除，因为；</li>
     </ol>
 </blockquote>
 @section styles{

@@ -8,5 +8,6 @@ namespace Une.TalentPool.Application.DailyStatistics
     {
         Task<PaginationOutput<DailyStatisticDto>> GetListAsync(PaginationInput input);
         Task<List<DailyStatisticDto>> GetDailyStatisticsAsync(DateTime date);
+        Task<List<DailyStatisticChartDto>> GetChartStatisticsAsync(DateTime startTime, DateTime endTime);
     }
 }

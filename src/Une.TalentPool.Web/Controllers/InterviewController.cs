@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Une.TalentPool.Application.Interviews;
@@ -87,7 +88,7 @@ namespace Une.TalentPool.Web.Controllers
             var model = Mapper.Map<CreateOrEditInterviewViewModel>(resume);
             return View(model);
 
-        } 
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateOrEditInterviewViewModel model)
@@ -105,13 +106,13 @@ namespace Une.TalentPool.Web.Controllers
 
         // 编辑 
         public async Task<IActionResult> Edit(Guid id)
-        { 
+        {
             var interview = await _interviewManager.FindByIdAsync(id);
             if (interview == null)
-                return NotFound(id); 
+                return NotFound(id);
             var model = Mapper.Map<CreateOrEditInterviewViewModel>(interview);
             return View(model);
-        } 
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CreateOrEditInterviewViewModel model)
@@ -122,8 +123,8 @@ namespace Une.TalentPool.Web.Controllers
                 if (interview == null)
                     return NotFound(model.Id);
                 interview = Mapper.Map(model, interview);
-                await _interviewManager.UpdateAsync(interview); 
-                Notifier.Success($"你已成功编辑了“{model.Name}”的预约记录！"); 
+                await _interviewManager.UpdateAsync(interview);
+                Notifier.Success($"你已成功编辑了“{model.Name}”的预约记录！");
                 return RedirectToAction(nameof(List));
             }
             return View(model);
@@ -133,7 +134,7 @@ namespace Une.TalentPool.Web.Controllers
         {
             var interview = await _interviewManager.FindByIdAsync(id);
             if (interview == null)
-                return NotFound(id); 
+                return NotFound(id);
             var model = Mapper.Map<CancelInterviewViewModel>(interview);
             return View(model);
         }
@@ -147,8 +148,8 @@ namespace Une.TalentPool.Web.Controllers
                 var interview = await _interviewManager.FindByIdAsync(model.Id);
                 if (interview == null)
                     return NotFound(model.Id);
-                await _interviewManager.CancelAsync(interview); 
-                Notifier.Success($"你已成功取消了“{interview.Name}”的预约记录！"); 
+                await _interviewManager.CancelAsync(interview);
+                Notifier.Success($"你已成功取消了“{interview.Name}”的预约记录！");
                 return RedirectToAction(nameof(List));
             }
             return View(model);
@@ -176,15 +177,29 @@ namespace Une.TalentPool.Web.Controllers
                 var interview = await _interviewManager.FindByIdAsync(model.Id);
                 if (interview == null)
                     return NotFound(model.Id);
-                interview = Mapper.Map(model, interview); 
-                await _interviewManager.ChangeAsync(interview); 
-                Notifier.Success($"你已成功编辑了“{interview.Name}”的预约记录状态！"); 
+                interview = Mapper.Map(model, interview);
+                await _interviewManager.ChangeAsync(interview);
+                Notifier.Success($"你已成功编辑了“{interview.Name}”的预约记录状态！");
                 return RedirectToAction(nameof(List));
             }
             return View(model);
         }
 
+        // 预约日历
+        public IActionResult Calendar()
+        {
+            return View();
+        }
 
+        public async Task<ActionResult<List<InterviewCalendarDto>>> GetCalendar(DateTime startDate, DateTime endDate)
+        {
+            return await _interviewQuerier.GetCalendarInterviewsAsync(startDate, endDate);
+        }
+        // 详情
+        public async Task<IActionResult> View(Guid id)
+        {
+            return View(await _interviewQuerier.GetInterviewDetailAsync(id));
+        }
         private IActionResult NotFound(Guid id)
         {
             Notifier.Warning($"未找到id:{id}的面试预约记录。");

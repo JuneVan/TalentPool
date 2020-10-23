@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Une.TalentPool.Application;
 using Une.TalentPool.Application.Users;
@@ -11,10 +12,15 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
     public class UserQuerier : IUserQuerier
     {
         private readonly TalentDbContext _context;
-        public UserQuerier(TalentDbContext context)
+        private readonly ICancellationTokenProvider _tokenProvider;
+        public UserQuerier(TalentDbContext context,
+            ICancellationTokenProvider tokenProvider)
         {
             _context = context;
+            _tokenProvider = tokenProvider;
         }
+        protected CancellationToken CancellationToken => _tokenProvider.Token;
+
         public async Task<PaginationOutput<UserDto>> GetListAsync(QueryUserInput input)
         {
             var query = from a in _context.Users
@@ -36,21 +42,26 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
             if (!string.IsNullOrEmpty(input.Keyword))
                 query = query.Where(w => w.Name.Contains(input.Keyword) || w.Surname.Contains(input.Keyword) || w.UserName.Contains(input.Keyword));
 
-            var totalCount = await query.CountAsync();
+            var totalCount = await query.CountAsync(CancellationToken);
             var totalSize = (int)Math.Ceiling(totalCount / (decimal)input.PageSize);
             var users = await query.OrderByDescending(o => o.CreationTime)
                  .Skip((input.PageIndex - 1) * input.PageSize)
                 .Take(input.PageSize)
-                 .ToListAsync();
+                 .ToListAsync(CancellationToken);
 
             return new PaginationOutput<UserDto>(totalSize, users);
         }
 
         public async Task<List<UserSelectItemDto>> GetUsersAsync()
         {
-            return await _context.Users
-                .Select(s => new UserSelectItemDto() { Id = s.Id, FullName = s.FullName })
-                .ToListAsync();
+            var query = from a in _context.Users
+                        where a.Confirmed == true
+                        select new UserSelectItemDto
+                        {
+                           Id= a.Id,
+                          FullName=  a.FullName 
+                        };
+            return await query.ToListAsync(CancellationToken);
         }
     }
 }

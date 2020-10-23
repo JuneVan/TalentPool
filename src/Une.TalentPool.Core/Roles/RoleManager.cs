@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Une.TalentPool.Roles
@@ -11,18 +12,21 @@ namespace Une.TalentPool.Roles
     public class RoleManager : RoleManager<Role>
     {
         private readonly IRoleStore _roleStore;
+        private readonly ICancellationTokenProvider _tokenProvider;
         public RoleManager(IRoleStore store,
             IEnumerable<IRoleValidator<Role>> roleValidators,
             ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors,
-            ILogger<RoleManager<Role>> logger)
+            ILogger<RoleManager<Role>> logger,
+            ICancellationTokenProvider  tokenProvider)
             : base(store,
             roleValidators,
             keyNormalizer, errors,
             logger)
         {
             _roleStore = store;
+            _tokenProvider = tokenProvider;
         }
-
+        protected override CancellationToken CancellationToken => _tokenProvider.Token;
         public async Task<IdentityResult> UpdatePermissionsAsync(Role role, List<string> permissions)
         {
             if (role == null)

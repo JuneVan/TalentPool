@@ -1,0 +1,103 @@
+﻿
+@{
+    ViewData["PageHeader"] = "面试预约管理";
+    ViewData["Title"] = "面试预约日历";
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="btn-group btn-group-sm"> 
+            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看面试预约列表", "/Interview/List", Pages.Interview, "btn btn-sm btn-default", "fas fa-list"))
+
+            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("新增面试预约", "/Resume/List", Pages.Interview_CreateOrEditOrDelete, "btn btn-sm btn-primary", "fas fa-plus"))
+        </div>
+    </div>
+</div>
+
+<div class="card card-default  mt-3">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"]</h3>
+    </div>
+    <div class="card-body p-0">
+        <div class="row">
+            <div class="col-md-1">
+                <div class="p-md-2">
+                    <div class="external-event text-white" style="background:#202bfd;">预约中</div>
+                    <div class="external-event text-white" style="background:#28a745;">履约</div>
+                    <div class="external-event text-white" style="background:#ff0000;">爽约</div>
+                    <div class="external-event text-white" style="background:#b9b9b9;">取消</div>
+                </div>
+            </div>
+            <div class="col-md-11">
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section styles {
+    <link href="~/lib-ext/fullcalendar/main.min.css" rel="stylesheet" />
+}
+@section scripts {
+    <script src="~/lib-ext/fullcalendar/main.min.js"></script>
+    <script src="~/lib-ext/fullcalendar/locales-all.min.js"></script>
+    <script src="~/lib-ext/fullcalendar/locales/zh-cn.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                'themeSystem': 'bootstrap',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+                },
+                locale: 'zh-cn', 
+                dayNames: ["星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+               
+                events: function (info, successCallback, failureCallback) { 
+                    var startDate = transitionDate(info.start.valueOf());
+                    var endDate = transitionDate(info.end.valueOf());
+                    $.get("/Interview/GetCalendar?startDate=" + startDate + "&endDate=" + endDate, function (res) {
+                        var events = [];
+                        for (var i = 0; i < res.length; i++) {
+                            var colorMark = res[i].colorMark;
+                            switch (res[i].status) {
+
+                                case 0:
+                                default:
+                                    colorMark = "#202bfd";
+                                    break;
+                                case 1://履约
+                                    colorMark = "#28a745";
+                                    break;
+                                case 2://爽约
+                                    colorMark = "#ff0000";
+                                    break;
+                                case 3://取消
+                                    colorMark = "#b9b9b9";
+                                    break;
+                            }
+
+                            events.push({
+                                title: res[i].name + "::" + res[i].jobName,
+                                start: res[i].appointmentTime,
+                                backgroundColor: colorMark, 
+                                url: "/Interview/View/" + res[i].id
+                            })
+                        }
+                        successCallback(events);
+                    })
+
+                }
+            });
+            calendar.render();
+        });
+        function transitionDate(unixTime) {
+            var date = new Date(unixTime);
+            return date.getFullYear() + '-' + (date.getMonth() + 1) + "-" + date.getDate();
+        }
+    </script>
+}

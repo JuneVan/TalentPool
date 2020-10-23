@@ -11,8 +11,7 @@ namespace Une.TalentPool.EntityFrameworkCore.EntityTypeConfigurations
             builder.ToTable("Users");
             builder.Property(p => p.Name).HasMaxLength(256);
             builder.Property(p => p.Surname).HasMaxLength(256);
-            builder.Property(p => p.Photo).HasMaxLength(2048);
-            builder.Property(p => p.ConnectionId).HasMaxLength(128);
+            builder.Property(p => p.Photo).HasMaxLength(2048); 
             builder.Ignore(i => i.FullName);
 
             builder.HasQueryFilter(f => !f.IsDeleted);

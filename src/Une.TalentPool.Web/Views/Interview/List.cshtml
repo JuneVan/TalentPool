@@ -11,7 +11,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="btn-group btn-group-sm">
-            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("新增面试预约", "/Resume/List", Pages.Interview_CreateOrEditOrDelete, "btn btn-sm btn-primary", "fa fa-plus"))
+            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("新增面试预约", "/Resume/List", Pages.Interview_CreateOrEditOrDelete, "btn btn-sm btn-primary", "fas fa-plus"))
         </div>
     </div>
 </div>
@@ -117,7 +117,7 @@
                                             {
                                                 @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Interview/Edit/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
                                                 @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("履约/爽约", "/Interview/Change/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
-                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("履约/爽约", "/Interview/Cancel/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("取消预约", "/Interview/Cancel/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
                                             }
                                         </div>
                                     </div>

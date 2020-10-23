@@ -192,17 +192,8 @@
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="group-dropdown">
                                             @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看调查", "/Investigation/View/" + item.Id, Pages.Investigation, "dropdown-item", blank: true))
-                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看简历", "/Resume/View/" + item.ResumeId, Pages.Resume, "dropdown-item", blank: true))
-
-                                            @if (!item.IsQualified.HasValue || !item.IsQualified.Value)
-                                            {
-                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("标记合适", "/Investigation/Audit/" + item.Id, Pages.Investigation_Audit, "dropdown-item"))
-                                            }
-                                            else
-                                            {
-                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("标记不合适", "/Investigation/Audit/" + item.Id, Pages.Investigation_Audit, "dropdown-item"))
-                                            }
-
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看简历", "/Resume/View/" + item.ResumeId, Pages.Resume, "dropdown-item", blank: true)) 
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("审核", "/Investigation/Audit/" + item.Id, Pages.Investigation_Audit, "dropdown-item"))
                                             @if (item.OwnerUserId == UserIdentifier.UserId)
                                             {
                                                 @if (item.Status != InvestigationStatus.Complete)

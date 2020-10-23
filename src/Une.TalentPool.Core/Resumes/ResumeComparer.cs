@@ -10,7 +10,7 @@ namespace Une.TalentPool.Resumes
         public ResumeComparer()
         {
         }
-        public async Task CompareAsync(ResumeManager manager, Resume resume)
+        public async Task CompareAsync(ResumeManager manager, Resume resume, decimal minSimilarityValue)
         {
             if (resume == null)
                 throw new ArgumentNullException(nameof(resume));
@@ -53,12 +53,15 @@ namespace Une.TalentPool.Resumes
                     int maxLength = Math.Max(resume.KeyMaps.Count, keywordMaps.Count);
 
                     decimal similarity = Math.Round((decimal)sameCount / maxLength, 4);
-                    resume.ResumeCompares.Add(new ResumeCompare()
+                    if (similarity > minSimilarityValue / 100)
                     {
-                        RelationResumeId = temp.Key,
-                        Similarity = similarity,
-                        RelationResumeName = temp.Value
-                    });
+                        resume.ResumeCompares.Add(new ResumeCompare()
+                        {
+                            RelationResumeId = temp.Key,
+                            Similarity = similarity,
+                            RelationResumeName = temp.Value
+                        });
+                    }
                 }
             }
         }

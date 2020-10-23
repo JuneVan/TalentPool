@@ -85,6 +85,10 @@ namespace Une.TalentPool.Investigations
         /// </summary>
         public virtual string Evaluation { get; set; }
         /// <summary>
+        /// 评测时间（未来时间则为预约时间）
+        /// </summary>
+        public virtual DateTime? EvaluationTime { get; set; }
+        /// <summary>
         /// 居住地城市
         /// </summary>
         public virtual string CityOfResidence { get; set; }

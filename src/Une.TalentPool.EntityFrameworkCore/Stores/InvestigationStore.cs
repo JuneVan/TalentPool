@@ -12,7 +12,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
               : base(context)
         {
         }
-        
+
         public async Task<Investigation> CreateAsync(Investigation investigation, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -58,7 +58,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
             {
                 throw new ArgumentNullException(nameof(investigationId));
             }
-            return await Context.Investigations.FirstOrDefaultAsync(f => f.Id == investigationId);
+            return await Context.Investigations.FirstOrDefaultAsync(f => f.Id == investigationId, cancellationToken);
         }
 
         public async Task<Investigation> FindByResumeIdAsync(Guid resumeId, CancellationToken cancellationToken)
@@ -69,9 +69,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
             {
                 throw new ArgumentNullException(nameof(resumeId));
             }
-            return await Context.Investigations.FirstOrDefaultAsync(f => f.ResumeId == resumeId);
-        }
-
+            return await Context.Investigations.FirstOrDefaultAsync(f => f.ResumeId == resumeId, cancellationToken);
+        } 
 
     }
 }

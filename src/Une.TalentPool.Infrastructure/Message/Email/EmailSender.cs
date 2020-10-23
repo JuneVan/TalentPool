@@ -36,7 +36,7 @@ namespace Une.TalentPool.Infrastructure.Message.Email
                 }
             }
             else
-                _logger.LogWarning("Email setting is not enabled");
+                _logger.LogWarning("邮件发送被禁用。");
         }
     }
 }

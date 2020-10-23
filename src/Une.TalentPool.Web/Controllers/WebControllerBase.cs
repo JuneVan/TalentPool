@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 using Une.TalentPool.Configurations;
 using Une.TalentPool.Infrastructure.Notify;
 
@@ -17,7 +18,7 @@ namespace Une.TalentPool.Web.Controllers
             Notifier = serviceProvider.GetRequiredService<INotifier>();
             Mapper = serviceProvider.GetRequiredService<IMapper>();
             UserIdentifier = serviceProvider.GetRequiredService<IUserIdentifier>();
-            InitUserCustomSetting();
+            InitUserCustomSetting().Wait();
         }
         protected IServiceProvider ServiceProvider { get; }
         protected INotifier Notifier { get; }
@@ -25,7 +26,7 @@ namespace Une.TalentPool.Web.Controllers
         protected IUserIdentifier UserIdentifier { get; }
         protected UserCustomSetting CustomSetting { get; private set; } = new UserCustomSetting();
 
-        private async void InitUserCustomSetting()
+        private async Task InitUserCustomSetting()
         {
             var configurationManager = ServiceProvider.GetRequiredService<ConfigurationManager>();
             CustomSetting = await configurationManager.GetSettingAsync<UserCustomSetting>(UserIdentifier.UserId);
