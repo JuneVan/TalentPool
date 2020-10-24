@@ -7,9 +7,9 @@ namespace Une.TalentPool.Evaluations
     public class EvaluationManager : IDisposable
     {
         private bool _disposed;
-        private readonly ICancellationTokenProvider _tokenProvider;
+        private readonly ITokenProvider _tokenProvider;
         public EvaluationManager(IEvaluationStore evaluationStore,
-            ICancellationTokenProvider tokenProvider)
+            ITokenProvider tokenProvider)
         {
             EvaluationStore = evaluationStore;
             _tokenProvider = tokenProvider;

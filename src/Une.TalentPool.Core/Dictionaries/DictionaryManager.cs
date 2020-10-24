@@ -10,10 +10,10 @@ namespace Une.TalentPool.Dictionaries
     public class DictionaryManager : IDisposable
     {
         private bool _disposed;
-        private readonly ICancellationTokenProvider _tokenProvider;
+        private readonly ITokenProvider _tokenProvider;
         public DictionaryManager(IDictionaryStore dictionaryStore,
             IOptions<DictionaryOptions> options,
-            ICancellationTokenProvider  tokenProvider)
+            ITokenProvider  tokenProvider)
         {
             DictionaryStore = dictionaryStore;
             _tokenProvider = tokenProvider;

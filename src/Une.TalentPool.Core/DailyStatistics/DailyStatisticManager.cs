@@ -7,9 +7,9 @@ namespace Une.TalentPool.DailyStatistics
     public class DailyStatisticManager : IDisposable
     {
         private bool _disposed;
-        private readonly ICancellationTokenProvider _tokenProvider;
+        private readonly ITokenProvider _tokenProvider;
         public DailyStatisticManager(IDailyStatisticStore dailyStatisticsStore,
-            ICancellationTokenProvider tokenProvider)
+            ITokenProvider tokenProvider)
         {
             DailyStatisticsStore = dailyStatisticsStore;
             _tokenProvider = tokenProvider;

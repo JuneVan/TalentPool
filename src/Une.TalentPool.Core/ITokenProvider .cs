@@ -2,7 +2,7 @@
 
 namespace Une.TalentPool
 {
-    public interface ICancellationTokenProvider
+    public interface ITokenProvider
     {
         CancellationToken Token { get; }
     }

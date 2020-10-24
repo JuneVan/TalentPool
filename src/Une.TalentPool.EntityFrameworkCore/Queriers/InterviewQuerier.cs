@@ -13,8 +13,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
     public class InterviewQuerier : IInterviewQuerier
     {
         private readonly TalentDbContext _context;
-        private readonly ICancellationTokenProvider _tokenProvider;
-        public InterviewQuerier(TalentDbContext context, ICancellationTokenProvider tokenProvider)
+        private readonly ITokenProvider _tokenProvider;
+        public InterviewQuerier(TalentDbContext context, ITokenProvider tokenProvider)
         {
             _context = context;
             _tokenProvider = tokenProvider;

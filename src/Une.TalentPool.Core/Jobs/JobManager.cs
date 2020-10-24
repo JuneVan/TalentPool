@@ -7,9 +7,9 @@ namespace Une.TalentPool.Jobs
     public class JobManager : IDisposable
     {
         private bool _disposed;
-        private readonly ICancellationTokenProvider _tokenProvider;
+        private readonly ITokenProvider _tokenProvider;
         public JobManager(IJobStore jobStore,
-            ICancellationTokenProvider tokenProvider)
+            ITokenProvider tokenProvider)
         {
             JobStore = jobStore;
             _tokenProvider = tokenProvider;

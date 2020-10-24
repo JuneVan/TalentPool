@@ -7,10 +7,10 @@ namespace Une.TalentPool.Interviews
     public class InterviewManager:IDisposable
     {
         private bool _disposed;
-        private readonly ICancellationTokenProvider _tokenProvider;
+        private readonly ITokenProvider _tokenProvider;
         public InterviewManager(
             IInterviewStore interviewStore,
-            ICancellationTokenProvider  tokenProvider)
+            ITokenProvider  tokenProvider)
         {
             InterviewStore = interviewStore;
             _tokenProvider = tokenProvider;

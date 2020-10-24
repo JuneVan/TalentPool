@@ -12,9 +12,9 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
     public class DailyStatisticQuerier : IDailyStatisticQuerier
     {
         private readonly TalentDbContext _context;
-        private readonly ICancellationTokenProvider _tokenProvider;
+        private readonly ITokenProvider _tokenProvider;
         public DailyStatisticQuerier(TalentDbContext context,
-            ICancellationTokenProvider tokenProvider)
+            ITokenProvider tokenProvider)
         {
             _context = context;
             _tokenProvider = tokenProvider;

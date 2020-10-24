@@ -8,9 +8,9 @@ namespace Une.TalentPool.Configurations
     public class SettingValueManager : IDisposable
     {
         private bool _disposed;
-        private readonly ICancellationTokenProvider _tokenProvider;
+        private readonly ITokenProvider _tokenProvider;
         public SettingValueManager(ISettingValueStore settingValueStore,
-            ICancellationTokenProvider  tokenProvider)
+            ITokenProvider  tokenProvider)
         {
             SettingValueStore = settingValueStore;
             _tokenProvider = tokenProvider;

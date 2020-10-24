@@ -12,12 +12,12 @@ namespace Une.TalentPool.Roles
     public class RoleManager : RoleManager<Role>
     {
         private readonly IRoleStore _roleStore;
-        private readonly ICancellationTokenProvider _tokenProvider;
+        private readonly ITokenProvider _tokenProvider;
         public RoleManager(IRoleStore store,
             IEnumerable<IRoleValidator<Role>> roleValidators,
             ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors,
             ILogger<RoleManager<Role>> logger,
-            ICancellationTokenProvider  tokenProvider)
+            ITokenProvider  tokenProvider)
             : base(store,
             roleValidators,
             keyNormalizer, errors,

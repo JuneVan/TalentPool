@@ -11,7 +11,7 @@ namespace Une.TalentPool.Users
     public class UserManager : UserManager<User>
     {
         private readonly IUserStore _userStore;
-        private readonly ICancellationTokenProvider _tokenProvider;
+        private readonly ITokenProvider _tokenProvider;
         public UserManager(IUserStore store,
             IOptions<IdentityOptions> optionsAccessor,
             IPasswordHasher<User> passwordHasher,
@@ -21,7 +21,7 @@ namespace Une.TalentPool.Users
             IdentityErrorDescriber errors,
             IServiceProvider services,
             ILogger<UserManager<User>> logger,
-            ICancellationTokenProvider tokenProvider)
+            ITokenProvider tokenProvider)
             : base(store,
             optionsAccessor,
             passwordHasher,
