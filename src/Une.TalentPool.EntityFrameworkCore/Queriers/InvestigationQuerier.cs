@@ -13,8 +13,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
     public class InvestigationQuerier : IInvestigationQuerier
     {
         private readonly TalentDbContext _context; 
-        private ICancellationTokenProvider _tokenProvider;
-        public InvestigationQuerier(TalentDbContext context, ICancellationTokenProvider tokenProvider)
+        private ITokenProvider _tokenProvider;
+        public InvestigationQuerier(TalentDbContext context, ITokenProvider tokenProvider)
         {
             _context = context;
             _tokenProvider = tokenProvider;

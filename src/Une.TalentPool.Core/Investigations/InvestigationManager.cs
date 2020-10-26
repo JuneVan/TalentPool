@@ -8,10 +8,10 @@ namespace Une.TalentPool.Investigations
     public class InvestigationManager:IDisposable
     {
         private bool _disposed;
-        private readonly ICancellationTokenProvider _tokenProvider;
+        private readonly ITokenProvider _tokenProvider;
         public InvestigationManager(IInvestigationStore investigaionStore,
             IEnumerable<IInvestigaionValidator> investigaionValidators,
-            ICancellationTokenProvider  tokenProvider)
+            ITokenProvider  tokenProvider)
         {
             InvestigaionStore = investigaionStore;
             InvestigaionValidators = investigaionValidators;

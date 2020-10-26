@@ -14,8 +14,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
     public class ResumeQuerier : IResumeQuerier
     {
         private readonly TalentDbContext _context;
-        private ICancellationTokenProvider _tokenProvider;
-        public ResumeQuerier(TalentDbContext context, ICancellationTokenProvider tokenProvider)
+        private ITokenProvider _tokenProvider;
+        public ResumeQuerier(TalentDbContext context, ITokenProvider tokenProvider)
         {
             _context = context;
             _tokenProvider = tokenProvider;

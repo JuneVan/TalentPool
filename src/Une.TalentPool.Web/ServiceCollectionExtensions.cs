@@ -96,7 +96,7 @@ namespace Une.TalentPool.Web
             services.AddTransient<INotifySerializer, NotifySerializer>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ISmsSender, SmsSender>();
-            services.AddTransient<ICancellationTokenProvider, HttpContextCancellationTokenProvider>();
+            services.AddTransient<ITokenProvider, HttpContextCancellationTokenProvider>();
             services.AddMemoryCache();
 
             // entityframework 

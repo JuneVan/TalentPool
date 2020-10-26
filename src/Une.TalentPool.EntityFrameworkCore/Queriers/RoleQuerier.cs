@@ -12,8 +12,8 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
     public class RoleQuerier : IRoleQuerier
     {
         private readonly TalentDbContext _context;
-        protected readonly ICancellationTokenProvider _tokenProvider;
-        public RoleQuerier(TalentDbContext context, ICancellationTokenProvider tokenProvider)
+        protected readonly ITokenProvider _tokenProvider;
+        public RoleQuerier(TalentDbContext context, ITokenProvider tokenProvider)
         {
             _context = context;
             _tokenProvider = tokenProvider;

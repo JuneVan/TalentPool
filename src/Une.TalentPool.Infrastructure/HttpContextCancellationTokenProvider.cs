@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace Une.TalentPool.Infrastructure
 {
-    public class HttpContextCancellationTokenProvider : ICancellationTokenProvider
+    public class HttpContextCancellationTokenProvider : ITokenProvider
     {
         private readonly IHttpContextAccessor _contextAccessor;
         public HttpContextCancellationTokenProvider(IHttpContextAccessor contextAccessor)

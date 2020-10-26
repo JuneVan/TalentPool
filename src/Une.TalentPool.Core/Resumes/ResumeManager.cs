@@ -10,13 +10,13 @@ namespace Une.TalentPool.Resumes
     public class ResumeManager : IDisposable
     {
         private bool _disposed;
-        private readonly ICancellationTokenProvider _tokenProvider;
+        private readonly ITokenProvider _tokenProvider;
         public ResumeManager(IResumeStore resumeStore,
             IResumeAuditSettingStore resumeAuditSettingStore,
             IEnumerable<IResumeValidator> resumeValidators,
             IResumeComparer resumeComparer,
             IOptions<ResumeOptions> options,
-            ICancellationTokenProvider  tokenProvider)
+            ITokenProvider  tokenProvider)
         {
             ResumeStore = resumeStore;
             ResumeValidators = resumeValidators;
