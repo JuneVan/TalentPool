@@ -10,6 +10,7 @@ namespace Une.TalentPool.EntityFrameworkCore.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<IdentityUserRole<Guid>> builder)
         {
             builder.ToTable("UserRoles");
+            builder.HasKey(r => new { r.UserId, r.RoleId });
         }
     }
 }

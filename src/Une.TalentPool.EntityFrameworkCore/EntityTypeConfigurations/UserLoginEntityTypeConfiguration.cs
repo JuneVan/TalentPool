@@ -10,6 +10,10 @@ namespace Une.TalentPool.EntityFrameworkCore.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<IdentityUserLogin<Guid>> builder)
         {
             builder.ToTable("UserLogins");
+
+            builder.HasKey(l => new { l.LoginProvider, l.ProviderKey }); 
+            builder.Property(l => l.LoginProvider).HasMaxLength(128);
+            builder.Property(l => l.ProviderKey).HasMaxLength(512);
         }
     }
 }

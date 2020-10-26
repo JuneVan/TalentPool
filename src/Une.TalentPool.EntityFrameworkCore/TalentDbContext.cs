@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -22,7 +22,7 @@ using Une.TalentPool.Users;
 
 namespace Une.TalentPool.EntityFrameworkCore
 {
-    public class TalentDbContext : IdentityDbContext<User, Role, Guid>
+    public class TalentDbContext :DbContext
     {
 
         public TalentDbContext(DbContextOptions options, IServiceProvider serviceProvider) : base(options)
@@ -33,6 +33,13 @@ namespace Une.TalentPool.EntityFrameworkCore
         {
             UserIdentifier = serviceProvider.GetService<IUserIdentifier>();
         }
+        public DbSet<IdentityUserRole<Guid>> UserRoles { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<IdentityRoleClaim<Guid>> RoleClaims { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<IdentityUserClaim<Guid>> UserClaims { get; set; }
+        public DbSet<IdentityUserLogin<Guid>> UserLogins { get; set; }
+        public DbSet<IdentityUserToken<Guid>> UserTokens { get; set; }
 
         public DbSet<SettingValue> SettingValues { get; set; }
         public DbSet<Dictionary> Dictionaries { get; set; }

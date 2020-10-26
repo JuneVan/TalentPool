@@ -10,6 +10,8 @@ namespace Une.TalentPool.EntityFrameworkCore.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<IdentityUserClaim<Guid>> builder)
         {
             builder.ToTable("UserClaims");
+
+            builder.HasKey(uc => uc.Id);
         }
     }
 }

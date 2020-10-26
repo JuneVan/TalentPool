@@ -9,7 +9,7 @@ namespace Une.TalentPool.Users
         public User()
         {
 
-        }
+        } 
         /// <summary>
         /// 名
         /// </summary>

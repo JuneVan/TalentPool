@@ -9,7 +9,8 @@ namespace Une.TalentPool.EntityFrameworkCore.EntityTypeConfigurations
     {
         public void Configure(EntityTypeBuilder<IdentityRoleClaim<Guid>> builder)
         {
-            builder.ToTable("RoleClaims"); 
+            builder.ToTable("RoleClaims");
+            builder.HasKey(rc => rc.Id);
         }
     }
 }

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Runtime.Serialization;
 using Une.TalentPool.Application.DailyStatistics;
 using Une.TalentPool.Application.Dictionaries;
 using Une.TalentPool.Application.Evaluations;
@@ -56,9 +55,9 @@ namespace Une.TalentPool.Web
                 opt.Password.RequireUppercase = false;
                 opt.Password.RequireNonAlphanumeric = false;
             })
-            .AddUserStore<VanUserStore>()
+            .AddUserStore<UserStore>()
             .AddUserManager<UserManager>()
-            .AddRoleStore<VanRoleStore>()
+            .AddRoleStore<RoleStore>()
             .AddRoleManager<RoleManager>()
             .AddDefaultTokenProviders();
             services.AddTransient<IUserConfirmation<User>, UserActiveConfirmation>();
@@ -104,8 +103,8 @@ namespace Une.TalentPool.Web
             {
                 optionsAction.UseMySql(configuration.GetConnectionString("DefaultConnection"));
             }, optionsLifetime: ServiceLifetime.Transient);
-            services.AddTransient<IUserStore, VanUserStore>();
-            services.AddTransient<IRoleStore, VanRoleStore>();
+            services.AddTransient<IUserStore, UserStore>();
+            services.AddTransient<IRoleStore, RoleStore>();
             services.AddTransient<ISettingValueStore, SettingValueStore>();
             services.AddTransient<IDictionaryStore, DictionaryStore>();
             services.AddTransient<IJobStore, JobStore>();
