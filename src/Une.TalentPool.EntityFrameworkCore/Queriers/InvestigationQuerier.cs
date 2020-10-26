@@ -180,6 +180,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Queriers
                             OwnerUserName = d.FullName,
                             Status = a.Status,
                             Information = a.Information,
+                            Description = b.Description,
                             Evaluation = a.Evaluation
                         };
 

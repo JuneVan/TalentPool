@@ -216,12 +216,12 @@ namespace Une.TalentPool.Web.Controllers
                         worksheet01.Cells[i + 2, 5].Value = investigations[i].JobName;
 
                         string name = new Regex("[\u4e00-\u9fa5]{1,5}").Match(investigations[i].Name).Value;
-                        if (!string.IsNullOrEmpty(investigations[i].Information))
+                        if (!string.IsNullOrEmpty(investigations[i].Description))
                         {
                             //添加简历记录
                             var resumeWorksheet = package.Workbook.Worksheets.Add($"{name}简历");
 
-                            AddHtmlToWorksheet(investigations[i].Information, resumeWorksheet, "意向调查表!A1");
+                            AddHtmlToWorksheet(investigations[i].Description, resumeWorksheet, "意向调查表!A1");
 
 
                             worksheet01.Cells[i + 2, 6].Style.Font.UnderLine = true;
