@@ -12,6 +12,8 @@ namespace Une.TalentPool.EntityFrameworkCore.EntityTypeConfigurations
             builder.HasKey(k => k.Id);
             builder.Property(p => p.Keyword).HasMaxLength(128);
             builder.HasIndex(i => i.Keyword).HasName("Index_Keyword");
+
+            builder.HasQueryFilter(f => !f.IsDeleted);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -82,6 +83,7 @@ namespace Une.TalentPool.Web
             services.AddTransient<IResumeValidator, PhoneNumberValidator>();
             services.AddTransient<IResumeValidator, PlatformValidator>();
             services.AddTransient<IResumeComparer, ResumeComparer>();
+            services.AddMediatR(typeof(ResumeDeletedEvent).Assembly);
             services.AddTransient<ResumeManager>();
             services.AddTransient<ResumeAuditSettingManager>();
             services.AddTransient<InvestigationManager>();

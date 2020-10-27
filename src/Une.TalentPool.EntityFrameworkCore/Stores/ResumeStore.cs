@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Une.TalentPool.Resumes;
@@ -82,7 +81,7 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
             if (resumeId == null)
                 throw new ArgumentNullException(nameof(resumeId));
             return await Context.Resumes.Include(i => i.KeyMaps)
-                .Include(i => i.ResumeCompares) 
+                .Include(i => i.ResumeCompares)
                 .FirstOrDefaultAsync(f => f.Id == resumeId, cancellationToken);
 
         }
@@ -155,6 +154,16 @@ namespace Une.TalentPool.EntityFrameworkCore.Stores
             if (resumeId == null)
                 throw new ArgumentNullException(nameof(resumeId));
             return await Context.ResumeKeyMaps.Where(w => w.ResumeId == resumeId).ToListAsync(cancellationToken);
+        }
+
+        public async Task RemoveResumeKeyMapsAsync(List<ResumeKeywordMap> resumeKeywordMaps, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (resumeKeywordMaps == null)
+                throw new ArgumentNullException(nameof(resumeKeywordMaps));
+            Context.ResumeKeyMaps.RemoveRange(resumeKeywordMaps);
+            await SaveChanges(cancellationToken);
         }
     }
 }

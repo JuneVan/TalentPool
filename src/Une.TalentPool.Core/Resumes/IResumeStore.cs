@@ -19,5 +19,6 @@ namespace Une.TalentPool.Resumes
 
         Task<List<ResumeKeywordMap>> GetResumeKeyMapsAsync(string keyword, CancellationToken cancellationToken);
         Task<List<ResumeKeywordMap>> GetResumeKeyMapsAsync(Guid resumeId, CancellationToken cancellationToken);
+        Task RemoveResumeKeyMapsAsync(List<ResumeKeywordMap> resumeKeywordMaps, CancellationToken cancellationToken);
     }
 }
