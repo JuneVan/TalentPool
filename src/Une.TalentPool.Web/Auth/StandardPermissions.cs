@@ -34,6 +34,7 @@ namespace Une.TalentPool.Web.Auth
         public const string Resume_Audit = "Pages.Resume.AssignUser";
         public const string Resume_SendEmail = "Pages.Resume.SendEmail";
         public const string Resume_AuditSetting = "Pages.Resume.AuditSetting";
+        public const string Resume_GenerateKeywords = "Pages.Resume.GenerateKeywords";
 
         public const string Investigation = "Pages.Investigation";
         public const string Investigation_CreateOrEditOrDelete = "Pages.Investigation.CreateOrEditOrDelete";
@@ -83,6 +84,7 @@ namespace Une.TalentPool.Web.Auth
             resume.AddChild(Pages.Resume_AssignUser, "分配负责人");
             resume.AddChild(Pages.Resume_SendEmail, "发送邮件");
             resume.AddChild(Pages.Resume_AuditSetting, "审核配置");
+            resume.AddChild(Pages.Resume_GenerateKeywords, "生成关键词");
 
             var investigation = new PermissionDefinition(Pages.Investigation, "意向调查", "拥有意向调查的管理权限。");
             investigation.AddChild(Pages.Investigation_CreateOrEditOrDelete, "创建、编辑、删除意向调查");

@@ -34,7 +34,7 @@ using Une.TalentPool.Resumes;
 using Une.TalentPool.Roles;
 using Une.TalentPool.Users;
 using Une.TalentPool.Web.Auth;
-using Une.TalentPool.Web.Profiles;
+using Une.TalentPool.Web.Mappings;
 
 namespace Une.TalentPool.Web
 {

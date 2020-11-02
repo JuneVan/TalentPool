@@ -18,7 +18,7 @@ namespace Une.TalentPool.KeywordmapGenerator
         static void Main(string[] args)
         {
 
-            using (MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Uid=root;Password=qweQWE123!@#;Database=TalentPoolDb;"))
+            using (MySqlConnection connection = new MySqlConnection("Server=192.168.1.11;Uid=root;Password=123456;Database=TalentPoolDb;"))
             {
                 connection.Open();
                 Console.WriteLine("开始查询简历关键词。");

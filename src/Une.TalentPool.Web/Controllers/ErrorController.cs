@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 
 namespace Une.TalentPool.Web.Controllers
 {
+    [AllowAnonymous]
     public class ErrorController : WebControllerBase
     {
         public ErrorController(IServiceProvider serviceProvider)

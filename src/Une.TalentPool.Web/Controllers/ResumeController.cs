@@ -66,7 +66,7 @@ namespace Une.TalentPool.Web.Controllers
             _userQuerier = userQuerier;
             _emailSender = emailSender;
             _environment = environment;
-            _configuration = configuration; 
+            _configuration = configuration;
             InitResumeSetting();
 
 
@@ -123,10 +123,12 @@ namespace Une.TalentPool.Web.Controllers
             return View(model);
         }
         // 创建
+        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
         public async Task<IActionResult> Create()
         {
             return await BuildCreateOrEditDisplayAsync(null);
         }
+        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateOrEditResumeViewModel model)
@@ -151,6 +153,7 @@ namespace Une.TalentPool.Web.Controllers
             return await BuildCreateOrEditDisplayAsync(model);
         }
         // 编辑
+        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
         public async Task<IActionResult> Edit(Guid id)
         {
             var resume = await _resumeManager.FindByIdAsync(id);
@@ -160,7 +163,7 @@ namespace Une.TalentPool.Web.Controllers
             return await BuildCreateOrEditDisplayAsync(model);
         }
 
-
+        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CreateOrEditResumeViewModel model)
@@ -242,6 +245,7 @@ namespace Une.TalentPool.Web.Controllers
 
 
         // 删除
+        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var resume = await _resumeManager.FindByIdAsync(id);
@@ -251,6 +255,7 @@ namespace Une.TalentPool.Web.Controllers
 
             return View(model);
         }
+        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(DeleteResumeModel model)
@@ -273,6 +278,49 @@ namespace Une.TalentPool.Web.Controllers
         }
         #endregion
 
+
+        // 生成关键词
+        [PermissionCheck(Pages.Resume_GenerateKeywords)]
+        public async Task<IActionResult> GenerateKeywords(Guid id)
+        {
+            var resume = await _resumeManager.FindByIdAsync(id);
+            if (resume == null)
+                return NotFound(id);
+            var model = Mapper.Map<GenerateKeywordViewModel>(resume);
+
+            return View(model);
+        }
+        [PermissionCheck(Pages.Resume_GenerateKeywords)]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GenerateKeywords(GenerateKeywordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var resume = await _resumeManager.FindByIdAsync(model.Id);
+                if (resume == null)
+                    return NotFound(model.Id);
+
+                resume.KeyMaps = new List<ResumeKeywordMap>();
+                if (!string.IsNullOrEmpty(model.Keywords))
+                {
+                    var keywords = model.Keywords.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var keyword in keywords)
+                    {
+                        resume.KeyMaps.Add(new ResumeKeywordMap()
+                        {
+                            Keyword = keyword,
+                            Name = model.Name
+                        });
+                    }
+                }
+                resume = await _resumeManager.UpdateAsync(resume, true);
+                Notifier.Success("你已成功编辑了一条简历记录。");
+                return RedirectToAction(nameof(List));
+            }
+            return View(model);
+
+        }
 
         #region 审核
         [PermissionCheck(Pages.Resume_Audit)]
@@ -659,6 +707,8 @@ namespace Une.TalentPool.Web.Controllers
             worksheet.Cells[1, 21].Hyperlink = new ExcelHyperLink(returnLink, "返回");
         }
         #endregion
+
+
         private IActionResult NotFound(Guid id)
         {
             Notifier.Warning($"未找到id:{id}的简历记录。");

@@ -42,6 +42,20 @@
     {
       "library": "Chart.js@2.9.3",
       "destination": "wwwroot/lib/Chart.js/"
+    },
+    {
+      "library": "moment.js@2.29.1",
+      "destination": "wwwroot/lib/moment/"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "fullcalendar@5.3.2",
+      "destination": "wwwroot/lib/fullcalendar/"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "fullcalendar-scheduler@5.3.2",
+      "destination": "wwwroot/lib/fullcalendar-scheduler/"
     }
   ]
 }

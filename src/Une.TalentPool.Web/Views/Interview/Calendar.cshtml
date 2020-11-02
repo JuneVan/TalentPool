@@ -7,7 +7,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="btn-group btn-group-sm"> 
+        <div class="btn-group btn-group-sm">
             @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看面试预约列表", "/Interview/List", Pages.Interview, "btn btn-sm btn-default", "fas fa-list"))
 
             @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("新增面试预约", "/Resume/List", Pages.Interview_CreateOrEditOrDelete, "btn btn-sm btn-primary", "fas fa-plus"))
@@ -38,12 +38,14 @@
 
 
 @section styles {
-    <link href="~/lib-ext/fullcalendar/main.min.css" rel="stylesheet" />
+    <link href="~/lib/fullcalendar/main.min.css" rel="stylesheet" />
+    <link href="~/lib/fullcalendar-scheduler/main.min.css" rel="stylesheet" />
+
 }
 @section scripts {
-    <script src="~/lib-ext/fullcalendar/main.min.js"></script>
-    <script src="~/lib-ext/fullcalendar/locales-all.min.js"></script>
-    <script src="~/lib-ext/fullcalendar/locales/zh-cn.js"></script>
+    <script src="~/lib/fullcalendar/main.min.js"></script>
+    <script src="~/lib/fullcalendar-scheduler/main.min.js"></script>
+    <script src="~/lib/fullcalendar/locales-all.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
@@ -54,10 +56,10 @@
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
                 },
-                locale: 'zh-cn', 
+                locale: 'zh-cn',
                 dayNames: ["星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
-               
-                events: function (info, successCallback, failureCallback) { 
+
+                events: function (info, successCallback, failureCallback) {
                     var startDate = transitionDate(info.start.valueOf());
                     var endDate = transitionDate(info.end.valueOf());
                     $.get("/Interview/GetCalendar?startDate=" + startDate + "&endDate=" + endDate, function (res) {
@@ -84,7 +86,8 @@
                             events.push({
                                 title: res[i].name + "::" + res[i].jobName,
                                 start: res[i].appointmentTime,
-                                backgroundColor: colorMark, 
+                                backgroundColor: colorMark,
+
                                 url: "/Interview/View/" + res[i].id
                             })
                         }

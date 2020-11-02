@@ -7,6 +7,6 @@ namespace Une.TalentPool.Configurations
     /// </summary>
     public interface IUserSettingDefinition : ISettingDefinition
     {
-        public Guid OwnerUserId { get; set; }
+        Guid OwnerUserId { get; set; }
     }
 }

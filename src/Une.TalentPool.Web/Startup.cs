@@ -27,10 +27,10 @@ namespace Une.TalentPool.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //entityframework
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                new SeedHelper(serviceScope.ServiceProvider).SeedDb();
-            }
+            //using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            //{
+            //    new SeedHelper(serviceScope.ServiceProvider).SeedDb();
+            //}
 
             if (env.IsDevelopment())
             {
