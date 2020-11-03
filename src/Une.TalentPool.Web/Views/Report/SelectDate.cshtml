@@ -1,25 +1,31 @@
 ﻿@{
-    ViewData["PageHeader"] = "日报表";
+    ViewData["PageHeader"] = "日报告";
     ViewData["Title"] = "选择统计的日期";
 }
-<div class="row">
-    <div class="col-md-4 offset-md-4">
-        <form class="form-horizontal" action="/Report/Output" method="get">
-            <label>请选择统计的日期</label>
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <i class="far fa-calendar-alt"></i>
-                    </span>
-                </div>
-                <input type="text" class="form-control float-right" id="selectedDate" name="Date">
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"] </h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 offset-md-4">
+                <form class="form-horizontal" action="/Report/Output" method="get"> 
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="far fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control float-right" id="selectedDate" name="Date">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
