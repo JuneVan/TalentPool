@@ -1,0 +1,72 @@
+﻿@model PaginationModel<TalentPool.Application.Dictionaries.DictionaryDto>
+@{
+    ViewData["PageHeader"] = "数据字典管理";
+    ViewData["Title"] = "数据字典列表";
+}
+
+
+<div class="row">
+    <div class="col-12">
+        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("新增数据字典", "/Dictionary/Create", string.Empty, "btn-sm btn btn-primary", "fas fa-plus"))
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"]</h3>
+    </div>
+    <div class="card-body">
+        <form asp-action="List" method="get">
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="text" name="Keywords" class="form-control" placeholder="请输入关键词" />
+                </div>
+                <div class="col-md-6 text-md-right">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                        搜索
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div class="row mt-3 ">
+            <div class="col-md-12  table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>显示名称</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.DisplayName</td>
+                                <td>
+                                    <div class="btn-group  btn-group-sm" role="group">
+                                        <button id="group-dropdown" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-cog"></i> 操作菜单
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="group-dropdown">
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Dictionary/Edit/" + item.Id, Pages.Configuration_Dictionary_CreateOrEditOrDelete, "dropdown-item"))
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("删除", "/Dictionary/Delete/" + item.Id, Pages.Configuration_Dictionary_CreateOrEditOrDelete, "dropdown-item"))
+                                        </div>
+                                    </div> 
+                                </td>
+                            </tr>
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        @await Html.PartialAsync("Partials/_PaginationPartial", Model)
+    </div>
+</div>

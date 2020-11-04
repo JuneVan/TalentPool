@@ -1,0 +1,181 @@
+﻿@using TalentPool.Users
+@using TalentPool.Roles
+@using TalentPool.Configurations
+@using TalentPool.Navigations
+
+@inject UserManager UserManager
+@inject RoleManager RoleManager
+@inject NavigationManager NavigationManager
+@inject ConfigurationManager ConfigurationManager
+@{
+    var currentUser = await UserManager.FindByNameAsync(User.Identity.Name);
+    var avatar = currentUser.Photo;
+    if (string.IsNullOrEmpty(currentUser.Photo))
+    {
+        avatar = "/img/default-avator.jpeg";
+    }
+    var navigations = NavigationManager.Navigations;
+    var siteSettings = await ConfigurationManager.GetSettingAsync<SiteSetting>();
+}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>@ViewData["Title"] - @(siteSettings.SiteName) </title>
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/lib/admin-lte/css/adminlte.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link href="~/css/talent.admin.css" rel="stylesheet" />
+    @RenderSection("styles", false)
+
+</head>
+<body class="hold-transition sidebar-mini sidebar-collapse">
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand  navbar-blue navbar-dark  shadow sidebar-collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+                        <i class="fas fa-bars"></i>
+                    </a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/Report/Output?Date=@DateTime.Now.Date.ToString("yyyy/MM/dd")" class="nav-link" target="_blank">
+                        <i class="fas fa-calendar-day"></i>
+                        今日报告统计
+                    </a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/Report/SelectDate" class="nav-link" target="_blank">
+                        <i class="fas fa-history"></i>
+                        历史报告统计
+                    </a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/Interview/Calendar" class="nav-link" target="_blank">
+                        <i class="fas fa-calendar-alt"></i>
+                        面试安排
+                    </a>
+                </li>
+            </ul>
+            <form class="form-inline ml-3" method="get" action="/Resume/List">
+                <input type="hidden" value="@DateTime.Now.Date.AddDays(-30)" name="StartTime">
+                <input type="hidden" value="@DateTime.Now.Date.AddDays(1)" name="EndTime">
+                <div class="input-group input-group-sm">
+                    <input class="form-control form-control-navbar" type="text" autocomplete="off" name="Keyword" placeholder="请输入姓名/手机号/简历编号/第三方平台ID">
+                    <div class="input-group-append">
+                        <button class="btn btn-navbar" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <ul class="navbar-nav ml-auto mr-2">
+                <li class="nav-item dropdown">
+                    <a data-toggle="dropdown" href="#">
+                        <div class="avatar avatar-sm">
+                            <img src="@avatar" class="rounded-circle">
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <li>
+                            <div class="p-3 d-flex">
+                                <div class="avatar avatar-lg">
+                                    <img src="@avatar" class="rounded">
+                                </div>
+                                <div class="pl-2">
+                                    <h4>@currentUser.Surname @currentUser.Name</h4>
+                                    <p>@currentUser.Email</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" asp-controller="Account" asp-action="UpdateProfile">我的资料</a>
+                            <a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword">修改密码</a>
+                            <a class="dropdown-item" asp-controller="Setting" asp-action="UserCustomSetting">我的设置</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" asp-controller="Account" asp-action="LogOff">注销</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <aside class="main-sidebar sidebar-light-blue shadow sidebar-collapse">
+            <a href="/" class="brand-link bg-blue text-white">
+                @if (string.IsNullOrEmpty(siteSettings.Logo))
+                {
+                    <img src="~/img/Logo.png" alt="Logo" class="brand-image img-rounded">
+                }
+                else
+                {
+                    <img src="@siteSettings.Logo" alt="Logo" class="brand-image img-rounded">
+                }
+                <span class="brand-text font-weight-light">@siteSettings.SiteName</span>
+            </a>
+
+            <div class="sidebar">
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="@avatar" class="img-rounded" alt="User Image">
+                    </div>
+                    <div class="info">
+                        <a href="javascript:void(0)" class="d-block">@currentUser.Surname @currentUser.Name</a>
+                    </div>
+                </div>
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        @await Html.PartialAsync("Partials/_NavigationPartial", navigations)
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+        <div class="content-wrapper">
+
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1>@ViewData["PageHeader"]</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container-fluid">
+                    @await Html.PartialAsync("Partials/_NotifyPartial")
+                    @RenderBody()
+                </div>
+            </div>
+
+
+        </div>
+
+        <footer class="main-footer">
+            <div class="container-fluid d-md-flex">
+                <nav class="float-left">
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Help
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="ml-auto">
+                    &copy; 2020   Power by <i class="fa fa-heart heart text-danger"></i><a href="http://www.kssoftware.cn">奎蛇科技</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="~/lib/jquery/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js" asp-append-version="true"></script>
+    <script src="~/lib/admin-lte/js/adminlte.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+    <script src="~/js/talent.admin.js" asp-append-version="true"></script>
+    @RenderSection("scripts", false)
+</body>
+</html>

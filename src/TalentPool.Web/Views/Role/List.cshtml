@@ -1,0 +1,88 @@
+﻿@model PaginationOutput<TalentPool.Application.Roles.RoleDto>
+@{
+    ViewData["PageHeader"] = "角色管理";
+    ViewData["Title"] = "角色列表";
+}
+
+<div class="row">
+    <div class="col-12"> 
+        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("新建角色", "/Role/Create", Pages.Authorization_Role_CreateOrEditOrDelete, "btn-sm btn btn-primary", "fas fa-plus"))
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header">
+        @ViewData["Title"]
+    </div>
+    <div class="card-body">
+        <form asp-action="List" method="get">
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="text" name="Keywords" class="form-control" placeholder="请输入关键词" />
+
+                </div>
+                <div class="col-md-6 text-md-right">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                        搜索
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div class="row mt-3">
+            <div class="col-md-12  table-responsive">
+                <table class="table table-bordered table-hover" role="grid">
+                    <thead>
+                        <tr>
+                            <th>角色名</th>
+                            <th>显示名称</th>
+                            <th>状态</th> 
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+
+                                <td>
+                                    @item.Name
+                                </td>
+                                <td>
+                                    @item.DisplayName
+                                </td>
+                                <td>
+                                    @if (item.Active)
+                                    {
+                                        <span class="badge badge-success">启用</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-danger">禁用</span>
+                                    }
+                                </td> 
+                                <td>
+                                    <div class="btn-group  btn-group-sm" role="group">
+                                        <button id="group-dropdown" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-cog"></i> 操作菜单
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="group-dropdown"> 
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Role/Edit/" + item.Id, Pages.Authorization_User_CreateOrEditOrDelete, "dropdown-item"))
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("分配权限", "/Role/AssignPermission/" + item.Id, Pages.Authorization_Role_AssignPermission, "dropdown-item"))
+                                            @if (!item.Protected)
+                                            {
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("删除", "/Role/Delete/" + item.Id, Pages.Authorization_User_CreateOrEditOrDelete, "dropdown-item"))
+                                            }
+                                        </div>
+                                    </div> 
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div> 
+</div>

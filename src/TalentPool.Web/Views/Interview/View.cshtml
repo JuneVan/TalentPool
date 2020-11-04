@@ -1,0 +1,61 @@
+﻿@model TalentPool.Application.Interviews.InterviewDetailDto
+@{
+    ViewData["PageHeader"] = "面试预约管理";
+    ViewData["Title"] = "查看预约记录";
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"]</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>姓名</label>
+                    <input type="text" class="form-control" asp-for="Name" readonly>
+                </div>
+                <div class="form-group">
+                    <label>岗位</label>
+                    <input type="text" class="form-control" asp-for="JobName" readonly>
+                </div>
+                <div class="form-group">
+                    <label>预约时间</label>
+                    <input type="text" class="form-control" asp-for="AppointmentTime" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>备注</label>
+                    <textarea asp-for="Remark" class="form-control" readonly></textarea>
+                </div>
+                <div class="form-group">
+                    <label>预约人</label>
+                    <input type="text" class="form-control" asp-for="CreatorUserName" readonly>
+                </div>
+                <div class="form-group">
+                    <label>预约状态</label>
+                    <input type="text" class="form-control" value="@Model.Status.GetDescription("/")" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>到访时间</label>
+                    <input type="text" class="form-control" asp-for="VisitedTime" readonly>
+                </div>
+                <div class="form-group">
+                    <label>创建时间</label>
+                    <input type="text" class="form-control" asp-for="CreationTime" readonly>
+                </div>
+                <div class="form-group">
+                    <label>最后更新人</label>
+                    <input type="text" class="form-control" asp-for="LastModifierUserName" readonly>
+                </div>
+                <div class="form-group">
+                    <label>最后更新时间</label>
+                    <input type="text" class="form-control" asp-for="LastModificationTime" readonly>
+                </div>
+            </div>
+            <div class="card-footer">
+                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("返回列表", "/Interview/List", Pages.Interview_CreateOrEditOrDelete, "btn btn-sm btn-primary", "fa fa-plus"))
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+﻿@model TalentPool.Web.Models.ResumeViewModels.SendEmailViewModel
+
+@{
+    ViewData["PageHeader"] = "简历库管理";
+    ViewData["Title"] = "发送邮件 - " + Model.Name;
+}
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"]</h3>
+    </div>
+    <form asp-controller="Resume" asp-action="SendEmail" method="post">
+        <input type="hidden" asp-for="Name">
+        <div class="card-body">
+            <div class="form-group">
+                <label>邮箱</label>
+                <input class="form-control" placeholder="请输入邮箱地址" asp-for="Email">
+            </div>
+            <div class="form-group">
+                <label>标题</label>
+                <input class="form-control" placeholder="请输入邮件标题" asp-for="Subject" value="来自深圳奎蛇软件科技有限公司的面试邀请函">
+            </div>
+
+            <div class="form-group">
+                <textarea name="Body" asp-for="Body" rows="10"></textarea>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="float-right">
+                <a href="/Resume/List" class="btn btn-default">取消</a>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-envelope"></i> 发送</button>
+            </div>
+        </div>
+    </form>
+</div>
+@section styles {
+    <link href="~/lib/summernote/summernote-bs4.min.css" rel="stylesheet" />
+}
+@section scripts {
+    <script src="~/lib/summernote/summernote-bs4.min.js"></script>
+    <script>
+        $("textarea[name='Body']").summernote();
+    </script>
+}
