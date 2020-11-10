@@ -11,9 +11,11 @@
     <form asp-controller="Resume" asp-action="SendEmail" method="post">
         <input type="hidden" asp-for="Name">
         <div class="card-body">
+            <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label>邮箱</label>
                 <input class="form-control" placeholder="请输入邮箱地址" asp-for="Email">
+                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label>标题</label>

@@ -53,9 +53,14 @@ namespace TalentPool.EntityFrameworkCore.Queriers
                         };
 
             if (!string.IsNullOrEmpty(input.Keyword))
-                query = query.Where(w => w.Name.Contains(input.Keyword)
-                || w.PhoneNumber.Contains(input.Keyword)
-               || w.PlatformId.Contains(input.Keyword));
+            {
+                query = query.Where(w => w.Name.Contains(input.Keyword)|| w.PhoneNumber.Contains(input.Keyword)|| w.PlatformId.Contains(input.Keyword));
+                if(Guid.TryParse(input.Keyword,out var id))
+                {
+                    query = query.Where(w => w.Id == id);
+                }
+            }
+
             if (input.JobId.HasValue)
                 query = query.Where(w => w.JobId == input.JobId.Value);
             if (input.CreatorUserId.HasValue)
@@ -178,7 +183,7 @@ namespace TalentPool.EntityFrameworkCore.Queriers
                         };
             if (auditStatus.HasValue)
                 query = query.Where(w => w.AuditStatus == auditStatus);
-          
+
             return await query.ToListAsync(CancellationToken);
         }
 
@@ -191,7 +196,7 @@ namespace TalentPool.EntityFrameworkCore.Queriers
                         from bbb in bb.DefaultIfEmpty()
                         join c in _context.Jobs on a.JobId equals c.Id
                         join d in _context.Users on a.OwnerUserId equals d.Id
-                        where a.AuditStatus == AuditStatus.Complete && (bbb == null || bbb.Status != InvestigationStatus.Complete) 
+                        where a.AuditStatus == AuditStatus.Complete && (bbb == null || bbb.Status != InvestigationStatus.Complete)
                         orderby a.CreationTime
                         select new UncompleteResumeDto
                         {

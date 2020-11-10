@@ -60,11 +60,9 @@
                     </a>
                 </li>
             </ul>
-            <form class="form-inline ml-3" method="get" action="/Resume/List">
-                <input type="hidden" value="@DateTime.Now.Date.AddDays(-30)" name="StartTime">
-                <input type="hidden" value="@DateTime.Now.Date.AddDays(1)" name="EndTime">
-                <div class="input-group input-group-sm">
-                    <input class="form-control form-control-navbar" type="text" autocomplete="off" name="Keyword" placeholder="请输入姓名/手机号/简历编号/第三方平台ID">
+            <form class="form-inline ml-3" method="get" action="/Resume/Search"> 
+                <div class="input-group">
+                    <input class="form-control form-control-navbar" type="text" autocomplete="off" name="Keyword" placeholder="请输入姓名/手机号/简历Id/第三方平台ID">
                     <div class="input-group-append">
                         <button class="btn btn-navbar" type="submit">
                             <i class="fas fa-search"></i>

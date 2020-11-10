@@ -22,7 +22,7 @@ namespace TalentPool.EntityFrameworkCore.Queriers
         protected CancellationToken CancellationToken => _tokenProvider.Token;
         public async Task<List<InterviewCalendarDto>> GetCalendarInterviewsAsync(DateTime startTime, DateTime endTime)
         {
-            CancellationToken.ThrowIfCancellationRequested(); 
+            CancellationToken.ThrowIfCancellationRequested();
             if (startTime == null)
                 throw new ArgumentNullException(nameof(startTime));
             if (endTime == null)
@@ -55,6 +55,8 @@ namespace TalentPool.EntityFrameworkCore.Queriers
                         join d in _context.Users on a.CreatorUserId equals d.Id
                         join e in _context.Users on a.LastModifierUserId equals e.Id into ee
                         from eee in ee.DefaultIfEmpty()
+                        join f in _context.Investigations on a.ResumeId equals f.ResumeId into ff
+                        from fff in ff.DefaultIfEmpty()
                         where a.Id == id
                         select new InterviewDetailDto()
                         {
@@ -67,7 +69,9 @@ namespace TalentPool.EntityFrameworkCore.Queriers
                             LastModifierUserName = eee == null ? string.Empty : eee.FullName,
                             Remark = a.Remark,
                             Status = a.Status,
-                            VisitedTime = a.VisitedTime
+                            VisitedTime = a.VisitedTime,
+                            ResumeId = a.ResumeId,
+                            InvestigationId = fff == null ? (Guid?)null : fff.Id
                         };
 
             return await query.FirstOrDefaultAsync(CancellationToken);

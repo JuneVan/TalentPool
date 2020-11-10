@@ -79,6 +79,14 @@ namespace TalentPool.Web.Controllers
         }
 
         #region CURD
+        public IActionResult Search(string keyword)
+        {
+            return RedirectToAction(nameof(List), new
+            {
+                StartTime = DateTime.Parse("2020-05-01"),
+                EndTime = DateTime.Now.Date.AddDays(1)
+            });
+        }
         public async Task<IActionResult> List(QueryResumeInput input)
         {
             if (!input.OwnerUserId.HasValue)
@@ -535,7 +543,7 @@ namespace TalentPool.Web.Controllers
 
         #endregion
 
-        
+
 
         #region 面试邀请邮件 
         public async Task<IActionResult> SendEmail(Guid id)
@@ -572,15 +580,22 @@ namespace TalentPool.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _emailSender.SendEmailAsync(new EmailEntry()
+                try
                 {
-                    ToName = model.Name,
-                    ToEmailAddress = model.Email,
-                    Subject = model.Subject,
-                    Body = model.Body
-                });
-                Notifier.Success($"你已经成功给{model.Name}发送了面试邀请！");
-                return RedirectToAction(nameof(List));
+                    await _emailSender.SendEmailAsync(new EmailEntry()
+                    {
+                        ToName = model.Name,
+                        ToEmailAddress = model.Email,
+                        Subject = model.Subject,
+                        Body = model.Body
+                    });
+                    Notifier.Success($"你已经成功给{model.Name}发送了面试邀请！");
+                    return RedirectToAction(nameof(List));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
             }
             return View(model);
         }

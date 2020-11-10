@@ -15,5 +15,7 @@ namespace TalentPool.Application.Interviews
         public DateTime CreationTime { get; set; }
         public string LastModifierUserName { get; set; }
         public DateTime? LastModificationTime { get; set; }
+        public Guid ResumeId { get; set; }
+        public Guid? InvestigationId { get; set; }
     }
 }
