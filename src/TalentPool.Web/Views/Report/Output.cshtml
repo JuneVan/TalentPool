@@ -1,6 +1,6 @@
 ﻿@using  TalentPool.Investigations
 @model TalentPool.Web.Models.ReportViewModels.OuputViewModel
-@{ 
+@{
     ViewData["PageHeader"] = "日报告";
     ViewData["Title"] = "日报 - " + DateTime.Now.Date.ToString("yyyy/MM/dd");
 }
@@ -11,12 +11,10 @@
             日报 - @Model.Date
         </h3>
         <div class="card-tools">
-            <form method="post" action="/Report/Export">
-                <input type="hidden" name="Date" value="@Model.Date" />
-                <button type="submit" class="btn btn-default btn-sm">
-                    <i class="fas fa-file-export"></i>导出报告
-                </button>
-            </form>
+            <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#modal-export">
+                <i class="fas fa-file-export"></i>
+                导出报告
+            </button>
         </div>
     </div>
     <div class="card-body">
@@ -305,6 +303,38 @@
                     </li>
                 </ol>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-export">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">日报告导出选项</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div> <form method="post" action="/Report/Export">
+                <div class="modal-body">
+
+                    <input type="hidden" name="Date" value="@Model.Date" />
+                    @if (Model.JobStatisticTotalInfo != null && Model.JobStatisticTotalInfo.JobStatisticInfo != null)
+                    {
+                        foreach (var item in Model.JobStatisticTotalInfo.JobStatisticInfo)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked name="Job.@item.JobName" id="Job#@item.JobName">
+                                <label class="form-check-label" for="Job#@item.JobName">@item.JobName</label>
+                            </div>
+                        }
+                    } 
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">确认</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

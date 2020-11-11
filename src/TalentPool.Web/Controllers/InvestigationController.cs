@@ -352,6 +352,7 @@ namespace TalentPool.Web.Controllers
             return Ok();
         }
 
+         
         private IActionResult NotFound(Guid id)
         {
             Notifier.Warning($"未找到id:“{id}”的调查记录。");
