@@ -84,7 +84,8 @@ namespace TalentPool.Web.Controllers
             return RedirectToAction(nameof(List), new
             {
                 StartTime = DateTime.Parse("2020-05-01"),
-                EndTime = DateTime.Now.Date.AddDays(1)
+                EndTime = DateTime.Now.Date.AddDays(1),
+                Keyword = keyword
             });
         }
         public async Task<IActionResult> List(QueryResumeInput input)

@@ -62,6 +62,7 @@ namespace TalentPool.Resumes
         /// 审核记录
         /// </summary>
         public virtual ICollection<ResumeAuditRecord> AuditRecords { get; set; }
+      
 
         /// <summary>
         /// 处理人

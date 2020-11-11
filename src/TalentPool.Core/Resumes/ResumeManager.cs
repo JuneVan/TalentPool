@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TalentPool.Resumes
 {
-    public class ResumeManager : IDisposable
+    public class ResumeManager : ObjectDisposable
     {
         private bool _disposed;
         private readonly ITokenProvider _tokenProvider;
@@ -155,14 +155,9 @@ namespace TalentPool.Resumes
                 throw new ArgumentNullException(nameof(resume));
             if (ownerUserId == null)
                 throw new ArgumentNullException(nameof(ownerUserId));
-
-
             resume.OwnerUserId = ownerUserId;
-
             await ResumeStore.UpdateAsync(resume, CancellationToken);
-
-        }
-      
+        }  
         internal async Task<List<ResumeKeywordMap>> GetResumeKeyMapsAsync(string keyword)
         {
             if (string.IsNullOrEmpty(keyword))
@@ -179,28 +174,12 @@ namespace TalentPool.Resumes
         {
             if (resumeKeywordMaps == null)
                 throw new ArgumentNullException(nameof(resumeKeywordMaps));
-            await ResumeStore.RemoveResumeKeyMapsAsync(resumeKeywordMaps, CancellationToken); 
+            await ResumeStore.RemoveResumeKeyMapsAsync(resumeKeywordMaps, CancellationToken);
         }
 
-        public void Dispose()
+        protected override void DisposeUnmanagedResource()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected void Dispose(bool disposing)
-        {
-            if (disposing && !_disposed)
-            {
-                ResumeStore.Dispose();
-            }
-            _disposed = true;
-        }
-        protected void ThrowIfDisposed()
-        {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException(GetType().Name);
-            }
+            ResumeStore.Dispose();
         }
     }
 }
