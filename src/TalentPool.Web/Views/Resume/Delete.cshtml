@@ -1,0 +1,26 @@
+﻿@model TalentPool.Web.Models.ResumeViewModels.DeleteResumeModel
+@{ ViewData["PageHeader"] = "简历库管理";
+                ViewData["Title"] = "删除一条简历记录 - " + Model.Name; }
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">
+                    操作提示
+                </h3>
+            </div>
+            <form role="form" asp-action="Delete" method="post">
+                <input type="hidden" asp-for="Id">
+                <div class="card-body">
+                    <i class="fas fa-question-circle fa-2x"></i>  请问是否确定删除 "@Model.Name" 的简历吗？
+                    数据删除是不可恢复的，请谨慎操作！
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-danger">确定</button>
+                    <a asp-action="List" class="btn btn-default">返回列表</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

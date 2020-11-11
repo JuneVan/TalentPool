@@ -1,0 +1,31 @@
+﻿@model TalentPool.Web.Models.InvestigationViewModels.CreateInvestigationViewModel
+@{
+    ViewData["PageHeader"] = "面试调查管理";
+    ViewData["Title"] = "创建一条新的意向调查记录";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">
+                    创建意向调查记录
+                </h3>
+            </div>
+            <form role="form" method="post" asp-controller="Investigation" asp-action="Create">
+                <input type="hidden" asp-for="ResumeId">
+                <input  type="hidden" asp-for="Name">
+                <div class="card-body">
+                    <i class="fas fa-question-circle"></i> 请问是否确定对 "@Model.Name" 开始进行意向调查？
+                    确认提交后会生成调查记录！
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">确定</button>
+                    <a asp-action="List" asp-controller="Resume" class="btn btn-default">
+                        返回简历列表
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

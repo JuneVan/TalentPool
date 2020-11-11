@@ -1,0 +1,37 @@
+﻿@model IEnumerable<TalentPool.Permissions.PermissionDefinition>
+
+
+@foreach (var item in Model)
+{
+
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-md-4">
+                @for (int i = 0; i < item.Level; i++)
+                {
+                    <span class="indent"></span>
+                }
+                <span class="form-check d-inline">
+                    @if (item.IsGrant)
+                    {
+                        <input id="Permission.@item.Name" class="form-check-input permission" type="checkbox" name="Permission.@item.Name" checked />
+                    }
+                    else
+                    {
+                        <input id="Permission.@item.Name" class="form-check-input permission" type="checkbox" name="Permission.@item.Name" />
+                    }
+                    <label class="form-check-label" for="Permission.@item.Name">
+                        @item.DisplayName
+                    </label>
+                </span>
+            </div>
+            <div class="col-md-8">
+                 @item.Description
+            </div>
+        </div>
+    </li>
+    @if (item.Children.Any())
+    {
+        @await Html.PartialAsync("_RecursivelyPermission", item.Children)
+    }
+}

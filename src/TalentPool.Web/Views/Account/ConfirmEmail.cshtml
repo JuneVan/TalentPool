@@ -1,0 +1,24 @@
+﻿@model TalentPool.Web.Models.AccountViewModels.ConfirmEmailViewModel
+@{
+    Layout = "_AccountLayout";
+    ViewData["Title"] = "确认邮箱";
+}
+
+<h1>@ViewData["Title"].</h1>
+<div>
+    <p>
+        感谢进行确认邮箱，
+        @if (Model.Success)
+        {
+            <text>
+                <i class="fas fa-check text-success"></i> 你已成功确认邮箱：@Model.Email，<a asp-controller="Account" asp-action="Login">请点击这里登陆</a>。
+            </text>
+        }
+        else
+        {
+            <text>
+                <i class="fas fa-times text-success"></i> 邮箱验证失败，请重新确认。
+            </text>
+        }
+    </p>
+</div>

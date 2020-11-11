@@ -1,0 +1,333 @@
+﻿@using TalentPool.Investigations
+@inject IUserIdentifier UserIdentifier
+
+@model TalentPool.Web.Models.InvestigationViewModels.QueryInvestigationViewModel
+@{
+    ViewData["PageHeader"] = "意向调查管理";
+    ViewData["Title"] = "意向调查列表";
+}
+<div class="row">
+    <div class="col-12">
+        @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("新增意向调查", "/Resume/List", Pages.Investigation_CreateOrEditOrDelete, "btn btn-primary btn-sm"))
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"]</h3>
+
+    </div>
+    <div class="card-body">
+        <form action="/Investigation/List" method="get">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>关键词</label>
+                        <input type="text" class="form-control" placeholder="请输入姓名/手机号/简历编号" name="Keyword" value="@Model.Output.Parameter.Keyword">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>职位</label>
+                        <input type="hidden" value="@Model.Output.Parameter.JobId" name="JobId">
+                        <select class="form-control" id="jobIdSelect" asp-items="@Model.Jobs">
+                            <option value="">==请选择职位==</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>负责人</label>
+                        <input type="hidden" value="@Model.Output.Parameter.OwnerUserId" name="OwnerUserId">
+                        <select class="form-control" id="ownerUserIdSelect" asp-items="@Model.Users">
+                            <option value="@Guid.Empty">=请选择负责人=</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>调查状态</label>
+                        <input type="hidden" class="form-control" value="@Model.Output.Parameter.Status" readonly name="Status">
+                        <select class="form-control" id="statusSelect" asp-items="@Html.GetEnumSelectList<InvestigationStatus>()">
+                            <option value="">=请选择调查状态=</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>调查时间</label>
+                        <input type="hidden" class="form-control" value="@Model.Output.Parameter.StartTime" readonly name="StartTime">
+                        <input type="hidden" class="form-control" value="@Model.Output.Parameter.EndTime" readonly name="EndTime">
+                        <input type="text" class="form-control" id="createdDaterangepicker">
+                    </div>
+                </div>
+            </div>
+            <div class="row m-2">
+                <div class="col-md-12 text-right">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                        搜索
+                    </button>
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col-md-12 table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+
+                            <th>姓名</th>
+                            <th>职位</th>
+                            <th>电话</th>
+                            <th>创建时间</th>
+                            <th>出差意愿</th>
+                            <th>
+                                调查人
+                            </th>
+                            <th>
+                                调查时间
+                            </th>
+                            <th>调查状态</th>
+                            <th>
+                                是否合格
+                            </th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Output.Items)
+                        {
+                            var bgColor = "";
+                            if (item.Status == InvestigationStatus.NoStart)// 未开始
+                            {
+                                bgColor = "";
+                            }
+                            else if (item.Status == InvestigationStatus.Ongoing)// 正在进行中
+                            {
+
+                                if (!item.IsConnected.HasValue || !item.IsConnected.Value)//未接通
+                                {
+                                    bgColor = "bg-secondary";
+                                }
+                                else
+                                {
+                                    bgColor = "bg-blue";
+                                    if (item.AcceptTravelStatus == AcceptTravelStatus.Consider)//考虑
+                                    {
+                                        bgColor = "bg-yellow";
+                                    }
+                                }
+                            }
+                            else
+                            {
+
+                                if (item.AcceptTravelStatus == AcceptTravelStatus.Refuse)//不接受
+                                {
+                                    bgColor = "";
+                                }
+                                else
+                                {
+                                    /*
+                                    接受的情况下
+                                     */
+                                    if (!item.IsQualified.HasValue || !item.IsQualified.Value)//不合适
+                                    {
+                                        bgColor = "";
+                                    }
+                                    else
+                                    {
+                                        bgColor = "bg-green";
+                                    }
+                                }
+                            }
+                            <tr class="@bgColor">
+                                <td>
+                                    @item.Name
+                                    @if (item.Status != InvestigationStatus.NoStart && (!item.IsConnected.HasValue || !item.IsConnected.Value))
+                                    {
+                                        <i>(未接)</i>
+                                    }
+                                </td>
+                                <td>@item.JobName</td>
+                                <td>@item.PhoneNumber</td>
+                                <td>@item.CreationTime</td>
+                                <td>
+                                    @item.AcceptTravelStatus.GetDescription("/")
+                                </td>
+
+                                <td>
+                                    @item.OwnerUserName
+                                </td>
+                                <td>@item.InvestigateDate.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    @item.Status.GetDescription("/")
+                                </td>
+                                <td>
+                                    @if (item.IsQualified.HasValue)
+                                    {
+                                        if (item.IsQualified.Value)
+                                        {
+                                            <span>合适</span>
+                                        }
+                                        else
+                                        {
+                                            <span>不合适</span>
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        <span>/</span>
+                                    }
+                                </td>
+                                <td>
+
+                                    <div class="btn-group  btn-group-sm" role="group">
+                                        <button id="group-dropdown" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-cog"></i> 操作菜单
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="group-dropdown">
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看调查", "/Investigation/View/" + item.Id, Pages.Investigation, "dropdown-item", blank: true))
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看简历", "/Resume/View/" + item.ResumeId, Pages.Resume, "dropdown-item", blank: true)) 
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("审核", "/Investigation/Audit/" + item.Id, Pages.Investigation_Audit, "dropdown-item"))
+                                            @if (item.OwnerUserId == UserIdentifier.UserId)
+                                            {
+                                                @if (item.Status != InvestigationStatus.Complete)
+                                                {
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("调查", "/Investigation/Edit/" + item.Id, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("技术评测", "/Evaluation/SelectEvaluation?InvestigationId=" + item.Id + "&JobId=" + item.JobId, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("结束调查", "/Investigation/Finsh/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("删除", "/Investigation/Delete/" + item.Id, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
+                                                }
+                                                else
+                                                {
+                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("恢复调查", "/Investigation/Restore/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        @await Html.PartialAsync("Partials/_PaginationPartial", Model.Output)
+    </div>
+</div>
+
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">颜色标记说明</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ol>
+                    <li>
+                        <span class="">未开始调查状态(默认)</span>
+
+                    </li>
+                    <li>
+                        正在进行调查的情况
+                        <small>(如果已接通电话且完成调查，请手动确定完成)</small>
+                        <ol>
+                            <li><span class="bg-secondary">电话未接通</span></li>
+                            <li>
+                                <span class="bg-blue">
+                                    电话已接通(另约时间技术评测或未更新调查状态)
+                                </span>
+                                <ol>
+                                    <li><span class="bg-yellow">考虑出差</span></li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </li>
+                    <li>
+                        已完成调查的情况
+                        <ol>
+                            <li><span class="">不考虑</span></li>
+                            <li>
+                                愿意出差
+                                <ol>
+                                    <li><span class="">不合适</span></li>
+                                    <li><span class="bg-green">合适</span></li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+@section styles{
+
+    <link href="~/lib/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" />
+}
+@section scripts {
+    <script src="~/lib/bootstrap-daterangepicker/moment.min.js"></script>
+    <script src="~/lib/bootstrap-daterangepicker/daterangepicker.min.js"></script>
+    <script>
+        $(function () {
+
+            //调查日期
+            var startDate = $("input[name='StartTime']").val(), endDate = $("input[name='EndTime']").val();
+            $("#createdDaterangepicker").daterangepicker({
+                timePicker: true,
+                ranges: {
+                    '最近7天': [moment().subtract(6, 'days'), moment()],
+                    '最近30天': [moment().subtract(29, 'days'), moment()],
+                    '这个月': [moment().startOf('month'), moment().endOf('month')],
+                    '上个月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                locale: {
+                    format: 'YYYY/MM/DD HH:mm',
+                    applyLabel: '确定',
+                    cancelLabel: '取消',
+                    daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+                    monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                        '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                    firstDay: 1,
+                    customRangeLabel: "自定义范围"
+                },
+                startDate: startDate,
+                endDate: endDate
+            }, function (start, end, label) {
+                $("input[name='StartTime']").val(start.format('YYYY/MM/DD HH:mm'));
+                $("input[name='EndTime']").val(end.format('YYYY/MM/DD HH:mm'));
+
+            });
+
+
+            //职位
+            $("#jobIdSelect").val($("input[name='JobId']").val());
+            $("#jobIdSelect").change(function () {
+                $("input[name='JobId']").val($("#jobIdSelect").val());
+            })
+
+            //调查状态
+            $("#statusSelect").val($("input[name='Status']").val());
+            $("#statusSelect").change(function () {
+                $("input[name='Status']").val($("#statusSelect").val());
+            })
+
+            //负责人
+            $("#ownerUserIdSelect").val($("input[name='OwnerUserId']").val());
+            $("#ownerUserIdSelect").change(function () {
+                $("input[name='OwnerUserId']").val($("#ownerUserIdSelect").val());
+            })
+        })
+
+    </script>
+}

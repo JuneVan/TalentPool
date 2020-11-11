@@ -1,0 +1,60 @@
+﻿@using TalentPool.Web.Models.IndexViewModels
+@{
+    var rankData = ((List<UserRankData>)Model.RankData)
+        .OrderByDescending(o => o.TotalCount).ToList();
+    var rankDataType = (int)Model.RankDataType;
+}
+
+<table class="table table-hover  text-nowrap">
+    <thead>
+        <tr>
+            <th>排名</th>
+            <th>头像</th>
+            <th>姓名</th>
+            <th>总数</th>
+            @if (rankDataType == 0)
+            {
+                <th>合格人数</th>
+            }
+            else
+            {
+                <th>接受人数</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < rankData.Count; i++)
+        {
+            <tr>
+                <td>
+                    @if (i == 0)
+                    {
+                        <span class="badge badge-success">1</span>
+                    }
+                    else if (i == 1)
+                    {
+                        <span class="badge badge-danger">2</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-light">@(i+1)</span>
+                    }
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(rankData[i].Photo))
+                    {
+                        <img src="@rankData[i].Photo" class="img-fluid rounded" width="30">
+                    }
+                    else
+                    { 
+                        <img src="~/img/default-avator.jpeg" class="img-fluid rounded" width="30">
+                    }
+                </td>
+                <td>@rankData[i].FullName</td>
+                <td>@rankData[i].TotalCount</td>
+                <td>@rankData[i].QualifiedCount</td>
+            </tr>
+
+        }
+    </tbody>
+</table>

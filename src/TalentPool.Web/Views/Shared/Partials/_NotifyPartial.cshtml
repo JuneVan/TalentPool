@@ -1,0 +1,39 @@
+﻿@using TalentPool.Infrastructure.Notify
+@{
+    var alterEntries = ViewData["NotifyEntities"];
+    if (alterEntries != null)
+    {
+        var entries = (NotifyEntry[])alterEntries;
+        foreach (var entry in entries)
+        {
+            switch (entry.Type)
+            {
+                case NotifyType.Success:
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        @Html.Raw(entry.Message)
+                    </div>
+                    break;
+                case NotifyType.Warning:
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        @Html.Raw(entry.Message)
+                    </div>
+                    break;
+                case NotifyType.Error:
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        @Html.Raw(entry.Message)
+                    </div>
+                    break;
+                case NotifyType.Information:
+                default:
+                    <div class="alert alert-info alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        @Html.Raw(entry.Message)
+                    </div>
+                    break;
+            }
+        }
+    }
+}
