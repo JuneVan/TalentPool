@@ -1,0 +1,73 @@
+﻿@using TalentPool.Resumes
+@inject IUserIdentifier UserIdentifier
+@model TalentPool.Web.Models.ResumeViewModels.UploadAttachmentViewModel
+
+@{ ViewData["PageHeader"] = "简历库管理";
+    ViewData["Title"] = "上传附件 - " + Model.Name; }
+
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"]</h3>
+    </div>
+    <form role="form" method="post" asp-action="UploadAttachment" enctype="multipart/form-data">
+        <div class="card-body">
+            <input type="hidden" class="form-control" asp-for="Id">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label>姓名</label>
+                    <input type="text" class="form-control" readonly asp-for="Name">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-12">
+                    <label>附件记录</label>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>文件</th>
+                                <th>时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Attachments != null)
+                            {
+                                foreach (var attachment in Model.Attachments)
+                                {
+                                    <tr>
+                                        <td>@attachment.FileName</td>
+                                        <td>@attachment.CreationTime</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a class="btn btn-default" href="@attachment.FilePath" target="_blank">
+                                                    <i class="fas fa-eye"></i>
+                                                    查看
+                                                </a>
+                                                <a class="btn btn-danger" asp-action="RemoveAttachment" asp-route-Id="@Model.Id" asp-route-AttachmentId="@attachment.Id">
+                                                    <i class="fas fa-trash"></i>
+                                                    删除
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="form-group col-md-12">
+                    <label>附件</label>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="Attachment" />
+                        <label class="custom-file-label" for="exampleInputFile">选择文件</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">提交</button>
+            <a href="/Resume/List" class="btn btn-default">返回简历列表</a>
+        </div>
+    </form>
+</div>
+

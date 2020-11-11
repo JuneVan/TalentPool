@@ -50,6 +50,7 @@ namespace TalentPool.EntityFrameworkCore
         public DbSet<ResumeAuditSetting> ResumeAuditSettings { get; set; }
         public DbSet<ResumeKeywordMap> ResumeKeyMaps { get; set; }
         public DbSet<ResumeCompare> ResumeCompares { get; set; }
+        public DbSet<ResumeAttachment> Attachments { get; set; }
 
         public DbSet<Investigation> Investigations { get; set; }
 
@@ -89,6 +90,7 @@ namespace TalentPool.EntityFrameworkCore
             builder.ApplyConfiguration(new EvaluationQuestionEntityTypeConfiguration());
             builder.ApplyConfiguration(new DailyStatisticEntityTypeConfiguration());
             builder.ApplyConfiguration(new DailyStatisticItemEntityTypeConfiguration());
+            builder.ApplyConfiguration(new ResumeAttachmentEntityTypeConfiguration());
         }
 
         protected IUserIdentifier UserIdentifier { get; }

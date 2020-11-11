@@ -54,8 +54,8 @@ namespace TalentPool.EntityFrameworkCore.Queriers
 
             if (!string.IsNullOrEmpty(input.Keyword))
             {
-                query = query.Where(w => w.Name.Contains(input.Keyword)|| w.PhoneNumber.Contains(input.Keyword)|| w.PlatformId.Contains(input.Keyword));
-                if(Guid.TryParse(input.Keyword,out var id))
+                query = query.Where(w => w.Name.Contains(input.Keyword) || w.PhoneNumber.Contains(input.Keyword) || w.PlatformId.Contains(input.Keyword));
+                if (Guid.TryParse(input.Keyword, out var id))
                 {
                     query = query.Where(w => w.Id == id);
                 }
@@ -132,6 +132,15 @@ namespace TalentPool.EntityFrameworkCore.Queriers
                         RelationResumeName = s.RelationResumeName,
                         Similarity = s.Similarity
                     }).ToListAsync(CancellationToken);
+
+                resume.Attachments = await _context.Attachments
+                  .Where(w => w.ResumeId == id)
+                  .Select(s => new ResumeAttachmentDto()
+                  {
+                      FileName = s.FileName,
+                      FilePath = s.FilePath,
+                      CreationTime = s.CreationTime
+                  }).ToListAsync(CancellationToken);
             }
             return resume;
 

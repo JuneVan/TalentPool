@@ -148,10 +148,11 @@
                                         <div class="dropdown-menu" aria-labelledby="group-dropdown">
 
                                             @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Resume/View/" + item.Id, Pages.Resume, "dropdown-item", blank: true))
-                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("生成关键词", "/Resume/GenerateKeywords/" + item.Id, Pages.Resume_GenerateKeywords, "dropdown-item", blank: true))
+
                                             @if (item.OwnerUserId == UserIdentifier.UserId)
                                             {
                                                 @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Resume/Edit/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("上传附件", "/Resume/UploadAttachment/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
                                             }
 
                                             @if (item.AuditStatus == AuditStatus.Complete)
