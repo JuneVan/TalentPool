@@ -311,7 +311,7 @@ namespace TalentPool.Web.Controllers
                 if (resume == null)
                     return NotFound(model.Id);
 
-                if (Request.Form.Files != null && Request.Form.Files.Count > 0 && Request.Form.Files[0].Length > 0)
+                if (Request.Form.Files != null && Request.Form.Files.Count > 0 )
                 {
                     try
                     {
@@ -319,31 +319,36 @@ namespace TalentPool.Web.Controllers
                         var dirPath = $"{webRootPath}/upload/resume-attachments";
                         if (!Directory.Exists(dirPath))
                             Directory.CreateDirectory(dirPath);
-                        var oldFileName = Request.Form.Files[0].FileName;
-                        var fileExtensionName = oldFileName.Substring(oldFileName.LastIndexOf(".") + 1);
-                        var fileName = $"{DateTime.Now:yyyyMMddHHmmssff}{ new Random().Next(10000, 99999) }.{fileExtensionName}";
-                        //存储路径
-                        var filePath = $"{dirPath}/{fileName}";
-                        using (Stream stream = Request.Form.Files[0].OpenReadStream())
+
+                        var attachments = new List<ResumeAttachment>();
+                        foreach (var file in Request.Form.Files)
                         {
-                            using (FileStream fileStream = new FileStream(filePath, FileMode.Append, FileAccess.Write))
+                            var oldFileName = file.FileName;
+                            var fileExtensionName = oldFileName.Substring(oldFileName.LastIndexOf(".") + 1);
+                            var fileName = $"{DateTime.Now:yyyyMMddHHmmssff}{ new Random().Next(10000, 99999) }.{fileExtensionName}";
+                            //存储路径
+                            var filePath = $"{dirPath}/{fileName}";
+                            using (Stream stream = file.OpenReadStream())
                             {
-                                int size = 1024;
-                                byte[] buffer = new byte[size];
-                                int length;
-                                while ((length = stream.Read(buffer, 0, size)) > 0)
+                                using (FileStream fileStream = new FileStream(filePath, FileMode.Append, FileAccess.Write))
                                 {
-                                    fileStream.Write(buffer);
+                                    int size = 1024;
+                                    byte[] buffer = new byte[size];
+                                    int length;
+                                    while ((length = stream.Read(buffer, 0, size)) > 0)
+                                    {
+                                        fileStream.Write(buffer);
+                                    }
                                 }
                             }
+                            attachments.Add(new ResumeAttachment()
+                            {
+                                FileName = oldFileName,
+                                FilePath = $"/upload/resume-attachments/{fileName}"
+                            });
                         }
-                        await _resumeManager.AddAttachmentAsync(resume, new ResumeAttachment()
-                        {
-                            FileName = fileName,
-                            FilePath = $"/upload/resume-attachments/{fileName}"
-                        });
-
-                        Notifier.Success("你已成功上传了一条简历附件记录。");
+                        await _resumeManager.AddAttachmentAsync(resume, attachments);
+                        Notifier.Success($"你已成功上传了{Request.Form.Files.Count}条简历附件记录。");
                         return RedirectToAction(nameof(UploadAttachment), new { Id = model.Id });
                     }
                     catch

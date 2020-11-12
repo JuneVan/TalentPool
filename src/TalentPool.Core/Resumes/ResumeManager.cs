@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 namespace TalentPool.Resumes
 {
     public class ResumeManager : ObjectDisposable
-    {
-        private bool _disposed;
+    { 
         private readonly ITokenProvider _tokenProvider;
         public ResumeManager(IResumeStore resumeStore,
             IResumeAuditSettingStore resumeAuditSettingStore,
@@ -177,15 +176,18 @@ namespace TalentPool.Resumes
             await ResumeStore.RemoveResumeKeyMapsAsync(resumeKeywordMaps, CancellationToken);
         }
 
-        public async Task AddAttachmentAsync(Resume resume, ResumeAttachment attachment)
+        public async Task AddAttachmentAsync(Resume resume, List<ResumeAttachment> attachments)
         {
             if (resume == null)
                 throw new ArgumentNullException(nameof(resume));
-            if (attachment == null)
-                throw new ArgumentNullException(nameof(attachment));
+            if (attachments == null)
+                throw new ArgumentNullException(nameof(attachments));
             if (resume.Attachments == null)
                 resume.Attachments = new List<ResumeAttachment>();
-            resume.Attachments.Add(attachment);
+            foreach (var attachment in attachments)
+            {
+                resume.Attachments.Add(attachment);
+            }
             await ResumeStore.UpdateAsync(resume, CancellationToken);
         }
         public async Task RemoveAttachmentAsync(Resume resume, ResumeAttachment attachment)

@@ -58,10 +58,10 @@
                 <div class="form-group col-md-12">
                     <label>附件</label>
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" name="Attachment" />
-                        <label class="custom-file-label" for="exampleInputFile">选择文件</label>
-                    </div>
-                </div>
+                        <input type="file" class="custom-file-input" name="Attachment" multiple id="Attachment" />
+                        <label class="custom-file-label" for="Attachment">选择文件</label>
+                    </div> 
+                </div> 
             </div>
         </div>
         <div class="card-footer">
@@ -70,4 +70,12 @@
         </div>
     </form>
 </div>
-
+@section scripts{
+    <script src="~/lib/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            bsCustomFileInput.init()
+        })
+    </script>
+  
+}
