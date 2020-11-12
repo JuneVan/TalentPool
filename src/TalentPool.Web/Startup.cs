@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TalentPool.EntityFrameworkCore.Seeds;
+using TalentPool.Infrastructure.Exceptions;
 
 namespace TalentPool.Web
 {
@@ -36,7 +37,10 @@ namespace TalentPool.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-             
+            else
+            {
+                app.UseMiddleware<ExceptionMiddleware>();
+            }
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseRouting();
