@@ -32,24 +32,6 @@ namespace TalentPool.EntityFrameworkCore.Stores
             if (resume == null)
                 throw new ArgumentNullException(nameof(resume));
 
-            /*// 清除子实体集合防止更新异常  
-            var keyMaps = await Context.ResumeKeyMaps.Where(w => w.ResumeId == resume.Id).ToListAsync();
-            if (keyMaps != null)
-            {
-                foreach (var keymap in keyMaps)
-                {
-                    Context.ResumeKeyMaps.Remove(keymap);
-                }
-            }
-            var compares = await Context.ResumeCompares.Where(w => w.ResumeId == resume.Id).ToListAsync();
-            if (compares != null)
-            {
-                foreach (var compare in compares)
-                {
-                    Context.ResumeCompares.Remove(compare);
-                }
-            }
-            */
             Context.Resumes.Attach(resume);
             resume.ConcurrencyStamp = Guid.NewGuid().ToString();
             Context.Resumes.Update(resume);
@@ -82,6 +64,7 @@ namespace TalentPool.EntityFrameworkCore.Stores
                 throw new ArgumentNullException(nameof(resumeId));
             return await Context.Resumes.Include(i => i.KeyMaps)
                 .Include(i => i.ResumeCompares)
+                .Include(i => i.Attachments)
                 .FirstOrDefaultAsync(f => f.Id == resumeId, cancellationToken);
 
         }

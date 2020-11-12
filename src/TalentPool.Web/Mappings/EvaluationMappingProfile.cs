@@ -9,6 +9,7 @@ namespace TalentPool.Web.Mappings
         public EvaluationMappingProfile()
         {
             CreateMap<CreateOrEditEvaluationViewModel, Evaluation>();
+            CreateMap<Evaluation, CreateOrEditEvaluationViewModel>();
             CreateMap<Evaluation, DeleteEvaluationViewModel>();
             CreateMap<EvaluationSubject, SubjectViewModel>();
             CreateMap<EvaluationQuestion, QuestionViewModel>();

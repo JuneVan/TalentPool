@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using Org.BouncyCastle.Crypto.Paddings;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -25,6 +26,7 @@ using TalentPool.Resumes;
 using TalentPool.Web.Auth;
 using TalentPool.Web.Models.CommonModels;
 using TalentPool.Web.Models.ResumeViewModels;
+using IOFile = System.IO.File;
 
 namespace TalentPool.Web.Controllers
 {
@@ -286,22 +288,22 @@ namespace TalentPool.Web.Controllers
         }
         #endregion
 
+        #region 附件
 
-        // 生成关键词
-        [PermissionCheck(Pages.Resume_GenerateKeywords)]
-        public async Task<IActionResult> GenerateKeywords(Guid id)
+        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
+        public async Task<IActionResult> UploadAttachment(Guid id)
         {
             var resume = await _resumeManager.FindByIdAsync(id);
             if (resume == null)
                 return NotFound(id);
-            var model = Mapper.Map<GenerateKeywordViewModel>(resume);
+            var model = Mapper.Map<UploadAttachmentViewModel>(resume);
 
             return View(model);
         }
-        [PermissionCheck(Pages.Resume_GenerateKeywords)]
+        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GenerateKeywords(GenerateKeywordViewModel model)
+        public async Task<IActionResult> UploadAttachment(UploadAttachmentViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -309,26 +311,97 @@ namespace TalentPool.Web.Controllers
                 if (resume == null)
                     return NotFound(model.Id);
 
-                resume.KeyMaps = new List<ResumeKeywordMap>();
-                if (!string.IsNullOrEmpty(model.Keywords))
+                if (Request.Form.Files != null && Request.Form.Files.Count > 0 )
                 {
-                    var keywords = model.Keywords.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                    foreach (var keyword in keywords)
+                    try
                     {
-                        resume.KeyMaps.Add(new ResumeKeywordMap()
+                        var webRootPath = _environment.WebRootPath;
+                        var dirPath = $"{webRootPath}/upload/resume-attachments";
+                        if (!Directory.Exists(dirPath))
+                            Directory.CreateDirectory(dirPath);
+
+                        var attachments = new List<ResumeAttachment>();
+                        foreach (var file in Request.Form.Files)
                         {
-                            Keyword = keyword,
-                            Name = model.Name
-                        });
+                            var oldFileName = file.FileName;
+                            var fileExtensionName = oldFileName.Substring(oldFileName.LastIndexOf(".") + 1);
+                            var fileName = $"{DateTime.Now:yyyyMMddHHmmssff}{ new Random().Next(10000, 99999) }.{fileExtensionName}";
+                            //存储路径
+                            var filePath = $"{dirPath}/{fileName}";
+                            using (Stream stream = file.OpenReadStream())
+                            {
+                                using (FileStream fileStream = new FileStream(filePath, FileMode.Append, FileAccess.Write))
+                                {
+                                    int size = 1024;
+                                    byte[] buffer = new byte[size];
+                                    int length;
+                                    while ((length = stream.Read(buffer, 0, size)) > 0)
+                                    {
+                                        fileStream.Write(buffer);
+                                    }
+                                }
+                            }
+                            attachments.Add(new ResumeAttachment()
+                            {
+                                FileName = oldFileName,
+                                FilePath = $"/upload/resume-attachments/{fileName}"
+                            });
+                        }
+                        await _resumeManager.AddAttachmentAsync(resume, attachments);
+                        Notifier.Success($"你已成功上传了{Request.Form.Files.Count}条简历附件记录。");
+                        return RedirectToAction(nameof(UploadAttachment), new { Id = model.Id });
+                    }
+                    catch
+                    {
+                        Notifier.Error("上传附件操作失败。");
                     }
                 }
-                resume = await _resumeManager.UpdateAsync(resume, true);
-                Notifier.Success("你已成功编辑了一条简历记录。");
-                return RedirectToAction(nameof(List));
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "请选择需要上传的附件文件。");
+                }
             }
             return View(model);
 
         }
+
+        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
+        public async Task<IActionResult> RemoveAttachment(Guid id, Guid attachmentId)
+        {
+            var resume = await _resumeManager.FindByIdAsync(id);
+            if (resume == null)
+                return NotFound(id);
+            var model = Mapper.Map<RemoveAttachmentViewModel>(resume);
+            var attachment = resume.Attachments?.FirstOrDefault(f => f.Id == attachmentId);
+            if (attachment == null)
+                return NotFound();
+            model.FileName = attachment.FileName;
+            model.AttachmentId = attachment.Id;
+            return View(model);
+        }
+        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveAttachment(RemoveAttachmentViewModel model)
+        {
+            var resume = await _resumeManager.FindByIdAsync(model.Id);
+            if (resume == null)
+                return NotFound(model.Id);
+            var attachment = resume.Attachments?.FirstOrDefault(f => f.Id == model.AttachmentId);
+            if (attachment == null)
+                return NotFound();
+            // 删除物理文件
+            var webRootPath = _environment.WebRootPath;
+            var filePath = $"{webRootPath}/{attachment.FilePath}";
+            if (IOFile.Exists(filePath))
+                IOFile.Delete(filePath);
+            await _resumeManager.RemoveAttachmentAsync(resume, attachment);
+
+            Notifier.Success("你已成功删除了一条简历附件记录。");
+            return RedirectToAction(nameof(UploadAttachment), new { Id = model.Id });
+        }
+
+        #endregion
 
         #region 审核
         [PermissionCheck(Pages.Resume_Audit)]

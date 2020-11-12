@@ -19,127 +19,159 @@
                 </div>
             </div>}
 
-        <div class="row">
-            <div class="form-group col-md-6">
-                <label>姓名</label>
-                <input type="text" class="form-control" asp-for="Name" readonly>
-            </div>
-            <div class="form-group col-md-6">
-                <label>手机号</label>
-                <input type="text" class="form-control" asp-for="PhoneNumber" readonly>
-            </div>
-            <div class="form-group col-md-6">
-                <label>邮箱地址</label>
-                <input type="text" class="form-control" asp-for="Email" readonly>
-            </div>
-            <div class="form-group col-md-6">
-                <label>职位</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" asp-for="JobName" readonly>
-                    <div class="input-group-append">
-                        <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#modal-default" title="岗位说明">
-                            <i class="fas fa-question-circle"></i>
-                        </button>
-                    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label>姓名</label>
+            <input type="text" class="form-control" asp-for="Name" readonly>
+        </div>
+        <div class="form-group col-md-6">
+            <label>手机号</label>
+            <input type="text" class="form-control" asp-for="PhoneNumber" readonly>
+        </div>
+        <div class="form-group col-md-6">
+            <label>邮箱地址</label>
+            <input type="text" class="form-control" asp-for="Email" readonly>
+        </div>
+        <div class="form-group col-md-6">
+            <label>职位</label>
+            <div class="input-group">
+                <input type="text" class="form-control" asp-for="JobName" readonly>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#modal-default" title="岗位说明">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
                 </div>
-            </div>
-            <div class="form-group col-md-6">
-                <label>求职意向城市</label>
-                <input type="text" class="form-control" placeholder="请输入求职意向城市" asp-for="City" readonly>
-            </div>
-            <div class="form-group col-md-12">
-                <label>相似度结果</label>
-                <br />
-                @if (Model.ResumeCompares != null)
-                {
-                    <div class="btn-group">
-                        @foreach (var item in Model.ResumeCompares)
-                        {
-                            <a target="_blank" href="/Resume/View/@item.RelationResumeId" class="btn btn-dark btn-sm" style="background:rgb(255,0,0,@item.Similarity)!important">
-                                @if (string.IsNullOrEmpty(item.RelationResumeName))
-                                {
-                                    <text>未知姓名</text> }
-                                else
-                                {
-                                    @item.RelationResumeName}
-                                @(item.Similarity*100) %
-                            </a>}
-                    </div>}
-            </div>
-            <div class="form-group col-md-12">
-                <label>简历内容</label>
-                <textarea name="Description">@Model.Description</textarea>
-            </div>
-            <div class="form-group col-md-12">
-                <label>简历匹配关键词<small>（该项用于检测简历职位符合程度）</small></label>
-                <div id="keywords"></div>
-            </div>
-
-            <div class="form-group col-md-6">
-                <label>所属招聘平台</label>
-                <input type="text" class="form-control" asp-for="PlatformName" readonly>
-            </div>
-            <div class="form-group col-md-6">
-                <label>所属招聘平台ID</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" asp-for="PlatformId" readonly>
-                    <div class="input-group-append">
-                        <button type="button" class="btn btn-default" title="复制平台ID" data-toggle="tooltip" data-placement="top" onclick="onCopy(this,'@Model.PlatformId')">
-                            <i class="fas fa-copy"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group col-md-6">
-                <label>创建时间</label>
-                <input type="text" class="form-control" asp-for="CreationTime" readonly>
-            </div>
-            <div class="form-group col-md-6">
-                <label>创建人</label>
-                <input type="text" class="form-control" asp-for="CreatorUserName" readonly>
-            </div>
-            <div class="form-group col-md-6">
-                <label>最后更新时间</label>
-                <input type="text" class="form-control" asp-for="LastModificationTime" readonly>
-            </div>
-            <div class="form-group col-md-6">
-                <label>最后更新人</label>
-                <input type="text" class="form-control" asp-for="LastModifierUserName" readonly>
-            </div>
-            <div class="form-group col-md-12">
-                <label>审核记录</label>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>审核人</th>
-                            <th>记录</th>
-                            <th>时间</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.ResumeAuditRecords != null)
-                        {
-                            foreach (var auditRecord in Model.ResumeAuditRecords)
-                            {
-                                <tr>
-                                    <td>@auditRecord.CreatorUserName</td>
-                                    <td>
-                                        @if (auditRecord.Passed)
-                                        {
-                                            <span class="text-success">通过</span> }
-                                        else
-                                        {
-                                            <span class="text-danger">未通过</span>
-                                            <text>@auditRecord.Remark</text>}
-                                    </td>
-                                    <td>@auditRecord.CreationTime</td>
-                                </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
             </div>
         </div>
+        <div class="form-group col-md-6">
+            <label>求职意向城市</label>
+            <input type="text" class="form-control" placeholder="请输入求职意向城市" asp-for="City" readonly>
+        </div>
+        <div class="form-group col-md-12">
+            <label>相似度结果</label>
+            <br />
+            @if (Model.ResumeCompares != null)
+            {
+                <div class="btn-group">
+                    @foreach (var item in Model.ResumeCompares)
+                    {
+                        <a target="_blank" href="/Resume/View/@item.RelationResumeId" class="btn btn-dark btn-sm" style="background:rgb(255,0,0,@item.Similarity)!important">
+                            @if (string.IsNullOrEmpty(item.RelationResumeName))
+                            {
+                                <text>未知姓名</text> }
+                            else
+                            {
+                                @item.RelationResumeName}
+                            @(item.Similarity*100) %
+                        </a>}
+                </div>}
+        </div>
+        <div class="form-group col-md-12">
+            <label>简历内容</label>
+            <textarea name="Description">@Model.Description</textarea>
+        </div>
+        <div class="form-group col-md-12">
+            <label>附件记录</label>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>文件</th>
+                        <th>时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Attachments != null)
+                    {
+                        foreach (var attachment in Model.Attachments)
+                        {
+                            <tr>
+                                <td>@attachment.FileName</td>
+                                <td>@attachment.CreationTime</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a class="btn btn-default" href="@attachment.FilePath" target="_blank">
+                                            <i class="fas fa-eye"></i>
+                                            查看
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group col-md-12">
+            <label>简历匹配关键词<small>（该项用于检测简历职位符合程度）</small></label>
+            <div id="keywords"></div>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label>所属招聘平台</label>
+            <input type="text" class="form-control" asp-for="PlatformName" readonly>
+        </div>
+        <div class="form-group col-md-6">
+            <label>所属招聘平台ID</label>
+            <div class="input-group">
+                <input type="text" class="form-control" asp-for="PlatformId" readonly>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-default" title="复制平台ID" data-toggle="tooltip" data-placement="top" onclick="onCopy(this,'@Model.PlatformId')">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label>创建时间</label>
+            <input type="text" class="form-control" asp-for="CreationTime" readonly>
+        </div>
+        <div class="form-group col-md-6">
+            <label>创建人</label>
+            <input type="text" class="form-control" asp-for="CreatorUserName" readonly>
+        </div>
+        <div class="form-group col-md-6">
+            <label>最后更新时间</label>
+            <input type="text" class="form-control" asp-for="LastModificationTime" readonly>
+        </div>
+        <div class="form-group col-md-6">
+            <label>最后更新人</label>
+            <input type="text" class="form-control" asp-for="LastModifierUserName" readonly>
+        </div>
+        <div class="form-group col-md-12">
+            <label>审核记录</label>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>审核人</th>
+                        <th>记录</th>
+                        <th>时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.ResumeAuditRecords != null)
+                    {
+                        foreach (var auditRecord in Model.ResumeAuditRecords)
+                        {
+                            <tr>
+                                <td>@auditRecord.CreatorUserName</td>
+                                <td>
+                                    @if (auditRecord.Passed)
+                                    {
+                                        <span class="text-success">通过</span> }
+                                    else
+                                    {
+                                        <span class="text-danger">未通过</span>
+                                        <text>@auditRecord.Remark</text>}
+                                </td>
+                                <td>@auditRecord.CreationTime</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
     </div>
     <div class="card-footer">
         @if (Model.OwnerUserId == UserIdentifier.UserId)

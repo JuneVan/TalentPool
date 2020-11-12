@@ -2,11 +2,11 @@
 
 namespace TalentPool.Web.Models.ResumeViewModels
 {
-    public class GenerateKeywordViewModel
+    public class RemoveAttachmentViewModel
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
-        public string Keywords { get; set; }
+        public Guid AttachmentId { get; set; }
+        public string FileName { get; set; }
     }
 }

@@ -119,17 +119,33 @@ namespace TalentPool.Web.Controllers
         public async Task<IActionResult> Export(DateTime date)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+             
+            //今日调查人数(今日有更新的调查记录数)  
+            var investigations = await _investigationQuerier.GetReportInvestigationsAsync(date);
 
-            var startedTime = date;
-            var endedTime = startedTime.AddDays(1);
+            // 进行职位过滤处理
+            var jobs = new List<string>();
+            foreach (string key in Request.Form.Keys)
+            {
+                if (key.StartsWith("Job.", StringComparison.Ordinal) && Request.Form[key] == "on")
+                {
+                    string roleName = key.Substring("Job.".Length);
+                    jobs.Add(roleName);
+                }
+            }
+            var investigationList = new List<ReportInvestigationDto>(); 
+            for (int i = 0; i < investigations.Count; i++)
+            {
+                // 过滤职位
+                if (!jobs.Contains(investigations[i].JobName))
+                    continue;
+
+                investigationList.Add(investigations[i]);
+            }
 
             #region 调查报表
             using (ExcelPackage package = new ExcelPackage())
-            {
-
-                //今日调查人数(今日有更新的调查记录数)  
-                var investigations = await _investigationQuerier.GetReportInvestigationsAsync(date);
-
+            { 
                 //02
                 var worksheet01 = package.Workbook.Worksheets.Add("意向调查表");
                 var columnNames2 = new string[] {
@@ -141,11 +157,11 @@ namespace TalentPool.Web.Controllers
                     "简历",
                     "意向调查",
                     "技术评测",
+                    "是否接受出差",
+                    "籍贯",
                     "来源",
                     "调查时间",
                     "调查人",
-                    "是否接受出差",
-                    "籍贯",
                     "现居住城市",
                     "是否现场面试",
                     "面试时间",
@@ -155,29 +171,28 @@ namespace TalentPool.Web.Controllers
                 {
                     worksheet01.Cells[1, i + 1].Value = columnNames2[i];
                 }
-                worksheet01.Cells[1, 1, 1, 17].Style.Font.Bold = true;
-
-                for (int i = 0; i < investigations.Count; i++)
+                worksheet01.Cells[1, 1, 1, 17].Style.Font.Bold = true; 
+                for (int i = 0; i < investigationList.Count; i++)
                 {
                     try
                     {
                         worksheet01.Cells[i + 2, 1, i + 2, 17].Style.Fill.PatternType = ExcelFillStyle.Solid;
                         /** 颜色***/
                         //未开始调查状态(默认
-                        if (investigations[i].Status == InvestigationStatus.NoStart)
+                        if (investigationList[i].Status == InvestigationStatus.NoStart)
                         {
                             worksheet01.Cells[i + 2, 1, i + 2, 17].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 255, 255));
                         }
-                        else if (investigations[i].Status == InvestigationStatus.Ongoing)
+                        else if (investigationList[i].Status == InvestigationStatus.Ongoing)
                         {
-                            if (!investigations[i].IsConnected.HasValue || !investigations[i].IsConnected.Value)
+                            if (!investigationList[i].IsConnected.HasValue || !investigationList[i].IsConnected.Value)
                             {
                                 worksheet01.Cells[i + 2, 1, i + 2, 17].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(108, 117, 125));//secondary
                             }
                             else //已接通 
                             {
 
-                                if (investigations[i].AcceptTravelStatus == AcceptTravelStatus.Consider)
+                                if (investigationList[i].AcceptTravelStatus == AcceptTravelStatus.Consider)
                                 {
                                     worksheet01.Cells[i + 2, 1, i + 2, 17].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 193, 7));//yellow
                                 }
@@ -189,7 +204,7 @@ namespace TalentPool.Web.Controllers
                         }
                         else
                         {
-                            if (!investigations[i].IsQualified.HasValue || !investigations[i].IsQualified.Value)
+                            if (!investigationList[i].IsQualified.HasValue || !investigationList[i].IsQualified.Value)
                             {
                                 //不合格
                                 worksheet01.Cells[i + 2, 1, i + 2, 17].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 255, 255));
@@ -201,27 +216,27 @@ namespace TalentPool.Web.Controllers
                         }
                         /** 颜色***/
 
-                        worksheet01.Cells[i + 2, 1].Value = investigations[i].CreationTime.ToString("yyyy-MM-dd");
+                        worksheet01.Cells[i + 2, 1].Value = investigationList[i].CreationTime.ToString("yyyy-MM-dd");
 
-                        if (!investigations[i].IsConnected.HasValue || !investigations[i].IsConnected.Value)//未接
+                        if (!investigationList[i].IsConnected.HasValue || !investigationList[i].IsConnected.Value)//未接
                         {
-                            worksheet01.Cells[i + 2, 2].Value = $"{investigations[i].Name}(未接)";
+                            worksheet01.Cells[i + 2, 2].Value = $"{investigationList[i].Name}(未接)";
                         }
                         else
                         {
-                            worksheet01.Cells[i + 2, 2].Value = investigations[i].Name;
+                            worksheet01.Cells[i + 2, 2].Value = investigationList[i].Name;
                         }
-                        worksheet01.Cells[i + 2, 3].Value = investigations[i].ExpectedSalary;
-                        worksheet01.Cells[i + 2, 4].Value = investigations[i].PhoneNumber;
-                        worksheet01.Cells[i + 2, 5].Value = investigations[i].JobName;
+                        worksheet01.Cells[i + 2, 3].Value = investigationList[i].ExpectedSalary;
+                        worksheet01.Cells[i + 2, 4].Value = investigationList[i].PhoneNumber;
+                        worksheet01.Cells[i + 2, 5].Value = investigationList[i].JobName;
 
-                        string name = new Regex("[\u4e00-\u9fa5]{1,5}").Match(investigations[i].Name).Value;
-                        if (!string.IsNullOrEmpty(investigations[i].Description))
+                        string name = new Regex("[\u4e00-\u9fa5]{1,5}").Match(investigationList[i].Name).Value;
+                        if (!string.IsNullOrEmpty(investigationList[i].Description))
                         {
                             //添加简历记录
                             var resumeWorksheet = package.Workbook.Worksheets.Add($"{name}简历");
 
-                            AddHtmlToWorksheet(investigations[i].Description, resumeWorksheet, "意向调查表!A1");
+                            AddHtmlToWorksheet(investigationList[i].Description, resumeWorksheet, "意向调查表!A1");
 
 
                             worksheet01.Cells[i + 2, 6].Style.Font.UnderLine = true;
@@ -229,12 +244,12 @@ namespace TalentPool.Web.Controllers
                             worksheet01.Cells[i + 2, 6].Hyperlink = new ExcelHyperLink($"{name}简历!A1", "简历");
 
                         }
-                        if (!string.IsNullOrEmpty(investigations[i].Information))
+                        if (!string.IsNullOrEmpty(investigationList[i].Information))
                         {
                             //添加意向调查
                             var investigaionWorksheet = package.Workbook.Worksheets.Add($"{name}意向调查");
 
-                            AddHtmlToWorksheet(investigations[i].Information, investigaionWorksheet, "意向调查表!A1");
+                            AddHtmlToWorksheet(investigationList[i].Information, investigaionWorksheet, "意向调查表!A1");
 
                             worksheet01.Cells[i + 2, 7].Style.Font.UnderLine = true;
                             worksheet01.Cells[i + 2, 7].Style.Font.Color.SetColor(Color.Blue);
@@ -242,12 +257,12 @@ namespace TalentPool.Web.Controllers
 
 
                         }
-                        if (!string.IsNullOrEmpty(investigations[i].Evaluation))
+                        if (!string.IsNullOrEmpty(investigationList[i].Evaluation))
                         {
                             //添加技术评测
                             var evaluationWorksheet = package.Workbook.Worksheets.Add($"{name}技术评测");
 
-                            AddHtmlToWorksheet(investigations[i].Evaluation, evaluationWorksheet, "意向调查表!A1");
+                            AddHtmlToWorksheet(investigationList[i].Evaluation, evaluationWorksheet, "意向调查表!A1");
 
                             worksheet01.Cells[i + 2, 8].Style.Font.UnderLine = true;
                             worksheet01.Cells[i + 2, 8].Style.Font.Color.SetColor(Color.Blue);
@@ -255,24 +270,25 @@ namespace TalentPool.Web.Controllers
 
 
                         }
-                        worksheet01.Cells[i + 2, 9].Value = investigations[i].PlatformName;
-                        worksheet01.Cells[i + 2, 10].Value = investigations[i].InvestigateDate.ToString("yyyy-MM-dd");
-                        worksheet01.Cells[i + 2, 11].Value = investigations[i].OwnerUserName;
-                        worksheet01.Cells[i + 2, 12].Value = investigations[i].AcceptTravelStatus.GetDescription();
-                        worksheet01.Cells[i + 2, 13].Value = investigations[i].CityOfDomicile;
-                        worksheet01.Cells[i + 2, 14].Value = investigations[i].CityOfResidence;
-                        worksheet01.Cells[i + 2, 15].Value = (investigations[i].IsAcceptInterview.HasValue && investigations[i].IsAcceptInterview.Value) ? "是" : "否";
-                        worksheet01.Cells[i + 2, 16].Value = investigations[i].ExpectedInterviewDate;
-                        if (investigations[i].IsQualified.HasValue && investigations[i].IsQualified.Value)
+
+                        worksheet01.Cells[i + 2, 9].Value = investigationList[i].AcceptTravelStatus.GetDescription();
+                        worksheet01.Cells[i + 2, 10].Value = investigationList[i].CityOfDomicile;
+                        worksheet01.Cells[i + 2, 11].Value = investigationList[i].PlatformName;
+                        worksheet01.Cells[i + 2, 12].Value = investigationList[i].InvestigateDate.ToString("yyyy-MM-dd");
+                        worksheet01.Cells[i + 2, 13].Value = investigationList[i].OwnerUserName;
+                        worksheet01.Cells[i + 2, 14].Value = investigationList[i].CityOfResidence;
+                        worksheet01.Cells[i + 2, 15].Value = (investigationList[i].IsAcceptInterview.HasValue && investigationList[i].IsAcceptInterview.Value) ? "是" : "否";
+                        worksheet01.Cells[i + 2, 16].Value = investigationList[i].ExpectedInterviewDate;
+                        if (investigationList[i].IsQualified.HasValue && investigationList[i].IsQualified.Value)
                         {
                             worksheet01.Cells[i + 2, 17].Value = "合格";
                         }
                         else
                         {
 
-                            if (!string.IsNullOrEmpty(investigations[i].UnconnectedRemark))
+                            if (!string.IsNullOrEmpty(investigationList[i].UnconnectedRemark))
                             {
-                                worksheet01.Cells[i + 2, 17].Value = $"不合格({investigations[i].UnconnectedRemark})";
+                                worksheet01.Cells[i + 2, 17].Value = $"不合格({investigationList[i].UnconnectedRemark})";
                             }
                             else
                             {
@@ -284,7 +300,6 @@ namespace TalentPool.Web.Controllers
                     {
                         _logger.LogError(ex, $"导出报告异常[Name:{investigations[i].Name}]");
                     }
-
                 }
                 return File(package.GetAsByteArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{date:yyyy-MM-dd} 意向调查报告.xlsx");
 

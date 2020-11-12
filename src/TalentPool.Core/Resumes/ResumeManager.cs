@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 namespace TalentPool.Resumes
 {
     public class ResumeManager : ObjectDisposable
-    {
-        private bool _disposed;
+    { 
         private readonly ITokenProvider _tokenProvider;
         public ResumeManager(IResumeStore resumeStore,
             IResumeAuditSettingStore resumeAuditSettingStore,
@@ -157,7 +156,7 @@ namespace TalentPool.Resumes
                 throw new ArgumentNullException(nameof(ownerUserId));
             resume.OwnerUserId = ownerUserId;
             await ResumeStore.UpdateAsync(resume, CancellationToken);
-        }  
+        }
         internal async Task<List<ResumeKeywordMap>> GetResumeKeyMapsAsync(string keyword)
         {
             if (string.IsNullOrEmpty(keyword))
@@ -175,6 +174,30 @@ namespace TalentPool.Resumes
             if (resumeKeywordMaps == null)
                 throw new ArgumentNullException(nameof(resumeKeywordMaps));
             await ResumeStore.RemoveResumeKeyMapsAsync(resumeKeywordMaps, CancellationToken);
+        }
+
+        public async Task AddAttachmentAsync(Resume resume, List<ResumeAttachment> attachments)
+        {
+            if (resume == null)
+                throw new ArgumentNullException(nameof(resume));
+            if (attachments == null)
+                throw new ArgumentNullException(nameof(attachments));
+            if (resume.Attachments == null)
+                resume.Attachments = new List<ResumeAttachment>();
+            foreach (var attachment in attachments)
+            {
+                resume.Attachments.Add(attachment);
+            }
+            await ResumeStore.UpdateAsync(resume, CancellationToken);
+        }
+        public async Task RemoveAttachmentAsync(Resume resume, ResumeAttachment attachment)
+        {
+            if (resume == null)
+                throw new ArgumentNullException(nameof(resume));
+            if (attachment == null)
+                throw new ArgumentNullException(nameof(attachment)); 
+            resume.Attachments.Remove(attachment);
+            await ResumeStore.UpdateAsync(resume, CancellationToken);
         }
 
         protected override void DisposeUnmanagedResource()

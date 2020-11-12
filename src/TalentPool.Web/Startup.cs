@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TalentPool.EntityFrameworkCore.Seeds;
+using TalentPool.Infrastructure.Exceptions;
 
 namespace TalentPool.Web
 {
@@ -27,14 +28,18 @@ namespace TalentPool.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //entityframework
-            //using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            //{
-            //    new SeedHelper(serviceScope.ServiceProvider).SeedDb();
-            //}
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                new SeedHelper(serviceScope.ServiceProvider).SeedDb();
+            }
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseMiddleware<ExceptionMiddleware>();
             }
             app.UseStaticFiles();
             app.UseAuthentication();

@@ -33,15 +33,10 @@ namespace TalentPool.Web.Mappings
             CreateMap<Resume, TrashResumeViewModel>();
             CreateMap<Resume, SendEmailViewModel>();
             CreateMap<ResumeCompare, ResumeCompareDto>();
+            CreateMap<Resume, UploadAttachmentViewModel>();
+            CreateMap<ResumeAttachment, ResumeAttachmentDto>();
 
-            CreateMap<Resume, GenerateKeywordViewModel>()
-              .AfterMap((src, dest) =>
-              {
-                  if (src.KeyMaps != null)
-                  {
-                      dest.Keywords = string.Join(" ", src.KeyMaps.Select(s => s.Keyword));
-                  } 
-              });
+            CreateMap<Resume, RemoveAttachmentViewModel>();
         }
     }
 }

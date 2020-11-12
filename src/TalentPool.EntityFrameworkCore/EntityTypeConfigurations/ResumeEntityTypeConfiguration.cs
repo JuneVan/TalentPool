@@ -24,6 +24,7 @@ namespace TalentPool.EntityFrameworkCore.EntityTypeConfigurations
             builder.HasMany(m => m.KeyMaps).WithOne().HasForeignKey(k => k.ResumeId);
             builder.HasMany(m => m.ResumeCompares).WithOne().HasForeignKey(k => k.ResumeId);
             builder.HasMany(m => m.AuditRecords).WithOne().HasForeignKey(k => k.ResumeId);
+            builder.HasMany(m => m.Attachments).WithOne().HasForeignKey(k => k.ResumeId);
 
             builder.HasIndex(i => i.PhoneNumber).HasName("Index_PhoneNumber");
             builder.HasIndex(i => i.PlatformId).HasName("Index_PlatformId");
