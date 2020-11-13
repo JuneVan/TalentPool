@@ -70,16 +70,16 @@ namespace TalentPool.Web.Controllers
             if (CustomSetting.DefaultOnlySeeMyselfData)
             {
                 var todayResumes = mothlyResumes.Where(w => w.CreatorUserId == userId && w.CreationTime >= startTime && w.CreationTime <= endTime).ToList();
-                todayResumeData.PassedCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.Complete );
-                todayResumeData.UnpassedCount = todayResumes.Count - todayResumeData.PassedCount;
+                todayResumeData.PassedCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.Complete);
                 todayResumeData.UnhandledCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.NoStart || w.AuditStatus == AuditStatus.Ongoing);
+                todayResumeData.UnpassedCount = todayResumes.Count - todayResumeData.PassedCount - todayResumeData.UnhandledCount;
             }
             else
             {
                 var todayResumes = mothlyResumes.Where(w => w.CreationTime >= startTime && w.CreationTime <= endTime).ToList();
-                todayResumeData.PassedCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.Complete);
-                todayResumeData.UnpassedCount = todayResumes.Count - todayResumeData.PassedCount;
+                todayResumeData.PassedCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.Complete); 
                 todayResumeData.UnhandledCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.NoStart || w.AuditStatus == AuditStatus.Ongoing);
+                todayResumeData.UnpassedCount = todayResumes.Count - todayResumeData.PassedCount - todayResumeData.UnhandledCount;
             }
 
 
@@ -215,7 +215,7 @@ namespace TalentPool.Web.Controllers
                 {
                     FullName = group.Key,
                     TotalCount = weekResumesByGroup.Count,
-                    QualifiedCount = weekResumesByGroup.Count(c => c.AuditStatus == AuditStatus.Complete ),
+                    QualifiedCount = weekResumesByGroup.Count(c => c.AuditStatus == AuditStatus.Complete),
                     Photo = photo
                 });
                 // 天
@@ -224,7 +224,7 @@ namespace TalentPool.Web.Controllers
                 {
                     FullName = group.Key,
                     TotalCount = dayResumesByGroup.Count,
-                    QualifiedCount = dayResumesByGroup.Count(c => c.AuditStatus == AuditStatus.Complete ),
+                    QualifiedCount = dayResumesByGroup.Count(c => c.AuditStatus == AuditStatus.Complete),
                     Photo = photo
                 });
 
