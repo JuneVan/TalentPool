@@ -281,7 +281,7 @@
 
                                         @if (item.InvestigationDate.HasValue)
                                         {
-                                            var days = (item.InvestigationDate.Value.Date - DateTime.Now.Date).TotalDays;
+                                            var days = ( DateTime.Now.Date- item.InvestigationDate.Value.Date).TotalDays;
                                             if (days == 1)
                                             {
                                                 <i class="fas fa-exclamation-circle text-warning" title="今日还未能及时跟进！" data-toggle="tooltip" data-placement="top"></i> 
