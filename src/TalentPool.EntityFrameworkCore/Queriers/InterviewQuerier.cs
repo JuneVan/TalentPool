@@ -105,7 +105,7 @@ namespace TalentPool.EntityFrameworkCore.Queriers
                 query = query.Where(w => w.Name.Contains(input.Keyword));
             if (input.StartTime.HasValue && input.EndTime.HasValue)
                 query = query.Where(w => w.AppointmentTime >= input.StartTime && w.AppointmentTime <= input.EndTime);
-            if (input.CreatorUserId.HasValue)
+            if (input.CreatorUserId.HasValue && input.CreatorUserId.Value != Guid.Empty)
                 query = query.Where(w => w.CreatorUserId == input.CreatorUserId);
             if (input.Status.HasValue)
                 query = query.Where(w => w.Status == (InterviewStatus)input.Status.Value);

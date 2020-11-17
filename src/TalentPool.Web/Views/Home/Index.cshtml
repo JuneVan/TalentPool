@@ -197,11 +197,11 @@
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="group-dropdown">
                                                 @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Interview/View/" + item.Id, Pages.Interview, "dropdown-item"))
-                                                @if (item.CreatorUserId == UserIdentifier.UserId)
+                                                @if (UserIdentifier.UserId == item.CreatorUserId)
                                                 {
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Interview/Edit/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("履约/爽约", "/Interview/Change/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("取消", "/Interview/Cancel/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
+                                                   @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Interview/Edit/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item")) 
+                                                   @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("履约/爽约", "/Interview/Change/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
+                                                   @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("取消预约", "/Interview/Cancel/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item")) 
                                                 }
                                             </div>
                                         </div>
@@ -259,17 +259,21 @@
 
                                         @if (item.EvaluationTime.HasValue && item.EvaluationTime.Value > DateTime.Now)
                                         {
-                                            <small class="badge badge-danger" title="预约评测时间-@item.EvaluationTime" data-toggle="tooltip" data-placement="top">待评测</small>
+                                            <small class="badge badge-info" title="预约评测时间-@item.EvaluationTime" data-toggle="tooltip" data-placement="top">待评测</small>
                                         }
                                         else
                                         {
-                                            if (item.CreationTime < DateTime.Now.Date)
+                                            if (item.InvestigationDate.HasValue)
                                             {
-                                                <span class="badge badge-primary" title="往期未完成任务，请及时跟进。" data-toggle="tooltip" data-placement="top">待跟进</span>
-                                            }
-                                            else if (item.CreationTime > DateTime.Now.Date && !item.Status.HasValue)
-                                            {
-                                                <small class="badge badge-success" title="今日新增简历，未安排调查" data-toggle="tooltip" data-placement="top">新增</small>
+                                                var days = (DateTime.Now.Date - item.InvestigationDate.Value.Date).TotalDays;
+                                                if (days == 1)
+                                                {
+                                                    <span class="badge badge-warning" title="未完成调查任务，请继续跟进！" data-toggle="tooltip" data-placement="top">待跟进</span>
+                                                }
+                                                else if(days>1)
+                                                {
+                                                    <span class="badge badge-danger" title="未完成调查任务，你有 @days 天未跟进！" data-toggle="tooltip" data-placement="top">待跟进</span>
+                                                }
                                             }
                                         }
                                     </td>
@@ -278,19 +282,6 @@
                                     <td onclick="onCopy(this,'@item.PlatformId')" title="单击本区域，可复制平台ID" data-toggle="tooltip" data-placement="top">@item.PlatformId</td>
                                     <td>@item.PhoneNumber</td>
                                     <td>
-
-                                        @if (item.InvestigationDate.HasValue)
-                                        {
-                                            var days = ( DateTime.Now.Date- item.InvestigationDate.Value.Date).TotalDays;
-                                            if (days == 1)
-                                            {
-                                                <i class="fas fa-exclamation-circle text-warning" title="今日还未能及时跟进！" data-toggle="tooltip" data-placement="top"></i> 
-                                            }
-                                            else
-                                            {
-                                                <i class="fas fa-exclamation-circle text-danger" title="已经 @days 天未跟进！" data-toggle="tooltip" data-placement="top"></i>
-                                            } 
-                                        }
                                         @item.InvestigationDate?.Date.ToShortDateString()
                                     </td>
                                     <td>
