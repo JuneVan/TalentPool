@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TalentPool.Application.Interviews;
 using TalentPool.Application.Investigations;
 using TalentPool.Application.Resumes;
+using TalentPool.Infrastructure.Notify;
 using TalentPool.Investigations;
 using TalentPool.Resumes;
 using TalentPool.Web.Models.IndexViewModels;
@@ -77,7 +78,7 @@ namespace TalentPool.Web.Controllers
             else
             {
                 var todayResumes = mothlyResumes.Where(w => w.CreationTime >= startTime && w.CreationTime <= endTime).ToList();
-                todayResumeData.PassedCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.Complete); 
+                todayResumeData.PassedCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.Complete);
                 todayResumeData.UnhandledCount = todayResumes.Count(w => w.AuditStatus == AuditStatus.NoStart || w.AuditStatus == AuditStatus.Ongoing);
                 todayResumeData.UnpassedCount = todayResumes.Count - todayResumeData.PassedCount - todayResumeData.UnhandledCount;
             }
@@ -151,6 +152,7 @@ namespace TalentPool.Web.Controllers
 
             }
             model.ResumeMonthlyData = resumeMonthlyData;
+
             // 月调查统计图
             var investigationMonthlyData = new MonthlyData()
             {
@@ -305,7 +307,12 @@ namespace TalentPool.Web.Controllers
                 var todoTasks = await _interviewQuerier.GetUnfinshInterviewsAsync(null);
                 model.InterviewTasks = todoTasks;
             }
-
+            // 过期预约
+            var expriedInterviewCount = model.InterviewTasks.Count(w => w.AppointmentTime < DateTime.Now & w.CreatorUserId == userId);
+            if (expriedInterviewCount > 0)
+            {
+                Notifier.Error($"你有{expriedInterviewCount}条面试预约记录超过预约时间，请及时处理。");
+            }
             #endregion
 
             return View(model);
