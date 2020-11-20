@@ -56,6 +56,7 @@
                         <a class="list-group-item active" data-toggle="list" href="#list-resume-day" role="tab" aria-controls="day">今日</a>
                         <a class="list-group-item" data-toggle="list" href="#list-resume-week" role="tab" aria-controls="week">本周</a>
                         <a class="list-group-item " data-toggle="list" href="#list-resume-monthly" role="tab" aria-controls="monthly">本月</a>
+                        <a class="list-group-item " data-toggle="list" href="#list-resume-yearly" role="tab" aria-controls="yearly">今年</a>
                     </div>
                 </div>
             </div>
@@ -80,6 +81,12 @@
                             @await Html.PartialAsync("Partials/_UserRankPartial", new { RankData = Model.ResumeRankData.MonthlyUserRanks, RankDataType = 0 })
                         }
                     </div>
+                    <div class="tab-pane fade table-responsive" id="list-resume-yearly" role="tabpanel">
+                        @if (Model.ResumeRankData != null)
+                        {
+                            @await Html.PartialAsync("Partials/_UserRankPartial", new { RankData = Model.ResumeRankData.YearlyUserRanks, RankDataType = 0 })
+                        }
+                    </div>
                 </div>
             </div>
         </div>
@@ -94,6 +101,7 @@
                         <a class="list-group-item active" data-toggle="list" href="#list-investigation-day" role="tab" aria-controls="day">今日</a>
                         <a class="list-group-item" data-toggle="list" href="#list-investigation-week" role="tab" aria-controls="week">本周</a>
                         <a class="list-group-item " data-toggle="list" href="#list-investigation-monthly" role="tab" aria-controls="monthly">本月</a>
+                        <a class="list-group-item " data-toggle="list" href="#list-investigation-yearly" role="tab" aria-controls="yearly">今年</a>
                     </div>
                 </div>
             </div>
@@ -116,6 +124,12 @@
                         @if (Model.InvestigaionRankData != null)
                         {
                             @await Html.PartialAsync("Partials/_UserRankPartial", new { RankData = Model.InvestigaionRankData.MonthlyUserRanks, RankDataType = 1 })
+                        }
+                    </div>
+                    <div class="tab-pane fade table-responsive" id="list-investigation-yearly" role="tabpanel">
+                        @if (Model.InvestigaionRankData != null)
+                        {
+                            @await Html.PartialAsync("Partials/_UserRankPartial", new { RankData = Model.InvestigaionRankData.YearlyUserRanks, RankDataType = 1 })
                         }
                     </div>
                 </div>

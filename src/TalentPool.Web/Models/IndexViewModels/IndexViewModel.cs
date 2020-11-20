@@ -87,6 +87,7 @@ namespace TalentPool.Web.Models.IndexViewModels
     }
     public class RankData
     {
+        public List<UserRankData> YearlyUserRanks { get; set; }
         public List<UserRankData> MonthlyUserRanks { get; set; }
         public List<UserRankData> WeekUserRanks { get; set; }
         public List<UserRankData> DayUserRanks { get; set; }
