@@ -23,38 +23,47 @@
         </tr>
     </thead>
     <tbody>
-        @for (int i = 0; i < rankData.Count; i++)
+        @if (rankData.Count > 0)
+        {
+            @for (int i = 0; i < rankData.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @if (i == 0)
+                        {
+                            <span class="badge badge-success">1</span>
+                        }
+                        else if (i == 1)
+                        {
+                            <span class="badge badge-danger">2</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-light">@(i+1)</span>
+                        }
+                    </td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(rankData[i].Photo))
+                        {
+                            <img src="@rankData[i].Photo" class="img-fluid rounded" width="30">
+                        }
+                        else
+                        {
+                            <img src="~/img/default-avator.jpeg" class="img-fluid rounded" width="30">
+                        }
+                    </td>
+                    <td>@rankData[i].FullName</td>
+                    <td>@rankData[i].TotalCount</td>
+                    <td>@rankData[i].QualifiedCount</td>
+                </tr>
+
+            }
+        }
+        else
         {
             <tr>
-                <td>
-                    @if (i == 0)
-                    {
-                        <span class="badge badge-success">1</span>
-                    }
-                    else if (i == 1)
-                    {
-                        <span class="badge badge-danger">2</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-light">@(i+1)</span>
-                    }
-                </td>
-                <td>
-                    @if (!string.IsNullOrEmpty(rankData[i].Photo))
-                    {
-                        <img src="@rankData[i].Photo" class="img-fluid rounded" width="30">
-                    }
-                    else
-                    { 
-                        <img src="~/img/default-avator.jpeg" class="img-fluid rounded" width="30">
-                    }
-                </td>
-                <td>@rankData[i].FullName</td>
-                <td>@rankData[i].TotalCount</td>
-                <td>@rankData[i].QualifiedCount</td>
+                <td colspan="5" class="text-center">无记录</td>
             </tr>
-
         }
     </tbody>
 </table>
