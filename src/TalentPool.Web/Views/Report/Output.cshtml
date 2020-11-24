@@ -69,6 +69,36 @@
             {
                 <dd>无可统计数据</dd>
             }
+            <dt>面试预约情况</dt>
+            @foreach (var item in Model.InterviewStatisticTotalInfo.InterviewStatisModels)
+            {
+                <dd>@item.JobName ：预约人数 @item.TotalCount 人 / 实到人数 @item.VisitedCount 人  </dd>
+
+            }
+            <dd>失约人员统计：</dd>
+            <dd> 
+                <table class="table table-border">
+                    <thead>
+                        <tr>
+                            <th>姓名</th>
+                            <th>职位</th>
+                            <th>预约时间</th>
+                            <th>原因</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.InterviewStatisticTotalInfo.UninterviewModels)
+                        {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.JobName</td>
+                            <td>@item.AppointmentTime.ToString("yyyy/MM/dd HH:mm")</td>
+                            <td>@item.Remark</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </dd>
         </dl>
 
     </div>
@@ -328,7 +358,7 @@
                                 <label class="form-check-label" for="Job#@item.JobName">@item.JobName</label>
                             </div>
                         }
-                    } 
+                    }
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>

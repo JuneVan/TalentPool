@@ -13,5 +13,6 @@ namespace TalentPool.Application.Interviews
         public Guid CreatorUserId { get; set; }
         public string CreatorUserName { get; set; }
         public InterviewStatus Status { get; set; } 
+        public DateTime CreationTime { get; set; }
     }
 }

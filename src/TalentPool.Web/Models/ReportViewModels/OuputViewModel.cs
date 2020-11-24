@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using TalentPool.Application.Interviews;
 using TalentPool.Application.Investigations;
 
 namespace TalentPool.Web.Models.ReportViewModels
@@ -18,6 +20,9 @@ namespace TalentPool.Web.Models.ReportViewModels
         public List<ReportInvestigationDto> Investigations { get; set; }
         // 职位统计
         public JobStatisticTotalModel JobStatisticTotalInfo { get; set; }
+
+        // 今日面试情况
+        public InterviewStatisticTotalModel InterviewStatisticTotalInfo { get; set; }
 
     }
     //简历城市分布统计
@@ -54,4 +59,38 @@ namespace TalentPool.Web.Models.ReportViewModels
         public string JobName { get; set; }
         public int Count { get; set; }
     }
+
+    public class InterviewStatisticTotalModel
+    {
+        public List<InterviewStatisModel> InterviewStatisModels { get; set; }
+
+        public List<UninterviewModel> UninterviewModels { get; set; }
+    }
+    public class InterviewStatisModel
+    {
+        /// <summary>
+        /// 职位
+        /// </summary>
+        public string JobName { get; set; }
+        /// <summary>
+        /// 应到人数
+        /// </summary>
+        public int TotalCount { get; set; }
+        /// <summary>
+        /// 实到人数
+        /// </summary>
+        public int VisitedCount { get; set; } 
+
+    }
+    /// <summary>
+    /// 未到人员统计
+    /// </summary>
+    public class UninterviewModel
+    {
+        public string Name { get; set; }
+        public string JobName { get; set; }
+        public DateTime AppointmentTime { get; set; }
+        public string Remark { get; set; }
+    }
+
 }

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TalentPool.Application.DailyStatistics;
+using TalentPool.Application.Interviews;
 using TalentPool.Application.Investigations;
 using TalentPool.Application.Resumes;
 using TalentPool.Infrastructure.Extensions;
@@ -23,10 +24,12 @@ namespace TalentPool.Web.Controllers
         private readonly IInvestigationQuerier _investigationQuerier;
         private readonly IResumeQuerier _resumeQuerier;
         private readonly IDailyStatisticQuerier _dailyStatisticQuerier;
+        private readonly IInterviewQuerier _interviewQuerier;
         private readonly ILogger _logger;
         public ReportController(IInvestigationQuerier investigationQuerier,
             IResumeQuerier resumeQuerier,
             IDailyStatisticQuerier dailyStatisticQuerier,
+            IInterviewQuerier interviewQuerier,
             ILogger<ReportController> logger,
             IServiceProvider serviceProvider)
             : base(serviceProvider)
@@ -34,6 +37,7 @@ namespace TalentPool.Web.Controllers
             _investigationQuerier = investigationQuerier;
             _resumeQuerier = resumeQuerier;
             _dailyStatisticQuerier = dailyStatisticQuerier;
+            _interviewQuerier = interviewQuerier;
             _logger = logger;
         }
         [ResponseCache(Duration = 6 * 60)]
@@ -46,7 +50,40 @@ namespace TalentPool.Web.Controllers
             model.Date = date.ToString("yyyy-MM-dd");
             // 调查记录
             var investigations = await _investigationQuerier.GetReportInvestigationsAsync(date);
-            ; model.Investigations = investigations;
+            model.Investigations = investigations;
+
+            // 面试情况
+            var interviews = await _interviewQuerier.GetReportInterviewsAsync(date);
+            model.InterviewStatisticTotalInfo = new InterviewStatisticTotalModel()
+            {
+                InterviewStatisModels = new List<InterviewStatisModel>(),
+                UninterviewModels = new List<UninterviewModel>()
+            };
+            var interviewByGroups = interviews.GroupBy(g => g.JobName);
+            foreach (var interviewByGroup in interviewByGroups)
+            {
+                var totalCount = interviewByGroup.Count();
+                var uninterviews = interviews.Where(w => w.JobName == interviewByGroup.Key);
+
+                model.InterviewStatisticTotalInfo.InterviewStatisModels.Add(new InterviewStatisModel()
+                {
+                    JobName = interviewByGroup.Key,
+                    TotalCount = totalCount,
+                    VisitedCount = totalCount - uninterviews.Count()
+                });
+                foreach (var uninterview in uninterviews)
+                {
+                    model.InterviewStatisticTotalInfo.UninterviewModels.Add(new UninterviewModel()
+                    {
+                        Name = uninterview.Name,
+                        JobName = uninterview.JobName,
+                        AppointmentTime = uninterview.AppointmentTime,
+                        Remark = uninterview.Remark
+                    });
+                }
+            }
+
+
 
 
             //平台数据统计 
@@ -119,7 +156,7 @@ namespace TalentPool.Web.Controllers
         public async Task<IActionResult> Export(DateTime date)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-             
+
             //今日调查人数(今日有更新的调查记录数)  
             var investigations = await _investigationQuerier.GetReportInvestigationsAsync(date);
 
@@ -133,7 +170,7 @@ namespace TalentPool.Web.Controllers
                     jobs.Add(roleName);
                 }
             }
-            var investigationList = new List<ReportInvestigationDto>(); 
+            var investigationList = new List<ReportInvestigationDto>();
             for (int i = 0; i < investigations.Count; i++)
             {
                 // 过滤职位
@@ -145,7 +182,7 @@ namespace TalentPool.Web.Controllers
 
             #region 调查报表
             using (ExcelPackage package = new ExcelPackage())
-            { 
+            {
                 //02
                 var worksheet01 = package.Workbook.Worksheets.Add("意向调查表");
                 var columnNames2 = new string[] {
@@ -171,7 +208,7 @@ namespace TalentPool.Web.Controllers
                 {
                     worksheet01.Cells[1, i + 1].Value = columnNames2[i];
                 }
-                worksheet01.Cells[1, 1, 1, 17].Style.Font.Bold = true; 
+                worksheet01.Cells[1, 1, 1, 17].Style.Font.Bold = true;
                 for (int i = 0; i < investigationList.Count; i++)
                 {
                     try

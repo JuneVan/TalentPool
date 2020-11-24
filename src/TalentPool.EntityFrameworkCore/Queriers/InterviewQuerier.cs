@@ -135,6 +135,25 @@ namespace TalentPool.EntityFrameworkCore.Queriers
             return await query.ToListAsync(CancellationToken);
         }
 
+        public async Task<List<ReportInterviewDto>> GetReportInterviewsAsync(DateTime date)
+        {
+            var query = from a in _context.Interviews
+                        join b in _context.Resumes on a.ResumeId equals b.Id
+                        join d in _context.Jobs on b.JobId equals d.Id 
+                        orderby a.AppointmentTime
+                        where a.Status == InterviewStatus.NotArrived
+                        select new ReportInterviewDto()
+                        { 
+                            Name = a.Name,
+                            AppointmentTime = a.AppointmentTime,
+                            JobName = d.Title, 
+                            Remark = a.Remark,
+                            VisitedTime = a.VisitedTime
+                        }; 
+            query = query.Where(w => w.AppointmentTime.Date == date.Date);
+            return await query.ToListAsync();
+        }
+
         public async Task<List<UnfinshInterviewDto>> GetUnfinshInterviewsAsync(Guid? creatorUserId)
         {
             var query = from a in _context.Interviews
@@ -152,7 +171,8 @@ namespace TalentPool.EntityFrameworkCore.Queriers
                             PhoneNumber = b.PhoneNumber,
                             CreatorUserId = a.CreatorUserId,
                             CreatorUserName = e.FullName,
-                            Status = a.Status
+                            Status = a.Status,
+                            CreationTime = a.CreationTime
                         };
             if (creatorUserId.HasValue)
                 query = query.Where(w => w.CreatorUserId == creatorUserId);

@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using TalentPool.Application.Interviews;
 using TalentPool.Application.Jobs;
@@ -205,6 +207,36 @@ namespace TalentPool.Web.Controllers
             Notifier.Warning($"未找到id:{id}的面试预约记录。");
             return RedirectToAction(nameof(List));
         }
+        // 导出预约中的面试预约
+        public async Task<IActionResult> InterviewingExport()
+        {
+            var interviews = await _interviewQuerier.GetUnfinshInterviewsAsync(null);
+            var interviewGroups = interviews.GroupBy(g => g.JobName);
 
+            using (MemoryStream memoryStream = new MemoryStream())
+            {  
+                using (StreamWriter streamWriter = new StreamWriter(memoryStream, Encoding.UTF8))
+                {
+                    streamWriter.WriteLine($"{DateTime.Now:yyyy-MM-dd} 面试名单\r");
+                    foreach (var interviewGroup in interviewGroups)
+                    {
+                        streamWriter.WriteLine($"{interviewGroup.Key}:{interviewGroup.Count()}个");
+                        var interviewsByGroup = interviews.Where(w => w.JobName == interviewGroup.Key).ToList();
+                        streamWriter.WriteLine("姓名\t预约时间\t预约人");
+                        foreach (var interview in interviewsByGroup)
+                        {
+                            if (interview.CreationTime.Date == DateTime.Today)
+                                streamWriter.WriteLine($"{interview.Name}\t{interview.AppointmentTime:yyyy/MM/dd HH:mm(当日)}\t{interview.CreatorUserName}");
+                            else
+                                streamWriter.WriteLine($"{interview.Name}\t{interview.AppointmentTime:yyyy/MM/dd HH:mm}\t{interview.CreatorUserName}");
+                        }
+                        streamWriter.WriteLine("\r");
+                        streamWriter.Flush();
+                    }
+                    byte[] buffer = memoryStream.ToArray();
+                    return File(buffer, "text/plain", $"{DateTime.Now:yyyy-MM-dd} 面试名单.txt");
+                }
+            }
+        }
     }
 }
