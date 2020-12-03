@@ -1,4 +1,5 @@
 ﻿using System;
+using TalentPool.Interviews;
 
 namespace TalentPool.Application.Interviews
 {
@@ -9,5 +10,6 @@ namespace TalentPool.Application.Interviews
         public string JobName { get; set; }
         public DateTime? VisitedTime { get; set; }
         public string Remark { get; set; }
+        public InterviewStatus Status { get; set; }
     }
 }

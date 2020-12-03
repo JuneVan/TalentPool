@@ -103,11 +103,18 @@ namespace TalentPool.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var investigation = Mapper.Map<Investigation>(model);
-                investigation.InvestigateDate = DateTime.Now.Date;
-                await _investigationManager.CreateAsync(investigation);
+                try
+                {
+                    var investigation = Mapper.Map<Investigation>(model);
+                    investigation.InvestigateDate = DateTime.Now.Date;
+                    await _investigationManager.CreateAsync(investigation);
 
-                Notifier.Success($"你已成功创建了“{investigation.Name}”的意向调查记录！");
+                    Notifier.Success($"你已成功创建了“{investigation.Name}”的意向调查记录！");
+                }
+                catch (Exception ex)
+                {
+                    Notifier.Warning(ex.Message);
+                } 
                 return RedirectToAction(nameof(List));
             }
             return View(model);
@@ -134,13 +141,20 @@ namespace TalentPool.Web.Controllers
                 var investigation = await _investigationManager.FindByIdAsync(model.Id);
                 if (investigation == null)
                     return NotFound(model.Id);
-                investigation = Mapper.Map(model, investigation);
-                investigation.Status = InvestigationStatus.Ongoing;
-                if (investigation.IsConnected.HasValue && investigation.IsConnected.Value)
-                    investigation.UnconnectedRemark = string.Empty;
-                await _investigationManager.UpdateAsync(investigation);
+                try
+                {
+                    investigation = Mapper.Map(model, investigation);
+                    investigation.Status = InvestigationStatus.Ongoing;
+                    if (investigation.IsConnected.HasValue && investigation.IsConnected.Value)
+                        investigation.UnconnectedRemark = string.Empty;
+                    await _investigationManager.UpdateAsync(investigation);
 
-                Notifier.Success($"你已成功编辑了“{investigation.Name}”的意向调查记录！");
+                    Notifier.Success($"你已成功编辑了“{investigation.Name}”的意向调查记录！");
+                }
+                catch (Exception ex)
+                {
+                    Notifier.Warning(ex.Message);
+                }
                 return RedirectToAction(nameof(List));
             }
             return View(model);

@@ -10,6 +10,7 @@
                 <h3 class="card-title">@ViewData["Title"]</h3>
             </div>
             <form role="form" method="post" asp-controller="Interview" asp-action="Create">
+                <input type="hidden" class="form-control" value="@Model.Id" readonly name="Id">
                 <input type="hidden" class="form-control" value="@Model.ResumeId" readonly name="ResumeId">
                 <div class="card-body">
                     <div class="form-group">

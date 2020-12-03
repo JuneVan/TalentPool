@@ -70,35 +70,46 @@
                 <dd>无可统计数据</dd>
             }
             <dt>面试预约情况</dt>
-            @foreach (var item in Model.InterviewStatisticTotalInfo.InterviewStatisModels)
+            @if (Model.InterviewStatisticTotalInfo.InterviewStatisModels.Count > 0)
             {
-                <dd>@item.JobName ：预约人数 @item.TotalCount 人 / 实到人数 @item.VisitedCount 人  </dd>
+                foreach (var item in Model.InterviewStatisticTotalInfo.InterviewStatisModels)
+                {
+                    <dd>@item.JobName ：预约人数 @item.TotalCount 人 / 实到人数 @item.VisitedCount 人  </dd>
 
+                }
+                if (Model.InterviewStatisticTotalInfo.UninterviewModels.Count > 0)
+                {
+                    <dd>失约人员统计：</dd>
+                    <dd>
+                        <table class="table table-border">
+                            <thead>
+                                <tr>
+                                    <th>姓名</th>
+                                    <th>职位</th>
+                                    <th>预约时间</th>
+                                    <th>原因</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.InterviewStatisticTotalInfo.UninterviewModels)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.JobName</td>
+                                        <td>@item.AppointmentTime.ToString("yyyy/MM/dd HH:mm")</td>
+                                        <td>@item.Remark</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </dd>
+                }
             }
-            <dd>失约人员统计：</dd>
-            <dd> 
-                <table class="table table-border">
-                    <thead>
-                        <tr>
-                            <th>姓名</th>
-                            <th>职位</th>
-                            <th>预约时间</th>
-                            <th>原因</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.InterviewStatisticTotalInfo.UninterviewModels)
-                        {
-                        <tr>
-                            <td>@item.Name</td>
-                            <td>@item.JobName</td>
-                            <td>@item.AppointmentTime.ToString("yyyy/MM/dd HH:mm")</td>
-                            <td>@item.Remark</td>
-                        </tr>
-                        }
-                    </tbody>
-                </table>
-            </dd>
+            else
+            {
+                <dd>无可统计数据</dd>
+            }
+
         </dl>
 
     </div>

@@ -85,6 +85,7 @@ namespace TalentPool.Web
             services.AddTransient<ResumeManager>();
             services.AddTransient<ResumeAuditSettingManager>();
             services.AddTransient<InvestigationManager>();
+            services.AddTransient<IInvestigaionValidator,ResumeIdValidator>();
             services.AddTransient<InterviewManager>();
             services.AddTransient<EvaluationManager>();
             services.AddTransient<DailyStatisticManager>();

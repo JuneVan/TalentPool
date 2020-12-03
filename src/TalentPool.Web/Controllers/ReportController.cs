@@ -63,7 +63,7 @@ namespace TalentPool.Web.Controllers
             foreach (var interviewByGroup in interviewByGroups)
             {
                 var totalCount = interviewByGroup.Count();
-                var uninterviews = interviews.Where(w => w.JobName == interviewByGroup.Key);
+                var uninterviews = interviews.Where(w => w.JobName == interviewByGroup.Key && w.Status != Interviews.InterviewStatus.Arrived);
 
                 model.InterviewStatisticTotalInfo.InterviewStatisModels.Add(new InterviewStatisModel()
                 {
