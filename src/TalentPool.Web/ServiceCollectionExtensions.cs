@@ -21,6 +21,7 @@ using TalentPool.EntityFrameworkCore.Queriers;
 using TalentPool.EntityFrameworkCore.Stores;
 using TalentPool.Evaluations;
 using TalentPool.Infrastructure;
+using TalentPool.Infrastructure.Authorize;
 using TalentPool.Infrastructure.Message.Email;
 using TalentPool.Infrastructure.Message.Sms;
 using TalentPool.Infrastructure.Notify;
@@ -45,6 +46,7 @@ namespace TalentPool.Web
             services.Configure<MvcOptions>(cfg =>
             {
                 cfg.Filters.Add<NotifyFilter>(); 
+                cfg.Filters.Add<AuthorizationFilter>();
             });
             // core
             services.AddTransient<IUserIdentifier, ClaimPrincipalUserIdentifier>();
