@@ -11,6 +11,9 @@
             日报 - @Model.Date
         </h3>
         <div class="card-tools">
+            <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#modal-default">
+                <i class="fas fa-question-circle"></i>
+            </button>
             <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#modal-export">
                 <i class="fas fa-file-export"></i>
                 导出报告
@@ -19,7 +22,10 @@
     </div>
     <div class="card-body">
         <dl>
-            <dt>下载点记录</dt>
+            <dt>
+                <i class="fas fa-download"></i>
+                下载点记录
+            </dt>
             @if (!string.IsNullOrEmpty(Model.Summary))
             {
                 <dd>@Html.Raw(Model.Summary)</dd>
@@ -28,7 +34,10 @@
             {
                 <dd class="text-col">无记录</dd>
             }
-            <dt>职位筛选情况</dt>
+            <dt>
+                <i class="fas fa-user-md"></i>
+                职位筛选情况
+            </dt>
             <dd><u>投递数量</u>：@Model.JobStatisticTotalInfo.DeliveryCount 份 / <u>搜索数量</u>：@Model.JobStatisticTotalInfo.SearchCount 份</dd>
             @if (Model.JobStatisticTotalInfo != null && Model.JobStatisticTotalInfo.JobStatisticInfo.Count > 0)
             {
@@ -43,7 +52,10 @@
             {
                 <dd>无可统计数据</dd>
             }
-            <dt>简历筛选情况</dt>
+            <dt>
+                <i class="fas fa-id-card"></i>
+                简历筛选情况
+            </dt>
             @if (Model.ResumeStatisticInfo != null && Model.ResumeStatisticInfo.Count > 0)
             {
                 foreach (var resumeStatisticModel in Model.ResumeStatisticInfo)
@@ -57,7 +69,10 @@
             {
                 <dd>无可统计数据</dd>
             }
-            <dt>意向调查情况</dt>
+            <dt>
+                <i class="fas fa-pen-alt"></i>
+                意向调查情况
+            </dt>
             @if (Model.InvestigationStatisticInfo != null && Model.InvestigationStatisticInfo.Count > 0)
             {
                 foreach (var item in Model.InvestigationStatisticInfo)
@@ -69,7 +84,10 @@
             {
                 <dd>无可统计数据</dd>
             }
-            <dt>面试预约情况</dt>
+            <dt>
+                <i class="fas fa-calendar-alt"></i>
+                面试预约情况
+            </dt>
             @if (Model.InterviewStatisticTotalInfo.InterviewStatisModels.Count > 0)
             {
                 foreach (var item in Model.InterviewStatisticTotalInfo.InterviewStatisModels)
@@ -109,27 +127,11 @@
             {
                 <dd>无可统计数据</dd>
             }
-
-        </dl>
-
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-pen-alt"></i>
-                    意向调查结果
-                </h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#modal-default">
-                        <i class="fas fa-question-circle"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body table-responsive p-0">
+            <dt>
+                <i class="fas fa-pen-alt"></i>
+                意向调查结果
+            </dt>
+            <dd class="table-responsive">
                 <table class="table table-hover text-nowrap">
                     <thead>
                         <tr>
@@ -296,10 +298,13 @@
                         }
                     </tbody>
                 </table>
-            </div>
-        </div>
+            </dd>
+        </dl>
+
     </div>
 </div>
+
+
 <div class="modal fade" id="modal-default">
     <div class="modal-dialog">
         <div class="modal-content">
