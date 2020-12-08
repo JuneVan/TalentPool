@@ -9,27 +9,27 @@ namespace TalentPool.Resumes
 {
     public class ResumeManager : ObjectDisposable
     { 
-        private readonly ITokenProvider _tokenProvider;
+        private readonly ISignal _signal;
         public ResumeManager(IResumeStore resumeStore,
             IResumeAuditSettingStore resumeAuditSettingStore,
             IEnumerable<IResumeValidator> resumeValidators,
             IResumeComparer resumeComparer,
             IOptions<ResumeOptions> options,
-            ITokenProvider tokenProvider)
+            ISignal signal)
         {
             ResumeStore = resumeStore;
             ResumeValidators = resumeValidators;
             ResumeComparer = resumeComparer;
             ResumeAuditSettingStore = resumeAuditSettingStore;
             Options = options?.Value;
-            _tokenProvider = tokenProvider;
+            _signal = signal;
         }
         public ResumeOptions Options { get; }
         protected IResumeStore ResumeStore { get; }
         protected IResumeAuditSettingStore ResumeAuditSettingStore { get; }
         protected IEnumerable<IResumeValidator> ResumeValidators { get; }
         protected IResumeComparer ResumeComparer { get; }
-        protected virtual CancellationToken CancellationToken => _tokenProvider.Token;
+        protected virtual CancellationToken CancellationToken => _signal.Token;
 
         public async Task<Resume> CreateAsync(Resume resume)
         {

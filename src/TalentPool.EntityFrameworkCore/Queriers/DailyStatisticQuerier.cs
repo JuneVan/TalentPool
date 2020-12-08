@@ -12,14 +12,14 @@ namespace TalentPool.EntityFrameworkCore.Queriers
     public class DailyStatisticQuerier : IDailyStatisticQuerier
     {
         private readonly TalentDbContext _context;
-        private readonly ITokenProvider _tokenProvider;
+        private readonly ISignal _signal;
         public DailyStatisticQuerier(TalentDbContext context,
-            ITokenProvider tokenProvider)
+            ISignal signal)
         {
             _context = context;
-            _tokenProvider = tokenProvider;
+            _signal = signal;
         }
-        protected CancellationToken CancellationToken => _tokenProvider.Token;
+        protected CancellationToken CancellationToken => _signal.Token;
 
         public async Task<List<DailyStatisticChartDto>> GetChartStatisticsAsync(DateTime startTime, DateTime endTime)
         {

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using TalentPool.Application.Roles;
 using TalentPool.Application.Users;
+using TalentPool.AspNetCore.Mvc.Authorization;
+using TalentPool.AspNetCore.Mvc.Notify;
 using TalentPool.Infrastructure.Imaging;
-using TalentPool.Infrastructure.Notify;
-using TalentPool.Permissions;
 using TalentPool.Users;
 using TalentPool.Web.Auth;
 using TalentPool.Web.Models.CommonModels;
@@ -18,7 +18,7 @@ using IOFile = System.IO.File;
 
 namespace TalentPool.Web.Controllers
 {
-    [PermissionCheck(Pages.Authorization_User)]
+    [AuthorizeCheck(Pages.Authorization_User)]
     public class UserController : WebControllerBase
     {
         private readonly UserManager _userManager;
@@ -45,13 +45,13 @@ namespace TalentPool.Web.Controllers
 
         // 创建用户
 
-        [PermissionCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
         public IActionResult Create()
         {
             return View();
         }
 
-        [PermissionCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateOrEditUserViewModel model)
@@ -75,7 +75,7 @@ namespace TalentPool.Web.Controllers
 
         // 编辑用户
 
-        [PermissionCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
         public async Task<IActionResult> Edit(Guid id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
@@ -86,7 +86,7 @@ namespace TalentPool.Web.Controllers
             return View(model);
         }
 
-        [PermissionCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CreateOrEditUserViewModel model)
@@ -110,13 +110,13 @@ namespace TalentPool.Web.Controllers
         }
 
         // 分配角色
-        [PermissionCheck(Pages.Authorization_User_AssignRole)]
+        [AuthorizeCheck(Pages.Authorization_User_AssignRole)]
         public async Task<IActionResult> AssignRole(Guid id)
         {
             return await BuilAssginRoleDisplayAsync(id);
         }
 
-        [PermissionCheck(Pages.Authorization_User_AssignRole)]
+        [AuthorizeCheck(Pages.Authorization_User_AssignRole)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AssignRole(AssginRoleViewModel model)
@@ -163,7 +163,7 @@ namespace TalentPool.Web.Controllers
             return View(model);
         }
         // 删除用户
-        [PermissionCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
@@ -177,7 +177,7 @@ namespace TalentPool.Web.Controllers
             return View(model);
         }
 
-        [PermissionCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Authorization_User_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(DeleteUserViewModel model)

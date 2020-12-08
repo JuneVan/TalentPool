@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Reflection;
 using System.Threading.Tasks;
-using TalentPool.Permissions;
 
-namespace TalentPool.Infrastructure.Authorize
+namespace TalentPool.AspNetCore.Mvc.Authorization
 {
     public class AuthorizationFilter : IAuthorizationFilter, IAsyncAuthorizationFilter
     {
@@ -48,15 +47,15 @@ namespace TalentPool.Infrastructure.Authorize
                 if (!(principal?.Identity?.IsAuthenticated ?? false))
                     context.Result = new UnauthorizedResult();
                 // 权限检查
-                var controllerAuthorizeCheckAttribute = actionDescriptor.ControllerTypeInfo.GetCustomAttribute<PermissionCheckAttribute>();
-                if (controllerAuthorizeCheckAttribute != null && !principal.HasClaim(AppConstansts.ClaimTypes.Permission, controllerAuthorizeCheckAttribute.Permission))
+                var controllerAuthorizeCheckAttribute = actionDescriptor.ControllerTypeInfo.GetCustomAttribute<AuthorizeCheckAttribute>();
+                if (controllerAuthorizeCheckAttribute != null && !principal.HasClaim(AppConstants.ClaimTypes.Permission, controllerAuthorizeCheckAttribute.Permission))
                 {
                     context.Result = new ForbidResult();
                 }
                 else
                 {
-                    var actionAuthorizeCheckAttribute = actionDescriptor.MethodInfo.GetCustomAttribute<PermissionCheckAttribute>();
-                    if (actionAuthorizeCheckAttribute != null && !principal.HasClaim(AppConstansts.ClaimTypes.Permission, actionAuthorizeCheckAttribute.Permission))
+                    var actionAuthorizeCheckAttribute = actionDescriptor.MethodInfo.GetCustomAttribute<AuthorizeCheckAttribute>();
+                    if (actionAuthorizeCheckAttribute != null && !principal.HasClaim(AppConstants.ClaimTypes.Permission, actionAuthorizeCheckAttribute.Permission))
                     {
                         context.Result = new ForbidResult();
                     }
@@ -66,4 +65,5 @@ namespace TalentPool.Infrastructure.Authorize
 
         }
     }
+
 }

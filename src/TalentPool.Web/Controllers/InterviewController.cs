@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using TalentPool.Application.Interviews;
 using TalentPool.Application.Jobs;
 using TalentPool.Application.Users;
-using TalentPool.Infrastructure.Notify;
+using TalentPool.AspNetCore.Mvc.Authorization;
+using TalentPool.AspNetCore.Mvc.Notify;
 using TalentPool.Interviews;
-using TalentPool.Permissions;
 using TalentPool.Resumes;
 using TalentPool.Web.Auth;
 using TalentPool.Web.Models.CommonModels;
@@ -19,7 +19,7 @@ using TalentPool.Web.Models.InterviewViewModels;
 
 namespace TalentPool.Web.Controllers
 {
-    [PermissionCheck(Pages.Interview)]
+    [AuthorizeCheck(Pages.Interview)]
     public class InterviewController : WebControllerBase
     {
         private readonly IInterviewQuerier _interviewQuerier;

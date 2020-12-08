@@ -3,10 +3,10 @@ using System.Threading;
 
 namespace TalentPool.Infrastructure
 {
-    public class HttpContextCancellationTokenProvider : ITokenProvider
+    public class HttpContextSignal : ISignal
     {
         private readonly IHttpContextAccessor _contextAccessor;
-        public HttpContextCancellationTokenProvider(IHttpContextAccessor contextAccessor)
+        public HttpContextSignal(IHttpContextAccessor contextAccessor)
         {
             _contextAccessor = contextAccessor;
         }

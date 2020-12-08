@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TalentPool.KeywordmapGenera
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{FD0E1413-6C61-4CDE-82B1-D43E3273CCC3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TalentPool.AspNetCore.Mvc", "src\TalentPool.AspNetCore.Mvc\TalentPool.AspNetCore.Mvc.csproj", "{4528BDD9-95A4-49B6-9418-7C6E72E72A12}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{C1C6A84E-B76C-4781-ADF2-43F5D6570FC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1C6A84E-B76C-4781-ADF2-43F5D6570FC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1C6A84E-B76C-4781-ADF2-43F5D6570FC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4528BDD9-95A4-49B6-9418-7C6E72E72A12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4528BDD9-95A4-49B6-9418-7C6E72E72A12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4528BDD9-95A4-49B6-9418-7C6E72E72A12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4528BDD9-95A4-49B6-9418-7C6E72E72A12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +73,7 @@ Global
 		{DD3CB51D-9198-4978-B4B2-6B23987C374E} = {F029559B-CDCB-479D-BA61-264927693A20}
 		{0CF991A5-A456-4B4C-9F05-A84BAE6C6B1B} = {F029559B-CDCB-479D-BA61-264927693A20}
 		{C1C6A84E-B76C-4781-ADF2-43F5D6570FC2} = {FD0E1413-6C61-4CDE-82B1-D43E3273CCC3}
+		{4528BDD9-95A4-49B6-9418-7C6E72E72A12} = {F029559B-CDCB-479D-BA61-264927693A20}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {86C56133-FE3D-4FF2-A364-F17FE53010C0}

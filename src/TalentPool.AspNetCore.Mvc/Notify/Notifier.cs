@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 
-namespace TalentPool.Infrastructure.Notify
+namespace TalentPool.AspNetCore.Mvc.Notify
 {
     public class Notifier : INotifier
     {

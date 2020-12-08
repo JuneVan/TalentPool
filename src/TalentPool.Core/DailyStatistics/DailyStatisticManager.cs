@@ -7,14 +7,14 @@ namespace TalentPool.DailyStatistics
     public class DailyStatisticManager : IDisposable
     {
         private bool _disposed;
-        private readonly ITokenProvider _tokenProvider;
+        private readonly ISignal _signal;
         public DailyStatisticManager(IDailyStatisticStore dailyStatisticsStore,
-            ITokenProvider tokenProvider)
+            ISignal signal)
         {
             DailyStatisticsStore = dailyStatisticsStore;
-            _tokenProvider = tokenProvider;
+            _signal = signal;
         }
-        protected virtual CancellationToken CancellationToken => _tokenProvider.Token;
+        protected virtual CancellationToken CancellationToken => _signal.Token;
         protected IDailyStatisticStore DailyStatisticsStore { get; }
 
         public async Task<DailyStatistic> CreateAsync(DailyStatistic dailyStatistic)

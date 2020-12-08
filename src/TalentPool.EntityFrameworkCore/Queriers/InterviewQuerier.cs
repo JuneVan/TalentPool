@@ -13,13 +13,13 @@ namespace TalentPool.EntityFrameworkCore.Queriers
     public class InterviewQuerier : IInterviewQuerier
     {
         private readonly TalentDbContext _context;
-        private readonly ITokenProvider _tokenProvider;
-        public InterviewQuerier(TalentDbContext context, ITokenProvider tokenProvider)
+        private readonly ISignal _signal;
+        public InterviewQuerier(TalentDbContext context, ISignal signal)
         {
             _context = context;
-            _tokenProvider = tokenProvider;
+            _signal = signal;
         }
-        protected CancellationToken CancellationToken => _tokenProvider.Token;
+        protected CancellationToken CancellationToken => _signal.Token;
         public async Task<List<InterviewCalendarDto>> GetCalendarInterviewsAsync(DateTime startTime, DateTime endTime)
         {
             CancellationToken.ThrowIfCancellationRequested();

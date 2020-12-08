@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 
-namespace TalentPool.Infrastructure.Notify
+namespace TalentPool.AspNetCore.Mvc.Notify
 {
     public class NotifyEntryConverter : JsonConverter
     { 

@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using TalentPool.AspNetCore.Mvc.Notify;
 using TalentPool.Configurations;
-using TalentPool.Infrastructure.Notify;
 
 namespace TalentPool.Web.Controllers
 {

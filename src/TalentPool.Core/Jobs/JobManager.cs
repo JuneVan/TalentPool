@@ -7,16 +7,16 @@ namespace TalentPool.Jobs
     public class JobManager : IDisposable
     {
         private bool _disposed;
-        private readonly ITokenProvider _tokenProvider;
+        private readonly ISignal _signal;
         public JobManager(IJobStore jobStore,
-            ITokenProvider tokenProvider)
+            ISignal signal)
         {
             JobStore = jobStore;
-            _tokenProvider = tokenProvider;
+            _signal = signal;
         }
 
         protected IJobStore JobStore { get; }
-        protected virtual CancellationToken CancellationToken => _tokenProvider.Token;
+        protected virtual CancellationToken CancellationToken => _signal.Token;
 
         public async Task<Job> CreateAsync(Job job)
         {

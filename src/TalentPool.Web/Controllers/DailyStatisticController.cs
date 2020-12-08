@@ -8,9 +8,9 @@ using TalentPool.Application;
 using TalentPool.Application.DailyStatistics;
 using TalentPool.Application.Dictionaries;
 using TalentPool.Application.Jobs;
+using TalentPool.AspNetCore.Mvc.Authorization;
+using TalentPool.AspNetCore.Mvc.Notify;
 using TalentPool.DailyStatistics;
-using TalentPool.Infrastructure.Notify;
-using TalentPool.Permissions;
 using TalentPool.Resumes;
 using TalentPool.Web.Auth;
 using TalentPool.Web.Models.CommonModels;
@@ -18,7 +18,7 @@ using TalentPool.Web.Models.DailyStatisticViewModels;
 
 namespace TalentPool.Web.Controllers
 {
-    [PermissionCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
+    [AuthorizeCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
     public class DailyStatisticController : WebControllerBase
     {
         private readonly IDailyStatisticQuerier _dailyStatisticQuerier;

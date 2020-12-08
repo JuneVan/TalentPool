@@ -7,15 +7,15 @@ namespace TalentPool.Evaluations
     public class EvaluationManager : IDisposable
     {
         private bool _disposed;
-        private readonly ITokenProvider _tokenProvider;
+        private readonly ISignal _signal;
         public EvaluationManager(IEvaluationStore evaluationStore,
-            ITokenProvider tokenProvider)
+            ISignal signal)
         {
             EvaluationStore = evaluationStore;
-            _tokenProvider = tokenProvider;
+            _signal = signal;
         }
         protected IEvaluationStore EvaluationStore { get; }
-        protected virtual CancellationToken CancellationToken => _tokenProvider.Token;
+        protected virtual CancellationToken CancellationToken => _signal.Token;
         public async Task<Evaluation> CreateAsync(Evaluation evaluation)
         {
             if (evaluation == null)

@@ -7,16 +7,16 @@ namespace TalentPool.Interviews
     public class InterviewManager:IDisposable
     {
         private bool _disposed;
-        private readonly ITokenProvider _tokenProvider;
+        private readonly ISignal _signal;
         public InterviewManager(
             IInterviewStore interviewStore,
-            ITokenProvider  tokenProvider)
+            ISignal  signal)
         {
             InterviewStore = interviewStore;
-            _tokenProvider = tokenProvider;
+            _signal = signal;
         }
         protected   IInterviewStore InterviewStore;
-        protected virtual CancellationToken CancellationToken => _tokenProvider.Token;
+        protected virtual CancellationToken CancellationToken => _signal.Token;
         public async Task<Interview> CreateAsync(Interview interview)
         {
             if (interview == null)

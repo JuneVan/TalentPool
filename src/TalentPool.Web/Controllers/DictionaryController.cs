@@ -5,16 +5,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using TalentPool.Application;
 using TalentPool.Application.Dictionaries;
+using TalentPool.AspNetCore.Mvc.Authorization;
+using TalentPool.AspNetCore.Mvc.Notify;
 using TalentPool.Dictionaries;
-using TalentPool.Infrastructure.Notify;
-using TalentPool.Permissions;
 using TalentPool.Web.Auth;
 using TalentPool.Web.Models.CommonModels;
 using TalentPool.Web.Models.DictionaryViewModels;
 
 namespace TalentPool.Web.Controllers
 {
-    [PermissionCheck(Pages.Configuration_Dictionary)]
+    [AuthorizeCheck(Pages.Configuration_Dictionary)]
     public class DictionaryController : WebControllerBase
     {
         private readonly DictionaryManager _dictionaryManager;

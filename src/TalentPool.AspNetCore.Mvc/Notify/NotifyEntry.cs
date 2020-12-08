@@ -1,4 +1,4 @@
-﻿namespace TalentPool.Infrastructure.Notify
+﻿namespace TalentPool.AspNetCore.Mvc.Notify
 {
 
     public class NotifyEntry

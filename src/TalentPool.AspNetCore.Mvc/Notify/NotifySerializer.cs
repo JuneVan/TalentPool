@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System.Net;
 
-namespace TalentPool.Infrastructure.Notify
+namespace TalentPool.AspNetCore.Mvc.Notify
 {
     public class NotifySerializer : INotifySerializer
     {

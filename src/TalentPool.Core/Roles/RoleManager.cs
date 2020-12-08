@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -10,23 +11,65 @@ using System.Threading.Tasks;
 namespace TalentPool.Roles
 {
     public class RoleManager : RoleManager<Role>
-    {
-        private readonly IRoleStore _roleStore;
-        private readonly ITokenProvider _tokenProvider;
-        public RoleManager(IRoleStore store,
+    { 
+        public RoleManager(IRoleStore roleStore,
+            IServiceProvider serviceProvider,
             IEnumerable<IRoleValidator<Role>> roleValidators,
             ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors,
             ILogger<RoleManager<Role>> logger,
-            ITokenProvider  tokenProvider)
-            : base(store,
+            ISignal  signal)
+            : base(roleStore,
             roleValidators,
             keyNormalizer, errors,
             logger)
         {
-            _roleStore = store;
-            _tokenProvider = tokenProvider;
+            RoleStore = roleStore;
+            Signal = signal;
+            PermissionProviders = serviceProvider.GetServices<IPermissionProvider>();
+            Initialize();
         }
-        protected override CancellationToken CancellationToken => _tokenProvider.Token;
+        protected ISignal Signal { get; }
+        protected IRoleStore RoleStore { get; }
+        protected override CancellationToken CancellationToken => Signal.Token;
+        protected IEnumerable<IPermissionProvider> PermissionProviders { get; }
+
+        public List<PermissionDefinition> Permissions { get; } = new List<PermissionDefinition>();
+
+        private void Initialize()
+        {
+            if (PermissionProviders != null)
+            {
+                foreach (var provider in PermissionProviders)
+                {
+                    Permissions.AddRange(provider.Definitions());
+                }
+            }
+        }
+
+        public async Task<List<PermissionDefinition>> GetPermissionsAsync(Role role)
+        {
+            if (PermissionProviders == null)
+                return null;
+            var permissions = await RoleStore.GetPermissionClaimsAsync(role, CancellationToken);
+
+            if (permissions != null)
+                RecursivelyPermission(Permissions, permissions);
+            return Permissions;
+        }
+
+        private void RecursivelyPermission(List<PermissionDefinition> permissionDefinitions, IList<string> rolePermissions)
+        {
+            foreach (var permissionDefinition in permissionDefinitions)
+            {
+                var rolePermission = rolePermissions.FirstOrDefault(f => f == permissionDefinition.Name);
+                if (rolePermission != null)
+                    permissionDefinition.IsGrant = true;
+                if (permissionDefinition.Children.Count > 0)
+                {
+                    RecursivelyPermission(permissionDefinition.Children.ToList(), rolePermissions);
+                }
+            }
+        }
         public async Task<IdentityResult> UpdatePermissionsAsync(Role role, List<string> permissions)
         {
             if (role == null)
@@ -38,29 +81,21 @@ namespace TalentPool.Roles
             var claims = await GetClaimsAsync(role);
             if (claims != null)
             {
-                var permissionClaims = claims.Where(w => w.Type == AppConstansts.ClaimTypes.Permission).ToList();
+                var permissionClaims = claims.Where(w => w.Type == AppConstants.ClaimTypes.Permission).ToList();
                 foreach (var permissionClaim in permissionClaims)
                 {
-                    await _roleStore.RemoveClaimAsync(role, permissionClaim, CancellationToken);
+                    await RoleStore.RemoveClaimAsync(role, permissionClaim, CancellationToken);
                 }
             }
             // 增加权限Claim
             foreach (var permission in permissions)
             {
-                await _roleStore.AddClaimAsync(role, new Claim(AppConstansts.ClaimTypes.Permission, permission), CancellationToken);
+                await RoleStore.AddClaimAsync(role, new Claim(AppConstants.ClaimTypes.Permission, permission), CancellationToken);
             }
 
             return await UpdateRoleAsync(role);
 
         }
 
-        public async Task<List<string>> GetPermissionsAsync(Role role)
-        {
-            if (role == null)
-                throw new ArgumentNullException(nameof(role));
-
-            return await _roleStore.GetPermissionClaimsAsync(role, CancellationToken);
-
-        }
     }
 }

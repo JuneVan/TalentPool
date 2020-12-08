@@ -13,6 +13,8 @@ using TalentPool.Application.Jobs;
 using TalentPool.Application.Resumes;
 using TalentPool.Application.Roles;
 using TalentPool.Application.Users;
+using TalentPool.AspNetCore.Mvc.Authorization;
+using TalentPool.AspNetCore.Mvc.Notify;
 using TalentPool.Configurations;
 using TalentPool.DailyStatistics;
 using TalentPool.Dictionaries;
@@ -21,15 +23,12 @@ using TalentPool.EntityFrameworkCore.Queriers;
 using TalentPool.EntityFrameworkCore.Stores;
 using TalentPool.Evaluations;
 using TalentPool.Infrastructure;
-using TalentPool.Infrastructure.Authorize;
 using TalentPool.Infrastructure.Message.Email;
 using TalentPool.Infrastructure.Message.Sms;
-using TalentPool.Infrastructure.Notify;
 using TalentPool.Interviews;
 using TalentPool.Investigations;
 using TalentPool.Jobs;
 using TalentPool.Navigations;
-using TalentPool.Permissions;
 using TalentPool.Resumes;
 using TalentPool.Roles;
 using TalentPool.Users;
@@ -78,7 +77,6 @@ namespace TalentPool.Web
             services.AddTransient<INavigationProvider, StandardNavigationProvider>();
             services.AddTransient<NavigationManager>();
             services.AddTransient<IPermissionProvider, StandardPermissionProvider>();
-            services.AddTransient<PermissionManager>();
             services.AddTransient<JobManager>();
             services.AddTransient<IResumeValidator, PhoneNumberValidator>();
             services.AddTransient<IResumeValidator, PlatformValidator>();
@@ -98,7 +96,7 @@ namespace TalentPool.Web
             services.AddTransient<INotifySerializer, NotifySerializer>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ISmsSender, SmsSender>();
-            services.AddTransient<ITokenProvider, HttpContextCancellationTokenProvider>();
+            services.AddTransient<ISignal, HttpContextSignal>();
             services.AddMemoryCache();
 
             // entityframework 

@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TalentPool.AspNetCore.Mvc.Exceptions;
 using TalentPool.EntityFrameworkCore.Seeds;
-using TalentPool.Infrastructure.Exceptions;
 
 namespace TalentPool.Web
 {
