@@ -3,7 +3,7 @@
     var path = Context.Request.Path;
     var user = User;
 }
-@if (string.IsNullOrEmpty(Model.PermissionName) || (!string.IsNullOrEmpty(Model.PermissionName) && user.HasClaim(AppConstansts.ClaimTypes.Permission, Model.PermissionName)))
+@if (string.IsNullOrEmpty(Model.PermissionName) || (!string.IsNullOrEmpty(Model.PermissionName) && user.HasClaim(AppConstants.ClaimTypes.Permission, Model.PermissionName)))
 {
     <a href="@Model.LinkUrl" class="@Model.CssClassName @(!Model.Enable?"disabled":"")" target="@(Model.Blank?"_blank":"_self")">
         @if (!string.IsNullOrEmpty(Model.IconClassName))

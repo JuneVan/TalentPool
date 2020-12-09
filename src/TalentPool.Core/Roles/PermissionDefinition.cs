@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TalentPool.Permissions
+namespace TalentPool.Roles
 {
     public class PermissionDefinition
     {

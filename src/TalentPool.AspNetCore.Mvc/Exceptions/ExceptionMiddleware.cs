@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace TalentPool.Infrastructure.Exceptions
+namespace TalentPool.AspNetCore.Mvc.Exceptions
 {
     public class ExceptionMiddleware
     {

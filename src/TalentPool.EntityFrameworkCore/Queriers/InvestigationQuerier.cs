@@ -13,13 +13,13 @@ namespace TalentPool.EntityFrameworkCore.Queriers
     public class InvestigationQuerier : IInvestigationQuerier
     {
         private readonly TalentDbContext _context; 
-        private ITokenProvider _tokenProvider;
-        public InvestigationQuerier(TalentDbContext context, ITokenProvider tokenProvider)
+        private ISignal _signal;
+        public InvestigationQuerier(TalentDbContext context, ISignal signal)
         {
             _context = context;
-            _tokenProvider = tokenProvider;
+            _signal = signal;
         }
-        protected CancellationToken CancellationToken => _tokenProvider.Token;
+        protected CancellationToken CancellationToken => _signal.Token;
 
         public async Task<PaginationOutput<InvestigationDto>> GetListAsync(QueryInvestigaionInput input)
         {

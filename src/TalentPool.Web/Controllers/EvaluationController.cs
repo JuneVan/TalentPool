@@ -6,17 +6,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using TalentPool.Application.Evaluations;
 using TalentPool.Application.Jobs;
+using TalentPool.AspNetCore.Mvc.Authorization;
+using TalentPool.AspNetCore.Mvc.Notify;
 using TalentPool.Evaluations;
-using TalentPool.Infrastructure.Notify;
 using TalentPool.Investigations;
-using TalentPool.Permissions;
 using TalentPool.Web.Auth;
 using TalentPool.Web.Models.CommonModels;
 using TalentPool.Web.Models.EvaluationViewModels;
 
 namespace TalentPool.Web.Controllers
 {
-    [PermissionCheck(Pages.Evaluation)]
+    [AuthorizeCheck(Pages.Evaluation)]
     public class EvaluationController : WebControllerBase
     {
         private readonly IEvaluationQuerier _evaluationQuerier;

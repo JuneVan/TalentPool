@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using Org.BouncyCastle.Crypto.Paddings;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -16,12 +15,12 @@ using TalentPool.Application.Dictionaries;
 using TalentPool.Application.Jobs;
 using TalentPool.Application.Resumes;
 using TalentPool.Application.Users;
+using TalentPool.AspNetCore.Mvc.Authorization;
+using TalentPool.AspNetCore.Mvc.Notify;
 using TalentPool.Configurations;
 using TalentPool.Infrastructure.Extensions;
 using TalentPool.Infrastructure.Message.Email;
-using TalentPool.Infrastructure.Notify;
 using TalentPool.Jobs;
-using TalentPool.Permissions;
 using TalentPool.Resumes;
 using TalentPool.Web.Auth;
 using TalentPool.Web.Models.CommonModels;
@@ -30,7 +29,7 @@ using IOFile = System.IO.File;
 
 namespace TalentPool.Web.Controllers
 {
-    [PermissionCheck(Pages.Resume)]
+    [AuthorizeCheck(Pages.Resume)]
     public class ResumeController : WebControllerBase
     {
         private readonly IResumeQuerier _resumeQuerier;
@@ -134,12 +133,12 @@ namespace TalentPool.Web.Controllers
             return View(model);
         }
         // 创建
-        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Resume_CreateOrEditOrDelete)]
         public async Task<IActionResult> Create()
         {
             return await BuildCreateOrEditDisplayAsync(null);
         }
-        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Resume_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateOrEditResumeViewModel model)
@@ -163,7 +162,7 @@ namespace TalentPool.Web.Controllers
             return await BuildCreateOrEditDisplayAsync(model);
         }
         // 编辑
-        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Resume_CreateOrEditOrDelete)]
         public async Task<IActionResult> Edit(Guid id)
         {
             var resume = await _resumeManager.FindByIdAsync(id);
@@ -173,7 +172,7 @@ namespace TalentPool.Web.Controllers
             return await BuildCreateOrEditDisplayAsync(model);
         }
 
-        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Resume_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CreateOrEditResumeViewModel model)
@@ -255,7 +254,7 @@ namespace TalentPool.Web.Controllers
 
 
         // 删除
-        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Resume_CreateOrEditOrDelete)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var resume = await _resumeManager.FindByIdAsync(id);
@@ -265,7 +264,7 @@ namespace TalentPool.Web.Controllers
 
             return View(model);
         }
-        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Resume_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(DeleteResumeModel model)
@@ -290,7 +289,7 @@ namespace TalentPool.Web.Controllers
 
         #region 附件
 
-        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Resume_CreateOrEditOrDelete)]
         public async Task<IActionResult> UploadAttachment(Guid id)
         {
             var resume = await _resumeManager.FindByIdAsync(id);
@@ -300,7 +299,7 @@ namespace TalentPool.Web.Controllers
 
             return View(model);
         }
-        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Resume_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadAttachment(UploadAttachmentViewModel model)
@@ -365,7 +364,7 @@ namespace TalentPool.Web.Controllers
 
         }
 
-        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Resume_CreateOrEditOrDelete)]
         public async Task<IActionResult> RemoveAttachment(Guid id, Guid attachmentId)
         {
             var resume = await _resumeManager.FindByIdAsync(id);
@@ -379,7 +378,7 @@ namespace TalentPool.Web.Controllers
             model.AttachmentId = attachment.Id;
             return View(model);
         }
-        [PermissionCheck(Pages.Resume_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Resume_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveAttachment(RemoveAttachmentViewModel model)
@@ -404,7 +403,7 @@ namespace TalentPool.Web.Controllers
         #endregion
 
         #region 审核
-        [PermissionCheck(Pages.Resume_Audit)]
+        [AuthorizeCheck(Pages.Resume_Audit)]
         public async Task<IActionResult> Audit(Guid id)
         {
             var resume = await _resumeManager.FindByIdAsync(id);
@@ -464,7 +463,7 @@ namespace TalentPool.Web.Controllers
 
             return View(model);
         }
-        [PermissionCheck(Pages.Resume_Audit)]
+        [AuthorizeCheck(Pages.Resume_Audit)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Audit(CreateAuditViewModel model)
@@ -494,7 +493,7 @@ namespace TalentPool.Web.Controllers
 
             return RedirectToAction(nameof(List));
         }
-        [PermissionCheck(Pages.Resume_Audit)]
+        [AuthorizeCheck(Pages.Resume_Audit)]
         public async Task<IActionResult> CancelAudit(Guid auditRecordId)
         {
             var auditRecord = await _resumeManager.GetAuditRecordByIdAsync(auditRecordId);
@@ -506,7 +505,7 @@ namespace TalentPool.Web.Controllers
                 AuditRecordId = auditRecordId
             });
         }
-        [PermissionCheck(Pages.Resume_Audit)]
+        [AuthorizeCheck(Pages.Resume_Audit)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CancelAudit(CancelAuditViewModel model)
@@ -529,7 +528,7 @@ namespace TalentPool.Web.Controllers
             return RedirectToAction(nameof(Audit), new { Id = auditRecord.ResumeId });
 
         }
-        [PermissionCheck(Pages.Resume_AuditSetting)]
+        [AuthorizeCheck(Pages.Resume_AuditSetting)]
         public async Task<IActionResult> AuditSetting()
         {
 
@@ -544,7 +543,7 @@ namespace TalentPool.Web.Controllers
             return View(model);
         }
 
-        [PermissionCheck(Pages.Resume_AuditSetting)]
+        [AuthorizeCheck(Pages.Resume_AuditSetting)]
         [HttpPost]
         public async Task<IActionResult> AuditSetting(AuditSettingViewModel model)
         {
@@ -564,7 +563,7 @@ namespace TalentPool.Web.Controllers
         #endregion
 
         #region 简历责任人分配
-        [PermissionCheck(Pages.Resume_AssignUser)]
+        [AuthorizeCheck(Pages.Resume_AssignUser)]
         public async Task<IActionResult> Assign(Guid id)
         {
             var resume = await _resumeManager.FindByIdAsync(id);
@@ -573,7 +572,7 @@ namespace TalentPool.Web.Controllers
             var model = Mapper.Map<AssignUserViewModel>(resume);
             return await BuildAssignDisplayAsync(model);
         }
-        [PermissionCheck(Pages.Resume_AssignUser)]
+        [AuthorizeCheck(Pages.Resume_AssignUser)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Assign(AssignUserViewModel model)

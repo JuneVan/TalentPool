@@ -10,13 +10,13 @@ namespace TalentPool.Dictionaries
     public class DictionaryManager : IDisposable
     {
         private bool _disposed;
-        private readonly ITokenProvider _tokenProvider;
+        private readonly ISignal _signal;
         public DictionaryManager(IDictionaryStore dictionaryStore,
             IOptions<DictionaryOptions> options,
-            ITokenProvider  tokenProvider)
+            ISignal  signal)
         {
             DictionaryStore = dictionaryStore;
-            _tokenProvider = tokenProvider;
+            _signal = signal;
             if (options.Value.Injects != null)
             {
                 InjectDictionaries = options.Value.Injects.ToList();
@@ -25,7 +25,7 @@ namespace TalentPool.Dictionaries
         }
         public IReadOnlyList<Dictionary> InjectDictionaries { get; }
         protected IDictionaryStore DictionaryStore { get; }
-        protected virtual CancellationToken CancellationToken => _tokenProvider.Token;
+        protected virtual CancellationToken CancellationToken => _signal.Token;
 
         public async Task<Dictionary> CreateAsync(Dictionary dictionary)
         {

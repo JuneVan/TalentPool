@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using TalentPool.Navigations;
-using TalentPool.Permissions;
+using TalentPool.Roles;
 
 namespace TalentPool.Web.Auth
 {

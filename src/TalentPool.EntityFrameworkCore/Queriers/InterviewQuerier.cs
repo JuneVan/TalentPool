@@ -13,13 +13,13 @@ namespace TalentPool.EntityFrameworkCore.Queriers
     public class InterviewQuerier : IInterviewQuerier
     {
         private readonly TalentDbContext _context;
-        private readonly ITokenProvider _tokenProvider;
-        public InterviewQuerier(TalentDbContext context, ITokenProvider tokenProvider)
+        private readonly ISignal _signal;
+        public InterviewQuerier(TalentDbContext context, ISignal signal)
         {
             _context = context;
-            _tokenProvider = tokenProvider;
+            _signal = signal;
         }
-        protected CancellationToken CancellationToken => _tokenProvider.Token;
+        protected CancellationToken CancellationToken => _signal.Token;
         public async Task<List<InterviewCalendarDto>> GetCalendarInterviewsAsync(DateTime startTime, DateTime endTime)
         {
             CancellationToken.ThrowIfCancellationRequested();
@@ -135,6 +135,25 @@ namespace TalentPool.EntityFrameworkCore.Queriers
             return await query.ToListAsync(CancellationToken);
         }
 
+        public async Task<List<ReportInterviewDto>> GetReportInterviewsAsync(DateTime date)
+        {
+            var query = from a in _context.Interviews
+                        join b in _context.Resumes on a.ResumeId equals b.Id
+                        join d in _context.Jobs on b.JobId equals d.Id 
+                        orderby a.AppointmentTime 
+                        select new ReportInterviewDto()
+                        { 
+                            Name = a.Name,
+                            AppointmentTime = a.AppointmentTime,
+                            JobName = d.Title, 
+                            Remark = a.Remark,
+                            Status = a.Status,
+                            VisitedTime = a.VisitedTime
+                        }; 
+            query = query.Where(w => w.AppointmentTime.Date == date.Date);
+            return await query.ToListAsync();
+        }
+
         public async Task<List<UnfinshInterviewDto>> GetUnfinshInterviewsAsync(Guid? creatorUserId)
         {
             var query = from a in _context.Interviews
@@ -152,7 +171,8 @@ namespace TalentPool.EntityFrameworkCore.Queriers
                             PhoneNumber = b.PhoneNumber,
                             CreatorUserId = a.CreatorUserId,
                             CreatorUserName = e.FullName,
-                            Status = a.Status
+                            Status = a.Status,
+                            CreationTime = a.CreationTime
                         };
             if (creatorUserId.HasValue)
                 query = query.Where(w => w.CreatorUserId == creatorUserId);

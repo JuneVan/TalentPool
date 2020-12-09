@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TalentPool.Infrastructure.Notify
+namespace TalentPool.AspNetCore.Mvc.Notify
 {
     internal class NotifyEntryComparer : IEqualityComparer<NotifyEntry>
     { 

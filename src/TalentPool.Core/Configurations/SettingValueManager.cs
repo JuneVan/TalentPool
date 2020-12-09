@@ -8,14 +8,14 @@ namespace TalentPool.Configurations
     public class SettingValueManager : IDisposable
     {
         private bool _disposed;
-        private readonly ITokenProvider _tokenProvider;
+        private readonly ISignal _signal;
         public SettingValueManager(ISettingValueStore settingValueStore,
-            ITokenProvider  tokenProvider)
+            ISignal  signal)
         {
             SettingValueStore = settingValueStore;
-            _tokenProvider = tokenProvider;
+            _signal = signal;
         }
-        protected CancellationToken CancellationToken => _tokenProvider.Token;
+        protected CancellationToken CancellationToken => _signal.Token;
         protected ISettingValueStore SettingValueStore;
 
         public async Task<SettingValue> FindByNameAsync(string settingName)

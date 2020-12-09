@@ -8,7 +8,7 @@
 @foreach (var item in Model)
 {
 
-    @if (!string.IsNullOrEmpty(item.PermissionName) && !user.HasClaim(AppConstansts.ClaimTypes.Permission, item.PermissionName))
+    @if (!string.IsNullOrEmpty(item.PermissionName) && !user.HasClaim(AppConstants.ClaimTypes.Permission, item.PermissionName))
     {
         continue;
     }

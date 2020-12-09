@@ -5,7 +5,7 @@ using TalentPool.Web.Models.InterviewViewModels;
 
 namespace TalentPool.Web.Mappings
 {
-    public class InterviewMappingProfile:Profile
+    public class InterviewMappingProfile : Profile
     {
         public InterviewMappingProfile()
         {
@@ -13,7 +13,8 @@ namespace TalentPool.Web.Mappings
                  .BeforeMap((src, dest) =>
                  {
                      dest.ResumeId = src.Id;
-                 });
+                 })
+                 .ForMember(f => f.Id, opt => opt.Ignore());
             CreateMap<CreateOrEditInterviewViewModel, Interview>();
             CreateMap<Interview, CreateOrEditInterviewViewModel>();
             CreateMap<Interview, ChangeInterviewViewModel>();

@@ -12,13 +12,13 @@ namespace TalentPool.EntityFrameworkCore.Queriers
     public class DictionaryQuerier : IDictionaryQuerier
     {
         private readonly TalentDbContext _context;
-        private readonly ITokenProvider _tokenProvider;
-        public DictionaryQuerier(TalentDbContext context, ITokenProvider tokenProvider)
+        private readonly ISignal _signal;
+        public DictionaryQuerier(TalentDbContext context, ISignal signal)
         {
             _context = context;
-            _tokenProvider = tokenProvider;
+            _signal = signal;
         }
-        protected CancellationToken CancellationToken => _tokenProvider.Token;
+        protected CancellationToken CancellationToken => _signal.Token;
 
         public async Task<PaginationOutput<DictionaryDto>> GetListAsync(PaginationInput input)
         {

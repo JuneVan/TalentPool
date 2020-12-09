@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using TalentPool.Permissions;
+using TalentPool.Roles;
 
 namespace TalentPool.Web.Models.RoleViewModels
 {

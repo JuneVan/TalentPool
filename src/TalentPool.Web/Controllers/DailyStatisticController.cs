@@ -8,9 +8,9 @@ using TalentPool.Application;
 using TalentPool.Application.DailyStatistics;
 using TalentPool.Application.Dictionaries;
 using TalentPool.Application.Jobs;
+using TalentPool.AspNetCore.Mvc.Authorization;
+using TalentPool.AspNetCore.Mvc.Notify;
 using TalentPool.DailyStatistics;
-using TalentPool.Infrastructure.Notify;
-using TalentPool.Permissions;
 using TalentPool.Resumes;
 using TalentPool.Web.Auth;
 using TalentPool.Web.Models.CommonModels;
@@ -18,7 +18,7 @@ using TalentPool.Web.Models.DailyStatisticViewModels;
 
 namespace TalentPool.Web.Controllers
 {
-    [PermissionCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
+    [AuthorizeCheck(Pages.DailyStatistic)]
     public class DailyStatisticController : WebControllerBase
     {
         private readonly IDailyStatisticQuerier _dailyStatisticQuerier;
@@ -42,12 +42,12 @@ namespace TalentPool.Web.Controllers
             var output = await _dailyStatisticQuerier.GetListAsync(input);
             return View(new PaginationModel<DailyStatisticDto>(output, input));
         }
-
+        [AuthorizeCheck(Pages.DailyStatistic_CreateOrEditOrDelete)]
         public async Task<IActionResult> Create()
         {
             return await BuildCreateOrEditDisplayAsync(null);
         }
-
+        [AuthorizeCheck(Pages.DailyStatistic_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateOrEditDailyStatisticViewModel model)
@@ -61,7 +61,7 @@ namespace TalentPool.Web.Controllers
             }
             return await BuildCreateOrEditDisplayAsync(model);
         }
-
+        [AuthorizeCheck(Pages.DailyStatistic_CreateOrEditOrDelete)]
         public async Task<IActionResult> Edit(Guid id)
         {
             var dailyStatistic = await _dailyStatisticManager.FindByIdAsync(id);
@@ -70,7 +70,7 @@ namespace TalentPool.Web.Controllers
             var model = Mapper.Map<CreateOrEditDailyStatisticViewModel>(dailyStatistic);
             return await BuildCreateOrEditDisplayAsync(model);
         }
-
+        [AuthorizeCheck(Pages.DailyStatistic_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CreateOrEditDailyStatisticViewModel model)
@@ -88,7 +88,7 @@ namespace TalentPool.Web.Controllers
             }
             return await BuildCreateOrEditDisplayAsync(model);
         }
-
+        [AuthorizeCheck(Pages.DailyStatistic_CreateOrEditOrDelete)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var dailyStatistic = await _dailyStatisticManager.FindByIdAsync(id);
@@ -97,7 +97,7 @@ namespace TalentPool.Web.Controllers
 
             return View(Mapper.Map<DeleteDailyStatisticViewModel>(dailyStatistic));
         }
-
+        [AuthorizeCheck(Pages.DailyStatistic_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(DeleteDailyStatisticViewModel model)

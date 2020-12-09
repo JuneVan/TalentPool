@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TalentPool.Application\TalentPool.Application.csproj" />
+    <ProjectReference Include="..\TalentPool.AspNetCore.Mvc\TalentPool.AspNetCore.Mvc.csproj" />
     <ProjectReference Include="..\TalentPool.Core\TalentPool.Core.csproj" />
     <ProjectReference Include="..\TalentPool.EntityFrameworkCore\TalentPool.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\TalentPool.Infrastructure\TalentPool.Infrastructure.csproj" />

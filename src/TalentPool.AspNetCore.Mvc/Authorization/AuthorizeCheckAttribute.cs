@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace TalentPool.Permissions
+namespace TalentPool.AspNetCore.Mvc.Authorization
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
-    public class PermissionCheckAttribute : Attribute
+    public class AuthorizeCheckAttribute : Attribute
     {
         public string Permission { get; }
-        public PermissionCheckAttribute(string permission)
+        public AuthorizeCheckAttribute(string permission)
         {
             Permission = permission;
         }

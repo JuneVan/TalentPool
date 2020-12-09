@@ -4,14 +4,13 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TalentPool.Application.Evaluations;
 using TalentPool.Application.Investigations;
 using TalentPool.Application.Jobs;
 using TalentPool.Application.Resumes;
 using TalentPool.Application.Users;
-using TalentPool.Infrastructure.Notify;
+using TalentPool.AspNetCore.Mvc.Authorization;
+using TalentPool.AspNetCore.Mvc.Notify;
 using TalentPool.Investigations;
-using TalentPool.Permissions;
 using TalentPool.Resumes;
 using TalentPool.Web.Auth;
 using TalentPool.Web.Models.CommonModels;
@@ -103,11 +102,18 @@ namespace TalentPool.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var investigation = Mapper.Map<Investigation>(model);
-                investigation.InvestigateDate = DateTime.Now.Date;
-                await _investigationManager.CreateAsync(investigation);
+                try
+                {
+                    var investigation = Mapper.Map<Investigation>(model);
+                    investigation.InvestigateDate = DateTime.Now.Date;
+                    await _investigationManager.CreateAsync(investigation);
 
-                Notifier.Success($"你已成功创建了“{investigation.Name}”的意向调查记录！");
+                    Notifier.Success($"你已成功创建了“{investigation.Name}”的意向调查记录！");
+                }
+                catch (Exception ex)
+                {
+                    Notifier.Warning(ex.Message);
+                } 
                 return RedirectToAction(nameof(List));
             }
             return View(model);
@@ -134,13 +140,20 @@ namespace TalentPool.Web.Controllers
                 var investigation = await _investigationManager.FindByIdAsync(model.Id);
                 if (investigation == null)
                     return NotFound(model.Id);
-                investigation = Mapper.Map(model, investigation);
-                investigation.Status = InvestigationStatus.Ongoing;
-                if (investigation.IsConnected.HasValue && investigation.IsConnected.Value)
-                    investigation.UnconnectedRemark = string.Empty;
-                await _investigationManager.UpdateAsync(investigation);
+                try
+                {
+                    investigation = Mapper.Map(model, investigation);
+                    investigation.Status = InvestigationStatus.Ongoing;
+                    if (investigation.IsConnected.HasValue && investigation.IsConnected.Value)
+                        investigation.UnconnectedRemark = string.Empty;
+                    await _investigationManager.UpdateAsync(investigation);
 
-                Notifier.Success($"你已成功编辑了“{investigation.Name}”的意向调查记录！");
+                    Notifier.Success($"你已成功编辑了“{investigation.Name}”的意向调查记录！");
+                }
+                catch (Exception ex)
+                {
+                    Notifier.Warning(ex.Message);
+                }
                 return RedirectToAction(nameof(List));
             }
             return View(model);
@@ -181,7 +194,7 @@ namespace TalentPool.Web.Controllers
         #endregion
 
         #region 审核
-        [PermissionCheck(Pages.Investigation_Audit)]
+        [AuthorizeCheck(Pages.Investigation_Audit)]
         public async Task<IActionResult> Audit(Guid id)
         {
 
@@ -192,7 +205,7 @@ namespace TalentPool.Web.Controllers
             return View(model);
 
         }
-        [PermissionCheck(Pages.Investigation_Audit)]
+        [AuthorizeCheck(Pages.Investigation_Audit)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Audit(AuditInvestigationViewModel model)
@@ -220,7 +233,7 @@ namespace TalentPool.Web.Controllers
         #endregion
 
         #region 结束/恢复
-        [PermissionCheck(Pages.Investigation_FinshOrRestore)]
+        [AuthorizeCheck(Pages.Investigation_FinshOrRestore)]
         public async Task<IActionResult> Finsh(Guid id)
         {
 
@@ -231,7 +244,7 @@ namespace TalentPool.Web.Controllers
             var model = Mapper.Map<FinshOrRestoreModel>(investigation);
             return View(model);
         }
-        [PermissionCheck(Pages.Investigation_FinshOrRestore)]
+        [AuthorizeCheck(Pages.Investigation_FinshOrRestore)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Finsh(FinshOrRestoreModel model)
@@ -261,7 +274,7 @@ namespace TalentPool.Web.Controllers
             }
             return View(model);
         }
-        [PermissionCheck(Pages.Investigation_FinshOrRestore)]
+        [AuthorizeCheck(Pages.Investigation_FinshOrRestore)]
         public async Task<IActionResult> Restore(Guid id)
         {
 
@@ -272,7 +285,7 @@ namespace TalentPool.Web.Controllers
             var model = Mapper.Map<FinshOrRestoreModel>(investigation);
             return View(model);
         }
-        [PermissionCheck(Pages.Investigation_FinshOrRestore)]
+        [AuthorizeCheck(Pages.Investigation_FinshOrRestore)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Restore(FinshOrRestoreModel model)
@@ -309,7 +322,7 @@ namespace TalentPool.Web.Controllers
         #endregion
 
 
-        [PermissionCheck(Pages.Investigation_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Investigation_CreateOrEditOrDelete)]
         [HttpPost]
         public async Task<IActionResult> Evaluate(EvaluateResultModel model)
         {

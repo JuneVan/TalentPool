@@ -3,17 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using TalentPool.AspNetCore.Mvc.Authorization;
+using TalentPool.AspNetCore.Mvc.Notify;
 using TalentPool.Configurations;
 using TalentPool.Infrastructure.Imaging;
-using TalentPool.Infrastructure.Notify;
-using TalentPool.Permissions;
 using TalentPool.Web.Auth;
 using TalentPool.Web.Models.SettingViewModels;
 using IOFile = System.IO.File;
 
 namespace TalentPool.Web.Controllers
 {
-    [PermissionCheck(Pages.Configuration)]
+    [AuthorizeCheck(Pages.Configuration)]
     public class SettingController : WebControllerBase
     {
         private readonly ConfigurationManager _configurationManager;
@@ -27,13 +27,13 @@ namespace TalentPool.Web.Controllers
             _environment = environment;
         }
         // 站点配置
-        [PermissionCheck(Pages.Configuration_SiteSetting)]
+        [AuthorizeCheck(Pages.Configuration_SiteSetting)]
         public async Task<IActionResult> SiteSetting()
         {
             var settings = await _configurationManager.GetSettingAsync<SiteSetting>();
             return View(Mapper.Map<SiteSettingViewModel>(settings));
         }
-        [PermissionCheck(Pages.Configuration_SiteSetting)]
+        [AuthorizeCheck(Pages.Configuration_SiteSetting)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SiteSetting(SiteSettingViewModel model)
@@ -81,13 +81,13 @@ namespace TalentPool.Web.Controllers
         }
 
         // 用户配置
-        [PermissionCheck(Pages.Configuration_UserSetting)]
+        [AuthorizeCheck(Pages.Configuration_UserSetting)]
         public async Task<IActionResult> UserSetting()
         {
             var settings = await _configurationManager.GetSettingAsync<UserSetting>();
             return View(Mapper.Map<UserSettingViewModel>(settings));
         }
-        [PermissionCheck(Pages.Configuration_UserSetting)]
+        [AuthorizeCheck(Pages.Configuration_UserSetting)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserSetting(UserSettingViewModel model)
@@ -103,13 +103,13 @@ namespace TalentPool.Web.Controllers
         }
 
         // 邮件配置
-        [PermissionCheck(Pages.Configuration_EmailSetting)]
+        [AuthorizeCheck(Pages.Configuration_EmailSetting)]
         public async Task<IActionResult> EmailSetting()
         {
             var settings = await _configurationManager.GetSettingAsync<EmailSetting>();
             return View(Mapper.Map<EmailSettingViewModel>(settings));
         }
-        [PermissionCheck(Pages.Configuration_EmailSetting)]
+        [AuthorizeCheck(Pages.Configuration_EmailSetting)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EmailSetting(EmailSettingViewModel model)
@@ -145,13 +145,13 @@ namespace TalentPool.Web.Controllers
         }
 
         // 简历配置
-        [PermissionCheck(Pages.Configuration_ResumeSetting)]
+        [AuthorizeCheck(Pages.Configuration_ResumeSetting)]
         public async Task<IActionResult> ResumeSetting()
         {
             var settings = await _configurationManager.GetSettingAsync<ResumeSetting>();
             return View(Mapper.Map<ResumeSettingViewModel>(settings));
         }
-        [PermissionCheck(Pages.Configuration_ResumeSetting)]
+        [AuthorizeCheck(Pages.Configuration_ResumeSetting)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResumeSetting(ResumeSettingViewModel model)

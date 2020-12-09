@@ -2,7 +2,7 @@
 
 namespace TalentPool
 {
-    public interface ITokenProvider
+    public interface ISignal
     {
         CancellationToken Token { get; }
     }

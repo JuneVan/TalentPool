@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TalentPool.Infrastructure.Notify
+namespace TalentPool.AspNetCore.Mvc.Notify
 {
     public class NotifyFilter : IActionFilter, IAsyncResultFilter
     {

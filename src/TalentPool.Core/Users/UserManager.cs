@@ -11,7 +11,7 @@ namespace TalentPool.Users
     public class UserManager : UserManager<User>
     {
         private readonly IUserStore _userStore;
-        private readonly ITokenProvider _tokenProvider;
+        private readonly ISignal _signal;
         public UserManager(IUserStore store,
             IOptions<IdentityOptions> optionsAccessor,
             IPasswordHasher<User> passwordHasher,
@@ -21,7 +21,7 @@ namespace TalentPool.Users
             IdentityErrorDescriber errors,
             IServiceProvider services,
             ILogger<UserManager<User>> logger,
-            ITokenProvider tokenProvider)
+            ISignal signal)
             : base(store,
             optionsAccessor,
             passwordHasher,
@@ -33,9 +33,9 @@ namespace TalentPool.Users
             logger)
         {
             _userStore = store;
-            _tokenProvider = tokenProvider;
+            _signal = signal;
         }
-        protected override CancellationToken CancellationToken => _tokenProvider.Token;
+        protected override CancellationToken CancellationToken => _signal.Token;
 
         public async Task<IdentityResult> UpdateRolesAsync(User user, List<string> roles)
         {

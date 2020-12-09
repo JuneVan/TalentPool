@@ -14,13 +14,13 @@ namespace TalentPool.EntityFrameworkCore.Queriers
     public class ResumeQuerier : IResumeQuerier
     {
         private readonly TalentDbContext _context;
-        private ITokenProvider _tokenProvider;
-        public ResumeQuerier(TalentDbContext context, ITokenProvider tokenProvider)
+        private ISignal _signal;
+        public ResumeQuerier(TalentDbContext context, ISignal signal)
         {
             _context = context;
-            _tokenProvider = tokenProvider;
+            _signal = signal;
         }
-        protected CancellationToken CancellationToken => _tokenProvider.Token;
+        protected CancellationToken CancellationToken => _signal.Token;
 
         public async Task<PaginationOutput<ResumeDto>> GetListAsync(QueryResumeInput input)
         {

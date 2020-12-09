@@ -2,16 +2,16 @@
 using System;
 using System.Threading.Tasks;
 using TalentPool.Application.Jobs;
-using TalentPool.Infrastructure.Notify;
+using TalentPool.AspNetCore.Mvc.Authorization;
+using TalentPool.AspNetCore.Mvc.Notify;
 using TalentPool.Jobs;
-using TalentPool.Permissions;
 using TalentPool.Web.Auth;
 using TalentPool.Web.Models.CommonModels;
 using TalentPool.Web.Models.JobViewModels;
 
 namespace TalentPool.Web.Controllers
 {
-    [PermissionCheck(Pages.Job)]
+    [AuthorizeCheck(Pages.Job)]
     public class JobController : WebControllerBase
     {
         private readonly IJobQuerier _jobQuerier;
@@ -30,12 +30,12 @@ namespace TalentPool.Web.Controllers
             return View(new PaginationModel<JobDto>(output, input));
         }
 
-        [PermissionCheck(Pages.Job_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Job_CreateOrEditOrDelete)]
         public IActionResult Create()
         {
             return View();
         }
-        [PermissionCheck(Pages.Job_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Job_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateOrEditJobViewModel model)
@@ -49,7 +49,7 @@ namespace TalentPool.Web.Controllers
             }
             return View(model);
         }
-        [PermissionCheck(Pages.Job_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Job_CreateOrEditOrDelete)]
         public async Task<IActionResult> Edit(Guid id)
         {
             var job = await _jobManager.FindByIdAsync(id);
@@ -58,7 +58,7 @@ namespace TalentPool.Web.Controllers
             var model = Mapper.Map<CreateOrEditJobViewModel>(job);
             return View(model);
         }
-        [PermissionCheck(Pages.Job_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Job_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CreateOrEditJobViewModel model)
@@ -75,7 +75,7 @@ namespace TalentPool.Web.Controllers
             }
             return View(model);
         }
-        [PermissionCheck(Pages.Job_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Job_CreateOrEditOrDelete)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var job = await _jobManager.FindByIdAsync(id);
@@ -84,7 +84,7 @@ namespace TalentPool.Web.Controllers
             var model = Mapper.Map<DeleteJobViewModel>(job);
             return View(model);
         }
-        [PermissionCheck(Pages.Job_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Job_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(DeleteJobViewModel model)

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 using TalentPool.Application.Interviews;
 using TalentPool.Application.Investigations;
 using TalentPool.Application.Resumes;
-using TalentPool.Infrastructure.Notify;
+using TalentPool.AspNetCore.Mvc.Notify;
 using TalentPool.Investigations;
 using TalentPool.Resumes;
 using TalentPool.Web.Models.IndexViewModels;

@@ -12,13 +12,13 @@ namespace TalentPool.EntityFrameworkCore.Queriers
     public class RoleQuerier : IRoleQuerier
     {
         private readonly TalentDbContext _context;
-        protected readonly ITokenProvider _tokenProvider;
-        public RoleQuerier(TalentDbContext context, ITokenProvider tokenProvider)
+        protected readonly ISignal _signal;
+        public RoleQuerier(TalentDbContext context, ISignal signal)
         {
             _context = context;
-            _tokenProvider = tokenProvider;
+            _signal = signal;
         }
-        protected CancellationToken CancellationToken => _tokenProvider.Token;
+        protected CancellationToken CancellationToken => _signal.Token;
 
         public async Task<PaginationOutput<RoleDto>> GetListAsync(PaginationInput input)
         {

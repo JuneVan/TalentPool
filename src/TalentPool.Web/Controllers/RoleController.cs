@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TalentPool.Application;
 using TalentPool.Application.Roles;
-using TalentPool.Infrastructure.Notify;
-using TalentPool.Permissions;
+using TalentPool.AspNetCore.Mvc.Authorization;
+using TalentPool.AspNetCore.Mvc.Notify;
 using TalentPool.Roles;
 using TalentPool.Web.Auth;
 using TalentPool.Web.Models.RoleViewModels;
@@ -15,17 +15,14 @@ namespace TalentPool.Web.Controllers
     public class RoleController : WebControllerBase
     {
         private readonly IRoleQuerier _roleQuerier;
-        private readonly RoleManager _roleManager;
-        private readonly PermissionManager _permissionManager;
+        private readonly RoleManager _roleManager; 
         public RoleController(IRoleQuerier roleQuerier,
-            RoleManager roleManager,
-            PermissionManager permissionManager,
+            RoleManager roleManager, 
             IServiceProvider serviceProvider)
             : base(serviceProvider)
         {
             _roleQuerier = roleQuerier;
-            _roleManager = roleManager;
-            _permissionManager = permissionManager;
+            _roleManager = roleManager; 
 
         }
         public async Task<IActionResult> List(PaginationInput input)
@@ -36,12 +33,12 @@ namespace TalentPool.Web.Controllers
 
         // 创建角色
 
-        [PermissionCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
         public IActionResult Create()
         {
             return View();
         }
-        [PermissionCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateOrEditRoleViewModel model)
@@ -58,7 +55,7 @@ namespace TalentPool.Web.Controllers
 
         // 编辑角色
 
-        [PermissionCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
         public async Task<IActionResult> Edit(Guid id)
         {
             var role = await _roleManager.FindByIdAsync(id.ToString());
@@ -67,7 +64,7 @@ namespace TalentPool.Web.Controllers
             var model = Mapper.Map<CreateOrEditRoleViewModel>(role);
             return View(model);
         }
-        [PermissionCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CreateOrEditRoleViewModel model)
@@ -87,12 +84,12 @@ namespace TalentPool.Web.Controllers
 
 
         // 编辑权限
-        [PermissionCheck(Pages.Authorization_Role_AssignPermission)]
+        [AuthorizeCheck(Pages.Authorization_Role_AssignPermission)]
         public async Task<IActionResult> AssignPermission(Guid id)
         {
             return await BuildPermissionDisplayAsync(id);
         }
-        [PermissionCheck(Pages.Authorization_Role_AssignPermission)]
+        [AuthorizeCheck(Pages.Authorization_Role_AssignPermission)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AssignPermission(AssignPermissionViewModel model)
@@ -125,16 +122,14 @@ namespace TalentPool.Web.Controllers
             if (role == null)
                 return NotFound(id);
             var model = Mapper.Map<AssignPermissionViewModel>(role);
-            var permissionClaims = await _roleManager.GetPermissionsAsync(role);
-            if (permissionClaims != null)
-                model.Permissions = _permissionManager.GetPermissionsTree(permissionClaims);
+            model.Permissions = await _roleManager.GetPermissionsAsync(role); 
 
             return View(model);
 
         }
 
 
-        [PermissionCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var role = await _roleManager.FindByIdAsync(id.ToString());
@@ -142,7 +137,7 @@ namespace TalentPool.Web.Controllers
                 return NotFound(id);
             return View(Mapper.Map<DeleteRoleViewModel>(role));
         }
-        [PermissionCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
+        [AuthorizeCheck(Pages.Authorization_Role_CreateOrEditOrDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(DeleteRoleViewModel model)

@@ -8,18 +8,18 @@ namespace TalentPool.Investigations
     public class InvestigationManager:IDisposable
     {
         private bool _disposed;
-        private readonly ITokenProvider _tokenProvider;
+        private readonly ISignal _signal;
         public InvestigationManager(IInvestigationStore investigaionStore,
             IEnumerable<IInvestigaionValidator> investigaionValidators,
-            ITokenProvider  tokenProvider)
+            ISignal  signal)
         {
             InvestigaionStore = investigaionStore;
             InvestigaionValidators = investigaionValidators;
-            _tokenProvider = tokenProvider;
+            _signal = signal;
         }
 
         protected IInvestigationStore InvestigaionStore { get; }
-        protected CancellationToken CancellationToken => _tokenProvider.Token;
+        protected CancellationToken CancellationToken => _signal.Token;
         protected IEnumerable<IInvestigaionValidator> InvestigaionValidators { get; }
 
         public async Task<Investigation> CreateAsync(Investigation investigation)

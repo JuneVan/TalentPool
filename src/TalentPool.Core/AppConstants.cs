@@ -1,6 +1,6 @@
 ﻿namespace TalentPool
 {
-    public class AppConstansts
+    public class AppConstants
     { 
         public class ClaimTypes
         {
