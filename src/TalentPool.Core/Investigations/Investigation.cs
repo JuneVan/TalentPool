@@ -3,6 +3,9 @@ using TalentPool.Entities;
 
 namespace TalentPool.Investigations
 {
+    /// <summary>
+    /// 调查记录
+    /// </summary>
     public class Investigation : Entity, ICreationAudited, IModificationAudited, IDeletionAudited
     {
         /// <summary>

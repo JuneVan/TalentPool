@@ -4,21 +4,23 @@ using System.Threading.Tasks;
 
 namespace TalentPool.Interviews
 {
-    public class InterviewManager:IDisposable
+    public class InterviewManager : ObjectDisposable
     {
-        private bool _disposed;
-        private readonly ISignal _signal;
+
         public InterviewManager(
-            IInterviewStore interviewStore,
-            ISignal  signal)
+             ISignal signal,
+            IInterviewStore interviewStore
+           )
         {
+            Signal = signal;
             InterviewStore = interviewStore;
-            _signal = signal;
         }
-        protected   IInterviewStore InterviewStore;
-        protected virtual CancellationToken CancellationToken => _signal.Token;
+        protected ISignal Signal { get; }
+        protected IInterviewStore InterviewStore { get; }
+        protected virtual CancellationToken CancellationToken => Signal.Token;
         public async Task<Interview> CreateAsync(Interview interview)
         {
+            ThrowIfDisposed();
             if (interview == null)
                 throw new ArgumentNullException(nameof(interview));
             return await InterviewStore.CreateAsync(interview, CancellationToken);
@@ -26,6 +28,7 @@ namespace TalentPool.Interviews
 
         public async Task<Interview> UpdateAsync(Interview interview)
         {
+            ThrowIfDisposed();
             if (interview == null)
                 throw new ArgumentNullException(nameof(interview));
             return await InterviewStore.UpdateAsync(interview, CancellationToken);
@@ -33,12 +36,14 @@ namespace TalentPool.Interviews
 
         public async Task DeleteAsync(Interview interview)
         {
+            ThrowIfDisposed();
             if (interview == null)
                 throw new ArgumentNullException(nameof(interview));
             await InterviewStore.DeleteAsync(interview, CancellationToken);
         }
         public async Task CancelAsync(Interview interview)
         {
+            ThrowIfDisposed();
             if (interview == null)
                 throw new ArgumentNullException(nameof(interview));
 
@@ -48,12 +53,14 @@ namespace TalentPool.Interviews
         }
         public async Task<Interview> FindByIdAsync(Guid interviewId)
         {
+            ThrowIfDisposed();
             if (interviewId == null)
                 throw new ArgumentNullException(nameof(interviewId));
             return await InterviewStore.FindByIdAsync(interviewId, CancellationToken);
         }
         public async Task ChangeAsync(Interview interview)
         {
+            ThrowIfDisposed();
             if (interview == null)
                 throw new ArgumentNullException(nameof(interview));
 
@@ -62,27 +69,5 @@ namespace TalentPool.Interviews
 
             await InterviewStore.UpdateAsync(interview, CancellationToken);
         }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected void Dispose(bool disposing)
-        {
-            if (disposing && !_disposed)
-            {
-                InterviewStore.Dispose();
-            }
-            _disposed = true;
-        }
-        protected void ThrowIfDisposed()
-        {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException(GetType().Name);
-            }
-        }
-
     }
 }

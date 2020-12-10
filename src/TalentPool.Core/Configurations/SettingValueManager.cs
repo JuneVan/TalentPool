@@ -5,21 +5,21 @@ using System.Threading.Tasks;
 
 namespace TalentPool.Configurations
 {
-    public class SettingValueManager : IDisposable
+    public class SettingValueManager : ObjectDisposable
     {
-        private bool _disposed;
-        private readonly ISignal _signal;
         public SettingValueManager(ISettingValueStore settingValueStore,
-            ISignal  signal)
+            ISignal signal)
         {
             SettingValueStore = settingValueStore;
-            _signal = signal;
+            Signal = signal;
         }
-        protected CancellationToken CancellationToken => _signal.Token;
+        protected ISignal Signal { get; }
+        protected CancellationToken CancellationToken => Signal.Token;
         protected ISettingValueStore SettingValueStore;
 
         public async Task<SettingValue> FindByNameAsync(string settingName)
         {
+            ThrowIfDisposed();
             if (settingName == null)
                 throw new ArgumentNullException(nameof(settingName));
 
@@ -27,6 +27,7 @@ namespace TalentPool.Configurations
         }
         public async Task<SettingValue> FindByOwnerUserIdAsync(Guid userId, string settingName)
         {
+            ThrowIfDisposed();
             if (userId == null)
                 throw new ArgumentNullException(nameof(userId));
 
@@ -37,6 +38,7 @@ namespace TalentPool.Configurations
         }
         public async Task BulkAsync(List<SettingValue> settingValues)
         {
+            ThrowIfDisposed();
             if (settingValues == null)
                 throw new ArgumentNullException(nameof(settingValues));
             foreach (var settingValue in settingValues)
@@ -48,25 +50,6 @@ namespace TalentPool.Configurations
             }
             await SettingValueStore.CommitAsync(CancellationToken);
         }
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected void Dispose(bool disposing)
-        {
-            if (disposing && !_disposed)
-            {
-                SettingValueStore.Dispose();
-            }
-            _disposed = true;
-        }
-        protected void ThrowIfDisposed()
-        {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException(GetType().Name);
-            }
-        }
+       
     }
 }

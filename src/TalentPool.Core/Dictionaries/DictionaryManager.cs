@@ -7,28 +7,27 @@ using System.Threading.Tasks;
 
 namespace TalentPool.Dictionaries
 {
-    public class DictionaryManager : IDisposable
+    public class DictionaryManager : ObjectDisposable
     {
-        private bool _disposed;
-        private readonly ISignal _signal;
         public DictionaryManager(IDictionaryStore dictionaryStore,
             IOptions<DictionaryOptions> options,
-            ISignal  signal)
+            ISignal signal)
         {
             DictionaryStore = dictionaryStore;
-            _signal = signal;
+            Signal = signal;
             if (options.Value.Injects != null)
             {
                 InjectDictionaries = options.Value.Injects.ToList();
             }
-
         }
+        protected ISignal Signal { get; }
         public IReadOnlyList<Dictionary> InjectDictionaries { get; }
         protected IDictionaryStore DictionaryStore { get; }
-        protected virtual CancellationToken CancellationToken => _signal.Token;
+        protected virtual CancellationToken CancellationToken => Signal.Token;
 
         public async Task<Dictionary> CreateAsync(Dictionary dictionary)
         {
+            ThrowIfDisposed();
             if (dictionary == null)
                 throw new ArgumentNullException(nameof(dictionary));
 
@@ -37,6 +36,7 @@ namespace TalentPool.Dictionaries
 
         public async Task<Dictionary> UpdateAsync(Dictionary dictionary)
         {
+            ThrowIfDisposed();
             if (dictionary == null)
                 throw new ArgumentNullException(nameof(dictionary));
             await DictionaryStore.UpdateAsync(dictionary, CancellationToken);
@@ -45,6 +45,7 @@ namespace TalentPool.Dictionaries
 
         public async Task<Dictionary> DeleteAsync(Dictionary dictionary)
         {
+            ThrowIfDisposed();
             if (dictionary == null)
                 throw new ArgumentNullException(nameof(dictionary));
 
@@ -53,28 +54,9 @@ namespace TalentPool.Dictionaries
 
         public async Task<Dictionary> FindByIdAsync(Guid dictionaryId)
         {
+            ThrowIfDisposed();
             return await DictionaryStore.FindByIdAsync(dictionaryId, CancellationToken);
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected void Dispose(bool disposing)
-        {
-            if (disposing && !_disposed)
-            {
-                DictionaryStore.Dispose();
-            }
-            _disposed = true;
-        }
-        protected void ThrowIfDisposed()
-        {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException(GetType().Name);
-            }
-        }
     }
 }

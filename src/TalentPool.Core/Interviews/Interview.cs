@@ -3,6 +3,9 @@ using TalentPool.Entities;
 
 namespace TalentPool.Interviews
 {
+    /// <summary>
+    /// 面试预约
+    /// </summary>
     public class Interview : Entity, ICreationAudited, IModificationAudited, IDeletionAudited
     {
         /// <summary>

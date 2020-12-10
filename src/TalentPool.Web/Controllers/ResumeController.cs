@@ -42,7 +42,7 @@ namespace TalentPool.Web.Controllers
         private readonly ConfigurationManager _configurationManager;
         private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailSender _emailSender; 
         public ResumeController(IResumeQuerier resumeQuerier,
             IJobQuerier jobQuerier,
             IDictionaryQuerier dictionaryQuerier,
@@ -69,8 +69,7 @@ namespace TalentPool.Web.Controllers
             _environment = environment;
             _configuration = configuration;
             InitResumeSetting();
-
-
+             
         }
         //初始化简历配置
         private async void InitResumeSetting()
@@ -150,7 +149,7 @@ namespace TalentPool.Web.Controllers
                 {
                     var resume = Mapper.Map<Resume>(model);
                     resume.OwnerUserId = UserIdentifier.UserId.Value;
-                    await _resumeManager.CreateAsync(resume);
+                    await _resumeManager.CreateAsync(resume); 
                     Notifier.Success("你已成功创建了一条简历记录。");
                     return RedirectToAction(nameof(Edit), new { resume.Id });
                 }
@@ -310,7 +309,7 @@ namespace TalentPool.Web.Controllers
                 if (resume == null)
                     return NotFound(model.Id);
 
-                if (Request.Form.Files != null && Request.Form.Files.Count > 0 )
+                if (Request.Form.Files != null && Request.Form.Files.Count > 0)
                 {
                     try
                     {

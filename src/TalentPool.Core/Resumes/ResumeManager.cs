@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 namespace TalentPool.Resumes
 {
     public class ResumeManager : ObjectDisposable
-    { 
-        private readonly ISignal _signal;
+    {
         public ResumeManager(IResumeStore resumeStore,
             IResumeAuditSettingStore resumeAuditSettingStore,
             IEnumerable<IResumeValidator> resumeValidators,
@@ -22,14 +21,15 @@ namespace TalentPool.Resumes
             ResumeComparer = resumeComparer;
             ResumeAuditSettingStore = resumeAuditSettingStore;
             Options = options?.Value;
-            _signal = signal;
+            Signal = signal;
         }
         public ResumeOptions Options { get; }
         protected IResumeStore ResumeStore { get; }
+        protected ISignal Signal { get; }
         protected IResumeAuditSettingStore ResumeAuditSettingStore { get; }
         protected IEnumerable<IResumeValidator> ResumeValidators { get; }
         protected IResumeComparer ResumeComparer { get; }
-        protected virtual CancellationToken CancellationToken => _signal.Token;
+        protected virtual CancellationToken CancellationToken => Signal.Token;
 
         public async Task<Resume> CreateAsync(Resume resume)
         {
@@ -195,7 +195,7 @@ namespace TalentPool.Resumes
             if (resume == null)
                 throw new ArgumentNullException(nameof(resume));
             if (attachment == null)
-                throw new ArgumentNullException(nameof(attachment)); 
+                throw new ArgumentNullException(nameof(attachment));
             resume.Attachments.Remove(attachment);
             await ResumeStore.UpdateAsync(resume, CancellationToken);
         }

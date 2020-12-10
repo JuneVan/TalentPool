@@ -4,6 +4,9 @@ using TalentPool.Entities;
 
 namespace TalentPool.Evaluations
 {
+    /// <summary>
+    /// 技术评估
+    /// </summary>
     public class Evaluation : Entity, ICreationAudited, IModificationAudited, IDeletionAudited
     {
         /// <summary>
