@@ -365,13 +365,13 @@
                 <div class="modal-body">
 
                     <input type="hidden" name="Date" value="@Model.Date" />
-                    @if (Model.JobStatisticTotalInfo != null && Model.JobStatisticTotalInfo.JobStatisticInfo != null)
+                    @if (Model.Jobs != null)
                     {
-                        foreach (var item in Model.JobStatisticTotalInfo.JobStatisticInfo)
+                        foreach (var item in Model.Jobs)
                         {
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" checked name="Job.@item.JobName" id="Job#@item.JobName">
-                                <label class="form-check-label" for="Job#@item.JobName">@item.JobName</label>
+                                <input class="form-check-input" type="checkbox" checked name="Job.@item" id="Job#@item">
+                                <label class="form-check-label" for="Job#@item">@item</label>
                             </div>
                         }
                     }

@@ -120,7 +120,10 @@ namespace TalentPool.Evaluations
         }
         #endregion
 
-         
 
+        protected override void DisposeUnmanagedResource()
+        {
+            EvaluationStore.Dispose();
+        }
     }
 }

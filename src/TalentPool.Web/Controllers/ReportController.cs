@@ -126,6 +126,11 @@ namespace TalentPool.Web.Controllers
                 });
             }
 
+            // 职位过滤
+            model.Jobs = investigations.GroupBy(g => g.JobName).Select(s => s.Key).ToList();
+
+
+
 
             //调查情况统计
             var groupInvestigations = investigations.GroupBy(g => g.OwnerUserName).ToList();

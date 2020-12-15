@@ -24,6 +24,8 @@ namespace TalentPool.Web.Models.ReportViewModels
         // 今日面试情况
         public InterviewStatisticTotalModel InterviewStatisticTotalInfo { get; set; }
 
+        public List<string> Jobs { get; set; }
+
     }
     //简历城市分布统计
     public class ResumeStatisticModel

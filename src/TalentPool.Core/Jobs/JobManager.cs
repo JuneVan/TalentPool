@@ -45,6 +45,11 @@ namespace TalentPool.Jobs
             if (jobId == null)
                 throw new ArgumentNullException(nameof(jobId));
             return await JobStore.FindByIdAsync(jobId, CancellationToken);
-        } 
+        }
+
+        protected override void DisposeUnmanagedResource()
+        {
+            JobStore.Dispose();
+        }
     }
 }

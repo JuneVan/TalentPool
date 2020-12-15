@@ -109,6 +109,11 @@ namespace TalentPool.Investigations
                 throw new ArgumentNullException(nameof(evaluation));
             investigation.Evaluation = evaluation;
             await UpdateAsync(investigation);
-        } 
+        }
+
+        protected override void DisposeUnmanagedResource()
+        {
+            InvestigaionStore.Dispose();
+        }
     }
 }

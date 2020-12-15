@@ -69,5 +69,9 @@ namespace TalentPool.Interviews
 
             await InterviewStore.UpdateAsync(interview, CancellationToken);
         }
+        protected override void DisposeUnmanagedResource()
+        {
+            InterviewStore.Dispose();
+        }
     }
 }

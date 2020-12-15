@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 
 namespace TalentPool.DailyStatistics
 {
-    public class DailyStatisticManager : IDisposable
-    {
-        private bool _disposed;
+    public class DailyStatisticManager : ObjectDisposable
+    { 
         private readonly ISignal _signal;
         public DailyStatisticManager(IDailyStatisticStore dailyStatisticsStore,
             ISignal signal)
@@ -44,26 +43,9 @@ namespace TalentPool.DailyStatistics
 
             return await DailyStatisticsStore.FindByIdAsync(dailyStatisticId, CancellationToken);
         }
-
-        public void Dispose()
+        protected override void DisposeUnmanagedResource()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected void Dispose(bool disposing)
-        {
-            if (disposing && !_disposed)
-            {
-                DailyStatisticsStore.Dispose();
-            }
-            _disposed = true;
-        }
-        protected void ThrowIfDisposed()
-        {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException(GetType().Name);
-            }
-        }
+            DailyStatisticsStore.Dispose();
+        } 
     }
 }

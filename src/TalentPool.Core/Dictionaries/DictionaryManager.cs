@@ -57,6 +57,9 @@ namespace TalentPool.Dictionaries
             ThrowIfDisposed();
             return await DictionaryStore.FindByIdAsync(dictionaryId, CancellationToken);
         }
-
+        protected override void DisposeUnmanagedResource()
+        {
+            DictionaryStore.Dispose();
+        }
     }
 }
