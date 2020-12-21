@@ -12,9 +12,9 @@ namespace TalentPool.Application.Interviews
         /// <summary>
         /// 获取未完成预约列表
         /// </summary>
-        /// <param name="creatorUserId"></param>
+        /// <param name="ownerUserId"></param>
         /// <returns></returns>
-        Task<List<UnfinshInterviewDto>> GetUnfinshInterviewsAsync(Guid?creatorUserId);
+        Task<List<UnfinshInterviewDto>> GetUnfinshInterviewsAsync(Guid? ownerUserId);
 
         Task<List<InterviewCalendarDto>> GetCalendarInterviewsAsync(DateTime startTime, DateTime endTime);
         Task<InterviewDetailDto> GetInterviewDetailAsync(Guid id);
