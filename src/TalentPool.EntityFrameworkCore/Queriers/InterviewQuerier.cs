@@ -87,6 +87,7 @@ namespace TalentPool.EntityFrameworkCore.Queriers
                         join b in _context.Resumes on a.ResumeId equals b.Id
                         join c in _context.Jobs on b.JobId equals c.Id
                         join d in _context.Users on a.CreatorUserId equals d.Id
+                        join f in _context.Users on b.OwnerUserId equals f.Id
                         select new InterviewDto()
                         {
                             Id = a.Id,
@@ -96,6 +97,8 @@ namespace TalentPool.EntityFrameworkCore.Queriers
                             JobName = c.Title,
                             CreatorUserId = a.CreatorUserId,
                             CreatorUserName = d.FullName,
+                            OwnerUserId = b.OwnerUserId,
+                            OwnerUserName = f.FullName,
                             PhoneNumber = b.PhoneNumber,
                             Remark = a.Remark,
                             VisitedTime = a.VisitedTime,
