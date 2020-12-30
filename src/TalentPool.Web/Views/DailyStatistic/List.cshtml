@@ -48,8 +48,8 @@
                                             <i class="fas fa-cog"></i> 操作菜单
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="group-dropdown">
-                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/DailyStatistic/Edit/" + item.Id, Pages.DailyStatistic_CreateOrEditOrDelete, "btn-sm btn btn-primary", "fas fa-plus"))
-                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("删除", "/DailyStatistic/Delete/" + item.Id, Pages.DailyStatistic_CreateOrEditOrDelete, "btn-sm btn btn-primary", "fas fa-plus"))
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/DailyStatistic/Edit/" + item.Id, Pages.DailyStatistic_CreateOrEditOrDelete, "dropdown-item"))
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("删除", "/DailyStatistic/Delete/" + item.Id, Pages.DailyStatistic_CreateOrEditOrDelete, "dropdown-item"))
                                         </div>
                                     </div>
                                 </td>
