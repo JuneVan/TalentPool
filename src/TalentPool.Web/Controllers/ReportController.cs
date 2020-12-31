@@ -223,13 +223,14 @@ namespace TalentPool.Web.Controllers
                         //未开始调查状态(默认
                         if (investigationList[i].Status == InvestigationStatus.NoStart)
                         {
-                            worksheet01.Cells[i + 2, 1, i + 2, 17].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 255, 255));
+                            worksheet01.Cells[i + 2, 1, i + 2, 17].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 255, 255)); 
                         }
                         else if (investigationList[i].Status == InvestigationStatus.Ongoing)
                         {
                             if (!investigationList[i].IsConnected.HasValue || !investigationList[i].IsConnected.Value)
                             {
                                 worksheet01.Cells[i + 2, 1, i + 2, 17].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(108, 117, 125));//secondary
+                                worksheet01.Cells[i + 2, 1, i + 2, 17].Style.Font.Color.SetColor(Color.FromArgb(255, 255, 255));
                             }
                             else //已接通 
                             {
@@ -237,10 +238,12 @@ namespace TalentPool.Web.Controllers
                                 if (investigationList[i].AcceptTravelStatus == AcceptTravelStatus.Consider)
                                 {
                                     worksheet01.Cells[i + 2, 1, i + 2, 17].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 193, 7));//yellow
+                                    worksheet01.Cells[i + 2, 1, i + 2, 17].Style.Font.Color.SetColor(Color.FromArgb(255, 255, 255));
                                 }
                                 else
                                 {
                                     worksheet01.Cells[i + 2, 1, i + 2, 17].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(0, 123, 255));//blue
+                                    worksheet01.Cells[i + 2, 1, i + 2, 17].Style.Font.Color.SetColor(Color.FromArgb(255, 255, 255));
                                 }
                             }
                         }
@@ -254,6 +257,7 @@ namespace TalentPool.Web.Controllers
                             else
                             {
                                 worksheet01.Cells[i + 2, 1, i + 2, 17].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(40, 167, 69));//green
+                                worksheet01.Cells[i + 2, 1, i + 2, 17].Style.Font.Color.SetColor(Color.FromArgb(255, 255, 255));
                             }
                         }
                         /** 颜色***/
@@ -321,21 +325,20 @@ namespace TalentPool.Web.Controllers
                         worksheet01.Cells[i + 2, 14].Value = investigationList[i].CityOfResidence;
                         worksheet01.Cells[i + 2, 15].Value = (investigationList[i].IsAcceptInterview.HasValue && investigationList[i].IsAcceptInterview.Value) ? "是" : "否";
                         worksheet01.Cells[i + 2, 16].Value = investigationList[i].ExpectedInterviewDate;
-                        if (investigationList[i].IsQualified.HasValue && investigationList[i].IsQualified.Value)
+                        if (investigationList[i].IsQualified.HasValue )
                         {
-                            worksheet01.Cells[i + 2, 17].Value = "合格";
-                        }
-                        else
-                        {
-
-                            if (!string.IsNullOrEmpty(investigationList[i].UnconnectedRemark))
+                            if (investigationList[i].IsQualified.Value)
                             {
-                                worksheet01.Cells[i + 2, 17].Value = $"不合格({investigationList[i].UnconnectedRemark})";
+                                worksheet01.Cells[i + 2, 17].Value = "合格";
                             }
                             else
                             {
                                 worksheet01.Cells[i + 2, 17].Value = "不合格";
                             }
+                        }
+                        else
+                        {
+                            worksheet01.Cells[i + 2, 17].Value = "/"; 
                         }
                     }
                     catch (Exception ex)
