@@ -204,7 +204,7 @@ namespace TalentPool.Web.Controllers
                 }
                 catch (Exception ex)
                 {
-                    Notifier.Warning(ex.Message);
+                    Notifier.Warning(ex.Message); 
                     model.ResumeCompares = resume.ResumeCompares
                         .Select(s => new ResumeCompareDto()
                         {
@@ -212,6 +212,7 @@ namespace TalentPool.Web.Controllers
                             RelationResumeName = s.RelationResumeName,
                             RelationResumeId = s.RelationResumeId
                         }).ToList();
+                    model.OwnerUserId = resume.OwnerUserId;
                 }
 
             }
