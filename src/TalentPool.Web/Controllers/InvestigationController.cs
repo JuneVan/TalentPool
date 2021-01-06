@@ -23,14 +23,14 @@ namespace TalentPool.Web.Controllers
         private readonly IInvestigationQuerier _investigationQuerier;
         private readonly IJobQuerier _jobQuerier;
         private readonly IUserQuerier _userQuerier;
-        private readonly IResumeQuerier _resumeQuerier; 
+        private readonly IResumeQuerier _resumeQuerier;
         private readonly ResumeManager _resumeManager;
         private readonly InvestigationManager _investigationManager;
         public InvestigationController(IServiceProvider serviceProvider,
             IInvestigationQuerier investigationQuerier,
             IJobQuerier jobQuerier,
             IUserQuerier userQuerier,
-            IResumeQuerier resumeQuerier, 
+            IResumeQuerier resumeQuerier,
             ResumeManager resumeManager,
             InvestigationManager investigationManager)
             : base(serviceProvider)
@@ -38,7 +38,7 @@ namespace TalentPool.Web.Controllers
             _investigationQuerier = investigationQuerier;
             _jobQuerier = jobQuerier;
             _userQuerier = userQuerier;
-            _resumeQuerier = resumeQuerier; 
+            _resumeQuerier = resumeQuerier;
             _resumeManager = resumeManager;
             _investigationManager = investigationManager;
         }
@@ -102,10 +102,10 @@ namespace TalentPool.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                var investigation = Mapper.Map<Investigation>(model);
+                investigation.InvestigateDate = DateTime.Now.Date;
                 try
                 {
-                    var investigation = Mapper.Map<Investigation>(model);
-                    investigation.InvestigateDate = DateTime.Now.Date;
                     await _investigationManager.CreateAsync(investigation);
 
                     Notifier.Success($"你已成功创建了“{investigation.Name}”的意向调查记录！");
@@ -113,8 +113,8 @@ namespace TalentPool.Web.Controllers
                 catch (Exception ex)
                 {
                     Notifier.Warning(ex.Message);
-                } 
-                return RedirectToAction(nameof(List));
+                }
+                return RedirectToAction(nameof(Edit), new { Id = investigation.Id });
             }
             return View(model);
 
@@ -365,7 +365,7 @@ namespace TalentPool.Web.Controllers
             return Ok();
         }
 
-         
+
         private IActionResult NotFound(Guid id)
         {
             Notifier.Warning($"未找到id:“{id}”的调查记录。");
