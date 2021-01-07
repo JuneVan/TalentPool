@@ -43,8 +43,12 @@ namespace TalentPool.Web.Models.InvestigationViewModels
         public string Information { get; set; }
         // 技术评测
         public string Evaluation { get; set; }
-        // 预约评测时间
-        public DateTime? EvaluationTime { get; set; }
+        // 预约时间
+        public DateTime? AppointmentTime { get; set; }
+        /// <summary>
+        /// 预约内容
+        /// </summary>
+        public AppointmentType? AppointmentType { get; set; }
 
         // 居住地城市
         public string CityOfResidence { get; set; }

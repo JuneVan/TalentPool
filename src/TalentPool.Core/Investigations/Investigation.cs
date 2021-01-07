@@ -88,9 +88,13 @@ namespace TalentPool.Investigations
         /// </summary>
         public virtual string Evaluation { get; set; }
         /// <summary>
-        /// 评测时间（未来时间则为预约时间）
+        /// 预约时间（未来时间则为预约时间）
         /// </summary>
-        public virtual DateTime? EvaluationTime { get; set; }
+        public virtual DateTime? AppointmentTime { get; set; }
+        /// <summary>
+        /// 预约内容类型
+        /// </summary>
+        public virtual AppointmentType? AppointmentType { get; set; }
         /// <summary>
         /// 居住地城市
         /// </summary>

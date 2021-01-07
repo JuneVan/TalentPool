@@ -18,6 +18,7 @@ namespace TalentPool.Application.Resumes
         public Guid? InvestigationId { get; set; }
         public InvestigationStatus? Status { get; set; }
         public DateTime? InvestigationDate { get; set; }
-        public DateTime? EvaluationTime { get; set; }
+        public DateTime? AppointmentTime { get; set; }
+        public AppointmentType? AppointmentType { get; set; }
     }
 }

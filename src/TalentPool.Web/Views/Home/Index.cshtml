@@ -287,9 +287,18 @@
                                     <td>
                                         @item.Name
 
-                                        @if (item.EvaluationTime.HasValue && item.EvaluationTime.Value > DateTime.Now)
+                                        @if (item.AppointmentTime.HasValue && item.AppointmentType.HasValue)
                                         {
-                                            <small class="badge badge-info" title="预约评测时间-@item.EvaluationTime" data-toggle="tooltip" data-placement="top">待评测</small>
+                                        <small class="badge badge-info" title="预约时间-@item.AppointmentTime" data-toggle="tooltip" data-placement="top">
+                                            @if (item.AppointmentType == AppointmentType.Investigaion)
+                                            {
+                                                <text>预约调查</text>
+                                            }
+                                            else
+                                            {
+                                                <text>预约评测</text>
+                                            }
+                                        </small>
                                         }
                                         else
                                         {

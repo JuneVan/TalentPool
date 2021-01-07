@@ -15,157 +15,188 @@
         <div class="card-body">
             @if (Model.ActiveDelivery)
             {
-<div class="ribbon-wrapper ribbon-lg">
-    <div class="ribbon bg-success text-lg">
-        主动投递
-    </div>
-</div>}
-            <input type="hidden" asp-for="Id">
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label>姓名</label>
-                    <input type="text" class="form-control" readonly asp-for="Name">
+                <div class="ribbon-wrapper ribbon-lg">
+                    <div class="ribbon bg-success text-lg">
+                        主动投递
+                    </div>
                 </div>
-                <div class="form-group col-md-6">
-                    <label>手机号</label>
-                    <input type="text" class="form-control" readonly asp-for="PhoneNumber">
-                </div>
-                <div class="form-group col-md-6">
-                    <label>邮箱地址</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" asp-for="Email" readonly>
-                        <div class="input-group-append">
-                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("", "/Resume/SendEmail/" + Model.ResumeId, Pages.Resume_SendEmail, "btn btn-sm btn-default", "fas fa-envelope", blank: true))
+                }
+            <input type="hidden" asp-for="Id"> 
+            <fieldset>
+                <legend>基本资料</legend>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>姓名</label>
+                        <input type="text" class="form-control" readonly asp-for="Name">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>手机号</label>
+                        <input type="text" class="form-control" readonly asp-for="PhoneNumber">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>邮箱地址</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" asp-for="Email" readonly>
+                            <div class="input-group-append">
+                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("", "/Resume/SendEmail/" + Model.ResumeId, Pages.Resume_SendEmail, "btn btn-sm btn-default", "fas fa-envelope", blank: true))
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>职位</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" asp-for="JobName" readonly>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#modal-default" title="岗位说明">
+                                    <i class="fas fa-question-circle"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-md-6">
-                    <label>职位</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" asp-for="JobName" readonly>
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#modal-default" title="岗位说明">
-                                <i class="fas fa-question-circle"></i>
-                            </button>
+            </fieldset>
+            <fieldset>
+                <legend>预约调查</legend>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label>下次预约时间(<small>超过当前日期即为预约日期</small>)</label>
+                        <input type="text" class="form-control" placeholder="请输入预约时间" asp-for="AppointmentTime" value="@(Model.AppointmentTime?.ToString("yyyy/MM/dd MM:dd"))">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>预约类型</label>
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                @Html.RadioButtonFor(Model => Model.AppointmentType, AppointmentType.Investigaion, new { @id = "AppointmentTypeRadio1", @name = "AppointmentType", @class = "custom-control-input" })
+                                <label for="AppointmentTypeRadio1" class="custom-control-label">电话调查</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                @Html.RadioButtonFor(Model => Model.AppointmentType, AppointmentType.Evaluation, new { @id = "AppointmentTypeRadio2", @name = "AppointmentType", @class = "custom-control-input" })
+                                <label for="AppointmentTypeRadio2" class="custom-control-label">技术评测</label>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-md-12">
-                    <label>调查时间<small>（日报告统计的日期）</small></label>
-                    <input type="text" class="form-control" placeholder="请输入调查时间" asp-for="InvestigateDate" value="@(Model.InvestigateDate.ToString("yyyy/MM/dd"))">
-                </div>
-                <div class="form-group col-md-12">
-                    <label>是否接通电话</label>
-                    <div class="form-group">
-                        <div class="custom-control custom-radio">
-                            @Html.RadioButtonFor(Model => Model.IsConnected, true, new { @id = "IsConnectedRadio1", @name = "IsConnected", @class = "custom-control-input" })
-                            <label for="IsConnectedRadio1" class="custom-control-label">已接</label>
+            </fieldset>
+            <fieldset>
+                <legend>调查信息</legend>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label>调查时间<small>（日报告统计的日期）</small></label>
+                        <input type="text" class="form-control" placeholder="请输入调查时间" asp-for="InvestigateDate" value="@(Model.InvestigateDate.ToString("yyyy/MM/dd"))">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>是否接通电话</label>
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                @Html.RadioButtonFor(Model => Model.IsConnected, true, new { @id = "IsConnectedRadio1", @name = "IsConnected", @class = "custom-control-input" })
+                                <label for="IsConnectedRadio1" class="custom-control-label">已接</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                @Html.RadioButtonFor(Model => Model.IsConnected, false, new { @id = "IsConnectedRadio2", @name = "IsConnected", @class = "custom-control-input" })
+                                <label for="IsConnectedRadio2" class="custom-control-label">未接</label>
+                            </div>
                         </div>
-                        <div class="custom-control custom-radio">
-                            @Html.RadioButtonFor(Model => Model.IsConnected, false, new { @id = "IsConnectedRadio2", @name = "IsConnected", @class = "custom-control-input" })
-                            <label for="IsConnectedRadio2" class="custom-control-label">未接</label>
+                        <span asp-validation-for="IsConnected" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>未接通电话的情况备注</label>
+                        <div class="btn-group btn-group-sm" id="btn-remarks">
+                            <button type="button" class="btn btn-default" data-remark="空号">空号</button>
+                            <button type="button" class="btn btn-primary" data-remark="无人接听">无人接听</button>
+                            <button type="button" class="btn btn-success" data-remark="拒接挂断">拒接挂断</button>
+                            <button type="button" class="btn btn-warning" data-remark="其他原因">其他原因</button>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" asp-for="UnconnectedRemark" class="form-control" placeholder="请输入未接通电话的情况备注">
                         </div>
                     </div>
-                    <span asp-validation-for="IsConnected" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-12">
-                    <label>未接通电话的情况备注</label>
-                    <div class="btn-group btn-group-sm" id="btn-remarks">
-                        <button type="button" class="btn btn-default" data-remark="空号">空号</button>
-                        <button type="button" class="btn btn-primary" data-remark="无人接听">无人接听</button>
-                        <button type="button" class="btn btn-success" data-remark="拒接挂断">拒接挂断</button>
-                        <button type="button" class="btn btn-warning" data-remark="其他原因">其他原因</button>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" asp-for="UnconnectedRemark" class="form-control" placeholder="请输入未接通电话的情况备注">
-                    </div>
-                </div>
-                <div class="form-group col-md-12">
-                    <label>工作状态</label>
-                    <div class="form-group">
-                        <div class="custom-control custom-radio">
-                            @Html.RadioButtonFor(Model => Model.WorkState, WorkState.InService, new { @id = "WorkStateRadio1", @name = "WorkState", @class = "custom-control-input" })
-                            <label for="WorkStateRadio1" class="custom-control-label">在职</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            @Html.RadioButtonFor(Model => Model.WorkState, WorkState.OutOfService, new { @id = "WorkStateRadio2", @name = "WorkState", @class = "custom-control-input" })
-                            <label for="WorkStateRadio2" class="custom-control-label">离职</label>
+                   
+                    <div class="form-group col-md-12">
+                        <label>工作状态</label>
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                @Html.RadioButtonFor(Model => Model.WorkState, WorkState.InService, new { @id = "WorkStateRadio1", @name = "WorkState", @class = "custom-control-input" })
+                                <label for="WorkStateRadio1" class="custom-control-label">在职</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                @Html.RadioButtonFor(Model => Model.WorkState, WorkState.OutOfService, new { @id = "WorkStateRadio2", @name = "WorkState", @class = "custom-control-input" })
+                                <label for="WorkStateRadio2" class="custom-control-label">离职</label>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group col-md-12">
-                    <label>期望薪资</label>
-                    <input type="text" class="form-control" placeholder="请输入期望薪资，例如：10k或10000" asp-for="ExpectedSalary">
-                </div>
-                <div class="form-group col-md-12">
-                    <label>出差意愿</label>
-                    <div class="form-group">
-                        <div class="custom-control custom-radio">
-                            @Html.RadioButtonFor(Model => Model.AcceptTravelStatus, AcceptTravelStatus.Accept, new { @id = "AcceptTravelStatusRadio1", @name = "AcceptTravelStatus", @class = "custom-control-input" })
-                            <label for="AcceptTravelStatusRadio1" class="custom-control-label">愿意</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            @Html.RadioButtonFor(Model => Model.AcceptTravelStatus, AcceptTravelStatus.Refuse, new { @id = "AcceptTravelStatusRadio2", @name = "AcceptTravelStatus", @class = "custom-control-input" })
-                            <label for="AcceptTravelStatusRadio2" class="custom-control-label">不愿意</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            @Html.RadioButtonFor(Model => Model.AcceptTravelStatus, AcceptTravelStatus.Consider, new { @id = "AcceptTravelStatusRadio3", @name = "AcceptTravelStatus", @class = "custom-control-input" })
-                            <label for="AcceptTravelStatusRadio3" class="custom-control-label">考虑</label>
+                    <div class="form-group col-md-12">
+                        <label>期望薪资</label>
+                        <input type="text" class="form-control" placeholder="请输入期望薪资，例如：10k或10000" asp-for="ExpectedSalary">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>出差意愿</label>
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                @Html.RadioButtonFor(Model => Model.AcceptTravelStatus, AcceptTravelStatus.Accept, new { @id = "AcceptTravelStatusRadio1", @name = "AcceptTravelStatus", @class = "custom-control-input" })
+                                <label for="AcceptTravelStatusRadio1" class="custom-control-label">愿意</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                @Html.RadioButtonFor(Model => Model.AcceptTravelStatus, AcceptTravelStatus.Refuse, new { @id = "AcceptTravelStatusRadio2", @name = "AcceptTravelStatus", @class = "custom-control-input" })
+                                <label for="AcceptTravelStatusRadio2" class="custom-control-label">不愿意</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                @Html.RadioButtonFor(Model => Model.AcceptTravelStatus, AcceptTravelStatus.Consider, new { @id = "AcceptTravelStatusRadio3", @name = "AcceptTravelStatus", @class = "custom-control-input" })
+                                <label for="AcceptTravelStatusRadio3" class="custom-control-label">考虑</label>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group col-md-12">
-                    <label>意愿备注</label>
-                    <input type="text" class="form-control" placeholder="请输入不愿意的原因，其他情况可不填" asp-for="NotAcceptTravelReason">
-                </div>
-                <div class="form-group col-md-12">
-                    <label>居住地</label>
-                    <input type="text" class="form-control" placeholder="请输入居住地，例如：深圳" asp-for="CityOfResidence">
-                </div>
-                <div class="form-group col-md-12">
-                    <label>户籍所在地</label>
-                    <input type="text" class="form-control" placeholder="请输入户籍所在地，例如：广东深圳" asp-for="CityOfDomicile">
-                </div>
-                <div class="form-group col-md-12">
-                    <label>可入职时间</label>
-                    <input type="text" class="form-control" placeholder="请输入可入职时间，例如：随时或一个星期" asp-for="ExpectedDate">
-                </div>
-                <div class="form-group col-md-12">
-                    <label>是否接受现场面试</label>
-                    <div class="form-group">
-                        <div class="custom-control custom-radio">
-                            @Html.RadioButtonFor(Model => Model.IsAcceptInterview, true, new { @id = "IsAcceptInterviewRadio1", @name = "IsAcceptInterview", @class = "custom-control-input" })
-                            <label for="IsAcceptInterviewRadio1" class="custom-control-label">接受</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            @Html.RadioButtonFor(Model => Model.IsAcceptInterview, false, new { @id = "IsAcceptInterviewRadio2", @name = "IsAcceptInterview", @class = "custom-control-input" })
-                            <label for="IsAcceptInterviewRadio2" class="custom-control-label">不接受</label>
+                    <div class="form-group col-md-12">
+                        <label>意愿备注</label>
+                        <input type="text" class="form-control" placeholder="请输入不愿意的原因，其他情况可不填" asp-for="NotAcceptTravelReason">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>居住地</label>
+                        <input type="text" class="form-control" placeholder="请输入居住地，例如：深圳" asp-for="CityOfResidence">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>户籍所在地</label>
+                        <input type="text" class="form-control" placeholder="请输入户籍所在地，例如：广东深圳" asp-for="CityOfDomicile">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>可入职时间</label>
+                        <input type="text" class="form-control" placeholder="请输入可入职时间，例如：随时或一个星期" asp-for="ExpectedDate">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>是否接受现场面试</label>
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                @Html.RadioButtonFor(Model => Model.IsAcceptInterview, true, new { @id = "IsAcceptInterviewRadio1", @name = "IsAcceptInterview", @class = "custom-control-input" })
+                                <label for="IsAcceptInterviewRadio1" class="custom-control-label">接受</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                @Html.RadioButtonFor(Model => Model.IsAcceptInterview, false, new { @id = "IsAcceptInterviewRadio2", @name = "IsAcceptInterview", @class = "custom-control-input" })
+                                <label for="IsAcceptInterviewRadio2" class="custom-control-label">不接受</label>
+                            </div>
                         </div>
                     </div>
+                    <div class="form-group col-md-12">
+                        <label>可面试时间</label>
+                        <input type="text" class="form-control" placeholder="请输入可面试时间，例如：随时" asp-for="ExpectedInterviewDate">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>可电话面试时间</label>
+                        <input type="text" class="form-control" placeholder="请输入可电话面试时间，例如：随时" asp-for="ExpectedPhoneInterviewDate">
+                    </div>
                 </div>
-                <div class="form-group col-md-12">
-                    <label>可面试时间</label>
-                    <input type="text" class="form-control" placeholder="请输入可面试时间，例如：随时" asp-for="ExpectedInterviewDate">
+            </fieldset>
+            <fieldset>
+                <legend>详细内容</legend>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label>意向调查表</label>
+                        <textarea asp-for="Information"></textarea>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>技术评测</label>
+                        <textarea asp-for="Evaluation"></textarea>
+                    </div>
                 </div>
-                <div class="form-group col-md-12">
-                    <label>可电话面试时间</label>
-                    <input type="text" class="form-control" placeholder="请输入可电话面试时间，例如：随时" asp-for="ExpectedPhoneInterviewDate">
-                </div>
-
-                <div class="form-group col-md-12">
-                    <label>意向调查表</label>
-                    <textarea asp-for="Information"></textarea>
-                </div>
-                <div class="form-group col-md-12">
-                    <label>预约评测时间</label>  
-                    <input type="text" class="form-control" placeholder="请输入预约评测时间" asp-for="EvaluationTime" value="@(Model.EvaluationTime?.ToString("yyyy/MM/dd"))">
-                </div>
-                <div class="form-group col-md-12">
-                    <label>技术评测</label>
-                    <textarea asp-for="Evaluation"></textarea>
-                </div>
-            </div>
-
+            </fieldset> 
         </div>
         <div class="card-footer">
             <button type="submit" class="btn btn-primary">提交</button>
@@ -179,6 +210,17 @@
 @section styles {
     <link href="~/lib/summernote/summernote-bs4.min.css" rel="stylesheet" />
     <link href="~/lib/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" />
+<style>
+    fieldset {
+        min-width: 0;
+        padding: .5rem;
+        margin: .5rem;
+        border:  .1rem solid #dbdbdb;
+    }
+    legend {
+        width:auto;
+    }
+</style>
 }
 @section scripts {
     <script src="~/lib/bootstrap-daterangepicker/moment.min.js"></script>
@@ -199,7 +241,7 @@
                 firstDay: 1
             }
         });
-        $("input[name='EvaluationTime']").daterangepicker({
+        $("input[name='AppointmentTime']").daterangepicker({
             singleDatePicker: true,
             timePicker: true,
             locale: {
