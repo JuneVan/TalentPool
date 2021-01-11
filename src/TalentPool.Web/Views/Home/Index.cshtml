@@ -213,11 +213,11 @@
                                         @item.AppointmentTime.ToString("yyyy/MM/dd HH:mm")
 
                                     </td>
-                                    <td> 
+                                    <td>
                                         @item.OwnerUserName
                                         @if (item.CreatorUserId != item.OwnerUserId)
                                         {
-                                        <del class="text-gray">@item.CreatorUserName</del>
+                                            <del class="text-gray">@item.CreatorUserName</del>
                                         }
                                     </td>
                                     <td>
@@ -286,35 +286,36 @@
                                 <tr>
                                     <td>
                                         @item.Name
-
+                                        @if (item.InvestigationDate.HasValue)
+                                        {
+                                            var days = (DateTime.Now.Date - item.InvestigationDate.Value.Date).TotalDays;
+                                            if (days == 1)
+                                            {
+                                                <span class="badge badge-warning" title="未完成调查任务，请继续跟进！" data-toggle="tooltip" data-placement="top">待跟进</span>
+                                            }
+                                            else if (days > 1)
+                                            {
+                                                <span class="badge badge-danger" title="未完成调查任务，你有 @days 天未跟进！" data-toggle="tooltip" data-placement="top">待跟进</span>
+                                            }
+                                        }
                                         @if (item.AppointmentTime.HasValue && item.AppointmentType.HasValue)
                                         {
-                                        <small class="badge badge-info" title="预约时间-@item.AppointmentTime" data-toggle="tooltip" data-placement="top">
-                                            @if (item.AppointmentType == AppointmentType.Investigaion)
-                                            {
-                                                <text>预约调查</text>
-                                            }
-                                            else
-                                            {
-                                                <text>预约评测</text>
-                                            }
-                                        </small>
-                                        }
-                                        else
-                                        {
-                                            if (item.InvestigationDate.HasValue)
-                                            {
-                                                var days = (DateTime.Now.Date - item.InvestigationDate.Value.Date).TotalDays;
-                                                if (days == 1)
+                                            <small class="badge badge-info" title="预约时间-@item.AppointmentTime" data-toggle="tooltip" data-placement="top">
+                                                @if (item.AppointmentType == AppointmentType.Investigaion)
                                                 {
-                                                    <span class="badge badge-warning" title="未完成调查任务，请继续跟进！" data-toggle="tooltip" data-placement="top">待跟进</span>
+                                                    <text>预约调查</text>
                                                 }
-                                                else if (days > 1)
+                                                else
                                                 {
-                                                    <span class="badge badge-danger" title="未完成调查任务，你有 @days 天未跟进！" data-toggle="tooltip" data-placement="top">待跟进</span>
+                                                    <text>预约评测</text>
                                                 }
-                                            }
+                                                @if (item.AppointmentTime.Value < DateTime.Now)
+                                                {
+                                                    <text>已过期</text>
+                                                }
+                                            </small>
                                         }
+
                                     </td>
                                     <td>@item.JobName</td>
                                     <td>@item.PlatformName</td>
