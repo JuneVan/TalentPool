@@ -113,14 +113,13 @@
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="group-dropdown">
                                             @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Interview/View/" + item.Id, Pages.Interview, "dropdown-item"))
-                                            @if (UserIdentifier.UserId == item.CreatorUserId)
+
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Interview/Edit/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
+
+                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("履约/爽约", "/Interview/Change/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
+                                            @if (item.Status == InterviewStatus.None)
                                             {
-                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Interview/Edit/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
-                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("履约/爽约", "/Interview/Change/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
-                                                @if (item.Status == InterviewStatus.None)
-                                                {
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("取消预约", "/Interview/Cancel/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
-                                                }
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("取消预约", "/Interview/Cancel/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
                                             }
                                         </div>
                                     </div>

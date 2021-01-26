@@ -227,12 +227,11 @@
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="group-dropdown">
                                                 @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("查看", "/Interview/View/" + item.Id, Pages.Interview, "dropdown-item"))
-                                                @if (UserIdentifier.UserId == item.OwnerUserId)
-                                                {
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Interview/Edit/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("履约/爽约", "/Interview/Change/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
-                                                    @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("取消预约", "/Interview/Cancel/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
-                                                }
+
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Interview/Edit/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("履约/爽约", "/Interview/Change/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
+                                                @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("取消预约", "/Interview/Cancel/" + item.Id, Pages.Interview_CreateOrEditOrDelete, "dropdown-item"))
+
                                             </div>
                                         </div>
                                     </td>
@@ -352,7 +351,7 @@
                                                     @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("编辑", "/Resume/Edit/" + item.Id, Pages.Resume_CreateOrEditOrDelete, "dropdown-item"))
                                                     @if (string.IsNullOrEmpty(item.Name))
                                                     {
-                                                        <a href="javascript:void(0)" class="dropdown-item bg-warning">调查前请先补充简历信息</a> }
+                                                        <a href="javascript:void(0)" class="dropdown-item">调查前请先补充简历信息</a> }
                                                     else
                                                     {
                                                         if (!item.InvestigationId.HasValue)

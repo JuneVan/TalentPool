@@ -23,7 +23,7 @@ namespace TalentPool.Web.Mappings
                 .ForMember(m => m.ResumeId, cfg => cfg.Ignore());
             CreateMap<Investigation, FinshOrRestoreModel>();
             CreateMap<Investigation, AuditInvestigationViewModel>();
-
+            CreateMap<Investigation, DeleteInvestigationViewModel>();
         }
     }
 }

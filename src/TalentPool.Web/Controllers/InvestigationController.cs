@@ -165,9 +165,9 @@ namespace TalentPool.Web.Controllers
             var investigation = await _investigationManager.FindByIdAsync(id);
             if (investigation == null)
                 return NotFound(id);
-            ViewBag.Id = id;
+            var model = Mapper.Map<Investigation,DeleteInvestigationViewModel>(investigation);
 
-            return View();
+            return View(model);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -179,7 +179,7 @@ namespace TalentPool.Web.Controllers
                 if (investigation == null)
                     return NotFound(model.Id);
                 await _investigationManager.DeleteAsync(investigation);
-                Notifier.Information($"你已成功删除了“{investigation.Name}”的意向调查记录！");
+                Notifier.Success($"你已成功删除了“{investigation.Name}”的意向调查记录！");
                 return RedirectToAction(nameof(List));
             }
             return View(model);
