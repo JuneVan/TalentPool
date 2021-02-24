@@ -28,6 +28,7 @@ namespace TalentPool.Application.Resumes
         public List<ResumeAuditRecordDto> ResumeAuditRecords { get; set; }
         public List<ResumeCompareDto> ResumeCompares { get; set; }
         public List<ResumeAttachmentDto> Attachments { get; set; }
+        public List<string> Keywords { get; set; }
         public bool ActiveDelivery { get; set; }
     }
 }

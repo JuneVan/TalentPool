@@ -141,6 +141,10 @@ namespace TalentPool.EntityFrameworkCore.Queriers
                       FilePath = s.FilePath,
                       CreationTime = s.CreationTime
                   }).ToListAsync(CancellationToken);
+
+                resume.Keywords = await _context.ResumeKeyMaps
+                    .Where(w => w.ResumeId == id)
+                    .Select(s => s.Keyword).ToListAsync();
             }
             return resume;
 

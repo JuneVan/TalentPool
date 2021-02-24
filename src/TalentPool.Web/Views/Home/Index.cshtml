@@ -360,8 +360,8 @@
                                                         else
                                                         {
                                                             @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("继续调查", "/Investigation/Edit/" + item.InvestigationId.Value, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
-                                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("技术评测", "/Evaluation/SelectEvaluation?InvestigationId=" + item.Id + "&JobId=" + item.JobId, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
-                                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("结束调查", "/Investigation/Finsh/" + item.Id, Pages.Investigation_FinshOrRestore, "dropdown-item"))}
+                                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("技术评测", "/Evaluation/SelectEvaluation?InvestigationId=" + item.InvestigationId.Value + "&JobId=" + item.JobId, Pages.Investigation_CreateOrEditOrDelete, "dropdown-item"))
+                                                            @await Html.PartialAsync("Partials/_ActionPartial", new ActionViewModel("结束调查", "/Investigation/Finsh/" + item.InvestigationId.Value, Pages.Investigation_FinshOrRestore, "dropdown-item"))}
                                                     }
                                                 }
 
