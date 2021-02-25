@@ -20,8 +20,8 @@
                         主动投递
                     </div>
                 </div>
-                }
-            <input type="hidden" asp-for="Id"> 
+            }
+            <input type="hidden" asp-for="Id">
             <fieldset>
                 <legend>基本资料</legend>
                 <div class="row">
@@ -55,28 +55,7 @@
                     </div>
                 </div>
             </fieldset>
-            <fieldset>
-                <legend>预约调查</legend>
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <label>下次预约时间(<small>超过当前日期即为预约日期</small>)</label>
-                        <input type="text" class="form-control" placeholder="请输入预约时间" asp-for="AppointmentTime" value="@(Model.AppointmentTime?.ToString("yyyy/MM/dd MM:dd"))">
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label>预约类型</label>
-                        <div class="form-group">
-                            <div class="custom-control custom-radio">
-                                @Html.RadioButtonFor(Model => Model.AppointmentType, AppointmentType.Investigaion, new { @id = "AppointmentTypeRadio1", @name = "AppointmentType", @class = "custom-control-input" })
-                                <label for="AppointmentTypeRadio1" class="custom-control-label">电话调查</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                                @Html.RadioButtonFor(Model => Model.AppointmentType, AppointmentType.Evaluation, new { @id = "AppointmentTypeRadio2", @name = "AppointmentType", @class = "custom-control-input" })
-                                <label for="AppointmentTypeRadio2" class="custom-control-label">技术评测</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
+
             <fieldset>
                 <legend>调查信息</legend>
                 <div class="row">
@@ -110,7 +89,7 @@
                             <input type="text" asp-for="UnconnectedRemark" class="form-control" placeholder="请输入未接通电话的情况备注">
                         </div>
                     </div>
-                   
+
                     <div class="form-group col-md-12">
                         <label>工作状态</label>
                         <div class="form-group">
@@ -196,7 +175,30 @@
                         <textarea asp-for="Evaluation"></textarea>
                     </div>
                 </div>
-            </fieldset> 
+            </fieldset>
+
+            <fieldset class="border-success">
+                <legend>预约调查</legend>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label>下次预约时间(<small>超过当前日期即为预约日期</small>)</label>
+                        <input type="text" class="form-control" placeholder="请输入预约时间" asp-for="AppointmentTime" value="@(Model.AppointmentTime?.ToString("yyyy/MM/dd MM:dd"))">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>预约类型</label>
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                @Html.RadioButtonFor(Model => Model.AppointmentType, AppointmentType.Investigaion, new { @id = "AppointmentTypeRadio1", @name = "AppointmentType", @class = "custom-control-input" })
+                                <label for="AppointmentTypeRadio1" class="custom-control-label">电话调查</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                @Html.RadioButtonFor(Model => Model.AppointmentType, AppointmentType.Evaluation, new { @id = "AppointmentTypeRadio2", @name = "AppointmentType", @class = "custom-control-input" })
+                                <label for="AppointmentTypeRadio2" class="custom-control-label">技术评测</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
         </div>
         <div class="card-footer">
             <button type="submit" class="btn btn-primary">提交</button>
